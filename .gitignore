@@ -1,0 +1,18 @@
+# build output
+dist/
+.astro/
+api/dist/
+
+# dependencies
+node_modules/
+
+# local environment — never commit real keys
+.env
+.env.*
+!.env.example
+api/local.settings.json
+
+# editor and OS
+.DS_Store
+Thumbs.db
+*.swp

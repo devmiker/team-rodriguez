@@ -1,0 +1,47 @@
+---
+/**
+ * The banner at the top of an inner page: eyebrow, h1, and a lead paragraph.
+ *
+ * Every inner page uses it, so every page has exactly one h1 and they all sit at the
+ * same place in the document. That consistency is what makes heading navigation
+ * useful to a screen-reader user.
+ */
+interface Props {
+  eyebrow?: string;
+  heading: string;
+  lead?: string;
+}
+
+const { eyebrow, heading, lead } = Astro.props;
+---
+
+<div class="hero">
+  <div class="page">
+    {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+    <h1>{heading}</h1>
+    {lead && <p class="lead">{lead}</p>}
+  </div>
+</div>
+
+<style>
+  .hero {
+    padding-block: var(--rhythm-tight);
+    border-block-end: 1px solid var(--color-line);
+    background:
+      radial-gradient(
+        60rem 20rem at 8% -10%,
+        color-mix(in oklab, var(--brand-emerald) 12%, transparent),
+        transparent 70%
+      ),
+      var(--color-bg);
+  }
+
+  h1 {
+    margin-block-start: var(--space-3);
+    max-width: 18ch;
+  }
+
+  .lead {
+    margin-block-start: var(--space-5);
+  }
+</style>

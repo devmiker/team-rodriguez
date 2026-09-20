@@ -1,0 +1,49 @@
+---
+/**
+ * One icon from `iconPaths.ts`.
+ *
+ *   <Icon name="check" />                          decorative — hidden from assistive tech
+ *   <Icon name="external" label="Opens in a new tab" />   meaningful — announced
+ *
+ * The default is `aria-hidden`, because the overwhelming majority of icons sit next to
+ * a text label that already says the same thing, and announcing both makes a screen
+ * reader repeat itself. Pass `label` only when the icon is the *only* thing conveying
+ * its meaning — and when that happens, consider whether visible text would be better.
+ */
+import { ICON_PATHS, type IconName } from "./iconPaths";
+
+interface Props {
+  name: IconName;
+  /** Accessible name. Omit for decorative icons. */
+  label?: string;
+  /** CSS length. Defaults to 1.25em so the icon scales with surrounding text. */
+  size?: string;
+  class?: string;
+}
+
+const { name, label, size = "1.25em", class: className } = Astro.props;
+---
+
+<svg
+  class={className}
+  width={size}
+  height={size}
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.75"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  role={label ? "img" : undefined}
+  aria-label={label}
+  aria-hidden={label ? undefined : "true"}
+  focusable="false"
+>
+  <path d={ICON_PATHS[name]}></path>
+</svg>
+
+<style>
+  svg {
+    flex: none;
+  }
+</style>

@@ -1,0 +1,21 @@
+{
+  "name": "team-rodriguez-api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Azure Functions app backing the contact form.",
+  "main": "dist/api/src/functions/*.js",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "prestart": "npm run build",
+    "start": "func start"
+  },
+  "dependencies": {
+    "@azure/functions": "^4.7.0"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.3",
+    "typescript": "5.9.3"
+  }
+}

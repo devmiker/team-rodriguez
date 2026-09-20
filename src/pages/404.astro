@@ -1,0 +1,65 @@
+---
+/**
+ * The 404 page.
+ *
+ * Lives outside `[locale]` because a wrong URL may not have a usable language segment
+ * in it — "/nonsense" has none at all. It renders in the default language and offers
+ * the main pages as a way back, which is more use than an apology.
+ */
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Icon from "../components/Icon.astro";
+import { DEFAULT_LOCALE } from "../i18n/locales";
+import { NAV_ROUTES, pathFor } from "../i18n/routes";
+import { useTranslations } from "../i18n/ui";
+
+const locale = DEFAULT_LOCALE;
+const t = useTranslations(locale);
+---
+
+<BaseLayout page={{ route: "home" }} title={t("notFound.title")} description={t("notFound.title")} noindex>
+  <section class="section">
+    <div class="page notfound">
+      <p class="eyebrow">404</p>
+      <h1>{t("notFound.heading")}</h1>
+      <p class="lead">{t("notFound.body")}</p>
+
+      <ul class="notfound__links">
+        {
+          NAV_ROUTES.map((route) => (
+            <li>
+              <a href={pathFor({ route }, locale)}>
+                {t(`${route}.title` as Parameters<typeof t>[0])}
+                <Icon name="arrowRight" size="0.95em" />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .notfound {
+    display: grid;
+    gap: var(--space-5);
+    justify-items: start;
+    max-width: var(--measure);
+  }
+
+  .notfound__links {
+    display: grid;
+    gap: var(--space-1);
+    list-style: none;
+    margin: var(--space-4) 0 0;
+    padding: 0;
+  }
+
+  .notfound__links a {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-block-size: var(--target-min);
+    font-weight: var(--weight-semibold);
+  }
+</style>

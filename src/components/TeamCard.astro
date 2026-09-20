@@ -1,0 +1,246 @@
+---
+/**
+ * One team member: photo or initials, name, role, bio, the services they take on, the
+ * technologies they work in, and links to their own profiles.
+ *
+ * The services are rendered as the service names from `src/data/services.ts` rather
+ * than free text on the person, so what a person is shown offering is always something
+ * the services page also describes — and `assertServiceIdsExist()` fails the build if
+ * that link is ever broken.
+ *
+ * Without a photo the card shows initials on a tinted disc. That is a deliberate
+ * design, not a fallback that looks like a missing image, so a team can launch before
+ * everyone has had a photograph taken.
+ */
+import { localized, LOCALE_META, type Locale } from "../i18n/locales";
+import { useTranslations } from "../i18n/ui";
+import { initials, type TeamMember } from "../data/team";
+import { serviceById } from "../data/services";
+import Icon from "./Icon.astro";
+
+interface Props {
+  member: TeamMember;
+  locale: Locale;
+}
+
+const { member, locale } = Astro.props;
+const t = useTranslations(locale);
+
+const services = member.services.map((id) => localized(serviceById(id).name, locale));
+
+const languages = (member.speaks ?? []).map(
+  (code) => LOCALE_META[code as Locale]?.name ?? code.toUpperCase(),
+);
+
+const profileLinks = [
+  member.links?.linkedin ? { href: member.links.linkedin, label: "LinkedIn" } : undefined,
+  member.links?.github ? { href: member.links.github, label: "GitHub" } : undefined,
+  member.links?.site ? { href: member.links.site, label: t("team.profile") } : undefined,
+].filter((l): l is { href: string; label: string } => l !== undefined);
+---
+
+<article class="member card">
+  <div class="member__head">
+    {
+      member.photo ? (
+        <img
+          class="member__photo"
+          src={`/team/${member.photo}`}
+          /* The photo adds nothing a screen reader needs that the name below does not
+             already give, so it is decorative: empty alt, not a description of a face. */
+          alt=""
+          width="96"
+          height="96"
+          loading="lazy"
+          decoding="async"
+        />
+      ) : (
+        <p class="member__initials" aria-hidden="true">
+          {initials(member.name)}
+        </p>
+      )
+    }
+
+    <div>
+      <h3 class="member__name">{member.name}</h3>
+      <p class="member__role">{localized(member.role, locale)}</p>
+      {member.location && <p class="member__location">{member.location}</p>}
+    </div>
+  </div>
+
+  <p class="member__bio">{localized(member.bio, locale)}</p>
+
+  {
+    services.length > 0 && (
+      <div class="member__block">
+        <h4 class="member__sub">{t("team.offers")}</h4>
+        <ul class="member__tags">
+          {services.map((name) => (
+            <li class="tag tag--accent">{name}</li>
+          ))}
+        </ul>
+      </div>
+    )
+  }
+
+  {
+    member.focus.length > 0 && (
+      <div class="member__block">
+        <h4 class="member__sub">{t("team.focus")}</h4>
+        <ul class="member__tags">
+          {member.focus.map((item) => (
+            <li class="tag">{item}</li>
+          ))}
+        </ul>
+      </div>
+    )
+  }
+
+  {
+    languages.length > 0 && (
+      <p class="member__languages">
+        <span class="member__sub">{t("team.speaks")}</span> {languages.join(" · ")}
+      </p>
+    )
+  }
+
+  {
+    profileLinks.length > 0 && (
+      <ul class="member__links">
+        {profileLinks.map((link) => (
+          <li>
+            <a href={link.href} rel="noopener" target="_blank">
+              <span>{link.label}</span>
+              <Icon name="external" size="0.85em" />
+            </a>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</article>
+
+<style>
+  .member {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .member__head {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  .member__photo,
+  .member__initials {
+    inline-size: 4rem;
+    block-size: 4rem;
+    border-radius: var(--radius-pill);
+    flex: none;
+  }
+
+  .member__photo {
+    object-fit: cover;
+    border: 2px solid var(--color-line-strong);
+  }
+
+  .member__initials {
+    display: grid;
+    place-items: center;
+    margin: 0;
+    background: color-mix(in oklab, var(--brand-emerald) 22%, var(--color-bg));
+    color: var(--color-text);
+    font-family: var(--font-display);
+    font-size: var(--step-h3);
+    font-weight: var(--weight-bold);
+    letter-spacing: 0.02em;
+  }
+
+  .member__name {
+    font-size: var(--step-h3);
+  }
+
+  .member__role {
+    color: var(--color-text-dim);
+    font-size: var(--step-small);
+  }
+
+  .member__location {
+    margin-block-start: var(--space-1);
+    font-family: var(--font-mono);
+    font-size: var(--step-label);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-text-dim);
+  }
+
+  .member__bio {
+    color: var(--color-text-dim);
+  }
+
+  .member__block {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .member__sub {
+    font-family: var(--font-mono);
+    font-size: var(--step-label);
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-text-dim);
+  }
+
+  .member__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .tag {
+    padding: var(--space-1) var(--space-2-5);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-pill);
+    font-size: var(--step-label);
+    color: var(--color-text-dim);
+  }
+
+  .tag--accent {
+    border-color: color-mix(in oklab, var(--color-accent) 45%, transparent);
+    color: var(--color-link);
+  }
+
+  .member__languages {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-2);
+    margin: 0;
+    font-size: var(--step-small);
+    color: var(--color-text-dim);
+  }
+
+  .member__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    list-style: none;
+    margin: auto 0 0;
+    padding-block-start: var(--space-2);
+  }
+
+  .member__links a {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1-5);
+    min-block-size: var(--target-min);
+    font-size: var(--step-small);
+    font-weight: var(--weight-medium);
+  }
+</style>

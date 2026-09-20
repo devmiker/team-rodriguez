@@ -1,0 +1,11 @@
+---
+/**
+ * "/" — required to exist so Astro's `redirectToDefaultLocale` has somewhere to attach
+ * the redirect to `/en/`. Astro generates the redirect page itself and logs a harmless
+ * "conflicts with higher priority route" warning about this file's own (empty) output.
+ *
+ * In production the host answers "/" with a 301 before this is ever served (see
+ * public/staticwebapp.config.json). The generated file still ships, and the
+ * `rootRedirect` integration in astro.config.mjs repairs its accessibility problems.
+ */
+---

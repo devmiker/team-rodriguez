@@ -1,0 +1,26 @@
+{
+  // rootDir is the repository ROOT so that the shared validator in ../src/lib compiles
+  // into this output tree alongside the function. Output therefore lands at
+  // dist/api/src/... and dist/src/..., which is why package.json's "main" is
+  // "dist/api/src/functions/*.js".
+  //
+  // Only ../src/lib/contact.ts is shared. It has no relative imports of its own, which
+  // is deliberate: the Astro side resolves extensionless imports through Vite, Node16
+  // ESM requires explicit .js extensions, and a file that imports nothing cannot be
+  // caught between the two.
+  "compilerOptions": {
+    "target": "ES2023",
+    "module": "Node16",
+    "moduleResolution": "Node16",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "declaration": false,
+    "types": ["node"],
+    "rootDir": "..",
+    "outDir": "dist"
+  },
+  "include": ["src/**/*.ts", "../src/lib/contact.ts"]
+}

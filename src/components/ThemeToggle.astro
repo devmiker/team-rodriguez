@@ -1,0 +1,151 @@
+---
+/**
+ * The light/dark switch.
+ *
+ * Two details are worth knowing before editing this.
+ *
+ * First, the accessible name is driven by CSS, not by JavaScript. The server has no
+ * idea which theme a given visitor will see, so it cannot render the right label. Both
+ * labels are rendered and CSS hides the wrong one with `display: none` — which removes
+ * it from the accessibility tree as well as the screen, so a screen reader announces
+ * exactly one. That means the button is correctly labelled before any script runs, and
+ * stays correct for a visitor who never chooses a theme at all.
+ *
+ * Second, the selectors below have to match tokens.css exactly: theme state lives in
+ * two places — the device setting and `data-theme` — and a label that disagrees with
+ * the colours is worse than no label.
+ *
+ * The toggle itself is four lines of inline script. It is inline because bundling it
+ * would delay the first click on an otherwise-static page, and its bytes are hashed
+ * into the CSP at build time.
+ */
+import Icon from "./Icon.astro";
+import { THEME_ATTRIBUTE, THEME_STORAGE_KEY } from "../lib/theme";
+import type { Locale } from "../i18n/locales";
+import { useTranslations } from "../i18n/ui";
+
+interface Props {
+  locale: Locale;
+}
+
+const t = useTranslations(Astro.props.locale);
+---
+
+<button type="button" class="theme-toggle" data-theme-toggle>
+  <Icon name="sun" class="icon icon--sun" />
+  <Icon name="moon" class="icon icon--moon" />
+  <span class="visually-hidden label label--to-dark">{t("theme.toDark")}</span>
+  <span class="visually-hidden label label--to-light">{t("theme.toLight")}</span>
+</button>
+
+<script is:inline define:vars={{ key: THEME_STORAGE_KEY, attribute: THEME_ATTRIBUTE }}>
+  document.querySelector("[data-theme-toggle]")?.addEventListener("click", () => {
+    const dark =
+      document.documentElement.getAttribute(attribute) === "dark" ||
+      (!document.documentElement.hasAttribute(attribute) &&
+        matchMedia("(prefers-color-scheme: dark)").matches);
+    const next = dark ? "light" : "dark";
+    document.documentElement.setAttribute(attribute, next);
+    try {
+      localStorage.setItem(key, next);
+    } catch {}
+  });
+</script>
+
+<style>
+  .theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: var(--target-min);
+    block-size: var(--target-min);
+    padding: 0;
+    background: none;
+    border: 1px solid transparent;
+    border-radius: var(--radius-pill);
+    color: inherit;
+    cursor: pointer;
+    transition:
+      background-color var(--duration-fast) var(--ease),
+      border-color var(--duration-fast) var(--ease);
+  }
+
+  .theme-toggle:hover {
+    border-color: var(--color-line);
+  }
+
+  /* Which icon and which label is shown.
+   *
+   * These selectors are `:global` and anchored on `.theme-toggle`, and that is not
+   * laziness. The two <svg> elements are rendered by <Icon>, a different component, so
+   * they carry Icon's scope attribute and not this file's — an ordinary scoped
+   * `.icon--moon` rule here silently matches nothing, and BOTH icons show. Anchoring
+   * on `.theme-toggle`, which only exists in this component, keeps the reach as narrow
+   * as a scoped rule would have been.
+   *
+   * The theme conditions mirror tokens.css exactly: device setting first
+   * (prefers-color-scheme, overridable by an explicit light choice), explicit
+   * data-theme second. A label that disagrees with the colours is worse than none.
+   *
+   * `display: none` rather than `visibility` or `opacity` is deliberate for the
+   * labels: it removes the hidden one from the accessibility tree, so a screen reader
+   * announces exactly one — and it does so before any JavaScript runs.
+   */
+
+  .theme-toggle :global(.icon--moon),
+  .theme-toggle .label--to-light {
+    display: none;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :global(:root:not([data-theme="light"]) .theme-toggle .icon--sun) {
+      display: none;
+    }
+
+    :global(:root:not([data-theme="light"]) .theme-toggle .icon--moon) {
+      display: block;
+    }
+
+    :global(:root:not([data-theme="light"])) .theme-toggle .label--to-dark {
+      display: none;
+    }
+
+    :global(:root:not([data-theme="light"])) .theme-toggle .label--to-light {
+      display: inline;
+    }
+  }
+
+  :global(:root[data-theme="dark"] .theme-toggle .icon--sun) {
+    display: none;
+  }
+
+  :global(:root[data-theme="dark"] .theme-toggle .icon--moon) {
+    display: block;
+  }
+
+  :global(:root[data-theme="dark"]) .theme-toggle .label--to-dark {
+    display: none;
+  }
+
+  :global(:root[data-theme="dark"]) .theme-toggle .label--to-light {
+    display: inline;
+  }
+
+  /* An explicit light choice has to win over the device setting above. */
+
+  :global(:root[data-theme="light"] .theme-toggle .icon--sun) {
+    display: block;
+  }
+
+  :global(:root[data-theme="light"] .theme-toggle .icon--moon) {
+    display: none;
+  }
+
+  :global(:root[data-theme="light"]) .theme-toggle .label--to-dark {
+    display: inline;
+  }
+
+  :global(:root[data-theme="light"]) .theme-toggle .label--to-light {
+    display: none;
+  }
+</style>

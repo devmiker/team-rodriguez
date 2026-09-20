@@ -1,0 +1,49 @@
+---
+/**
+ * Every page, in every language.
+ *
+ * One route file rather than eight per language. Which view renders is decided by the
+ * route key from `src/i18n/pages.ts`; each view reads its own language from
+ * `Astro.currentLocale`. Adding a page means adding a `ROUTES` entry, a view and one
+ * line here — never a new file per locale.
+ */
+import { allPages, assertUniquePaths } from "../../i18n/pages";
+import type { PageRef } from "../../i18n/routes";
+import { publishedCaseStudies } from "../../data/work";
+
+import ContactPage from "../../views/ContactPage.astro";
+import HomePage from "../../views/HomePage.astro";
+import PartnersPage from "../../views/PartnersPage.astro";
+import PrivacyPage from "../../views/PrivacyPage.astro";
+import ServicesPage from "../../views/ServicesPage.astro";
+import TeamPage from "../../views/TeamPage.astro";
+import TermsPage from "../../views/TermsPage.astro";
+import ThanksPage from "../../views/ThanksPage.astro";
+import WorkPage from "../../views/WorkPage.astro";
+
+export async function getStaticPaths() {
+  /*
+   * Detail pages come from the published case studies, so an unpublished one does not
+   * merely render as nothing — its URL is never built at all.
+   */
+  const pages = allPages({ work: publishedCaseStudies().map((c) => c.slug) });
+  assertUniquePaths(pages);
+
+  return pages.map(({ locale, page, path }) => ({
+    params: { locale, path },
+    props: { page },
+  }));
+}
+
+const { page } = Astro.props as { page: PageRef };
+---
+
+{page.route === "home" && <HomePage />}
+{page.route === "services" && <ServicesPage />}
+{page.route === "work" && <WorkPage />}
+{page.route === "team" && <TeamPage />}
+{page.route === "partners" && <PartnersPage />}
+{page.route === "contact" && <ContactPage />}
+{page.route === "thanks" && <ThanksPage />}
+{page.route === "privacy" && <PrivacyPage />}
+{page.route === "terms" && <TermsPage />}

@@ -1,0 +1,89 @@
+---
+/**
+ * The privacy notice.
+ *
+ * Content lives in src/data/legal.ts. While `PRIVACY_REVIEWED` is false a visible
+ * notice says the text has not been through a lawyer — which is honest, and removes
+ * the temptation to quietly ship an unreviewed legal page and forget about it.
+ */
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHero from "../components/PageHero.astro";
+import Icon from "../components/Icon.astro";
+import { localized, LOCALE_META, toLocale } from "../i18n/locales";
+import { useTranslations } from "../i18n/ui";
+import { LEGAL_UPDATED, PRIVACY_REVIEWED, PRIVACY_SECTIONS } from "../data/legal";
+
+const locale = toLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+
+const updated = new Intl.DateTimeFormat(LOCALE_META[locale].intl, {
+  dateStyle: "long",
+}).format(new Date(LEGAL_UPDATED));
+---
+
+<BaseLayout
+  page={{ route: "privacy" }}
+  title={t("privacy.title")}
+  description={t("privacy.description")}
+  noindex={!PRIVACY_REVIEWED}
+>
+  <PageHero heading={t("privacy.heading")} />
+
+  <section class="section">
+    <div class="page">
+      {
+        !PRIVACY_REVIEWED && (
+          <div class="card review-notice" role="note">
+            <Icon name="alert" size="1.25rem" class="review-notice__icon" />
+            <p>{t("privacy.pending")}</p>
+          </div>
+        )
+      }
+
+      <div class="prose">
+        {
+          PRIVACY_SECTIONS.map((section) => (
+            <>
+              <h2>{localized(section.heading, locale)}</h2>
+              {section.body.map((paragraph) => (
+                <p>{localized(paragraph, locale)}</p>
+              ))}
+            </>
+          ))
+        }
+
+        <p class="updated">
+          <span class="eyebrow">{t("legal.lastUpdated")}</span>
+          <time datetime={LEGAL_UPDATED}>{updated}</time>
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .review-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    max-width: var(--measure);
+    margin-block-end: var(--space-10);
+    border-color: var(--color-accent);
+  }
+
+  .review-notice__icon {
+    margin-block-start: 0.15em;
+    color: var(--color-accent);
+    flex: none;
+  }
+
+  .updated {
+    margin-block-start: var(--space-10);
+    padding-block-start: var(--space-4);
+    border-block-start: 1px solid var(--color-line);
+    display: grid;
+    gap: var(--space-1);
+    font-size: var(--step-small);
+    color: var(--color-text-dim);
+  }
+</style>

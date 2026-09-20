@@ -1,0 +1,253 @@
+---
+/**
+ * The footer: what the studio is, where everything is, and the legal links.
+ *
+ * Contact details come from `src/data/company.ts` and are rendered only when they have
+ * a value, so an unset phone number leaves no empty row behind.
+ */
+import { COMPANY } from "../data/company";
+import type { Locale } from "../i18n/locales";
+import { LEGAL_ROUTES, NAV_ROUTES, pathFor } from "../i18n/routes";
+import { useTranslations } from "../i18n/ui";
+import Icon from "./Icon.astro";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const year = new Date().getFullYear();
+const copyrightYears =
+  year > COMPANY.foundedYear ? `${COMPANY.foundedYear}–${year}` : `${COMPANY.foundedYear}`;
+
+interface FooterLink {
+  href: string;
+  label: string;
+}
+
+/* Typed as FooterLink[] rather than inferred: COMPANY is `as const`, so an inferred
+   array would carry each URL as its own literal type and no predicate could narrow it. */
+const socialLinks: FooterLink[] = [
+  COMPANY.social.github ? { href: COMPANY.social.github, label: "GitHub" } : undefined,
+  COMPANY.social.linkedin ? { href: COMPANY.social.linkedin, label: "LinkedIn" } : undefined,
+].filter((l): l is FooterLink => l !== undefined);
+---
+
+<footer class="footer band on-band">
+  <div class="page">
+    <div class="footer__grid">
+      <div class="footer__about">
+        <p class="wordmark">
+          <span aria-hidden="true" class="wordmark__bracket">&lt;</span>
+          <span>{t("site.name")}</span>
+          <span aria-hidden="true" class="wordmark__bracket">/&gt;</span>
+        </p>
+        <p class="footer__blurb">{t("footer.blurb")}</p>
+        {COMPANY.location && <p class="footer__location">{COMPANY.location}</p>}
+      </div>
+
+      <nav aria-labelledby="footer-site">
+        <h2 id="footer-site" class="footer__heading">{t("footer.navHeading")}</h2>
+        <ul>
+          {
+            NAV_ROUTES.map((route) => (
+              <li>
+                <a href={pathFor({ route }, locale)}>
+                  {t(`${route}.title` as Parameters<typeof t>[0])}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <nav aria-labelledby="footer-legal">
+        <h2 id="footer-legal" class="footer__heading">{t("footer.legalHeading")}</h2>
+        <ul>
+          {
+            LEGAL_ROUTES.map((route) => (
+              <li>
+                <a href={pathFor({ route }, locale)}>
+                  {t(`${route}.title` as Parameters<typeof t>[0])}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <div>
+        <h2 class="footer__heading">{t("footer.contactHeading")}</h2>
+        <ul>
+          <li>
+            <a href={`mailto:${COMPANY.email}`} class="footer__contact">
+              <Icon name="mail" size="1em" />
+              <span>{COMPANY.email}</span>
+            </a>
+          </li>
+          {COMPANY.phone && (
+            <li>
+              <a href={`tel:${COMPANY.phone.replace(/[^+\d]/g, "")}`}>{COMPANY.phone}</a>
+            </li>
+          )}
+          {
+            socialLinks.map((link) => (
+              <li>
+                {/*
+                  rel="me" marks these as the same person's other profiles, which is
+                  what IndieWeb verification and some search features read. noopener
+                  is set because these open in a new context; noreferrer is not, so
+                  the destination can see the referral.
+                */}
+                <a href={link.href} rel="me noopener" target="_blank" class="footer__contact">
+                  <span>{link.label}</span>
+                  <Icon name="external" size="0.85em" />
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer__base">
+      <p>© {copyrightYears} {COMPANY.name}. {t("footer.rights")}</p>
+      <p class="footer__built">{t("footer.builtWith")}</p>
+    </div>
+  </div>
+
+  {/* The language switcher lives here too, so it is reachable from the bottom of a
+      long page without scrolling back up. */}
+  <div class="page footer__langs">
+    <slot name="languages" />
+  </div>
+</footer>
+
+<style>
+  .footer {
+    padding-block: var(--rhythm-tight) var(--space-8);
+    border-block-start: 1px solid var(--color-line-on-band);
+  }
+
+  .footer__grid {
+    display: grid;
+    gap: var(--space-8);
+  }
+
+  @media (min-width: 40rem) {
+    .footer__grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .footer__about {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .footer__grid {
+      grid-template-columns: 2fr 1fr 1fr 1.2fr;
+    }
+
+    .footer__about {
+      grid-column: auto;
+    }
+  }
+
+  .wordmark {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2em;
+    font-family: var(--font-mono);
+    font-size: var(--step-small);
+    font-weight: var(--weight-bold);
+  }
+
+  .wordmark__bracket {
+    color: var(--color-link-on-band);
+  }
+
+  .footer__blurb {
+    margin-block-start: var(--space-3);
+    max-width: 34ch;
+    color: var(--color-text-dim-on-band);
+    font-size: var(--step-small);
+  }
+
+  .footer__location {
+    margin-block-start: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: var(--step-label);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-text-dim-on-band);
+  }
+
+  .footer__heading {
+    font-family: var(--font-mono);
+    font-size: var(--step-label);
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-text-dim-on-band);
+  }
+
+  ul {
+    list-style: none;
+    margin: var(--space-4) 0 0;
+    padding: 0;
+  }
+
+  li + li {
+    margin-block-start: var(--space-1);
+  }
+
+  a {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    /* 24px is the WCAG 2.2 AA minimum target size; footer links are spaced so their
+       exclusion zones do not overlap, which is what the success criterion asks for. */
+    min-block-size: 1.75rem;
+    font-size: var(--step-small);
+    color: var(--color-text-dim-on-band);
+    text-decoration: none;
+  }
+
+  a:hover {
+    color: var(--color-text-on-band);
+    text-decoration: underline;
+  }
+
+  .footer__contact {
+    overflow-wrap: anywhere;
+  }
+
+  .footer__base {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-6);
+    justify-content: space-between;
+    margin-block-start: var(--space-10);
+    padding-block-start: var(--space-6);
+    border-block-start: 1px solid var(--color-line-on-band);
+    font-size: var(--step-small);
+    color: var(--color-text-dim-on-band);
+  }
+
+  .footer__built {
+    font-family: var(--font-mono);
+    font-size: var(--step-label);
+  }
+
+  .footer__langs {
+    margin-block-start: var(--space-6);
+  }
+
+  @media (min-width: 52.0625rem) {
+    .footer__langs {
+      display: none;
+    }
+  }
+</style>

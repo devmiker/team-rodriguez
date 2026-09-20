@@ -1,0 +1,220 @@
+/* Contact form.
+ *
+ * In its own file rather than a scoped <style> block because Astro's style scoping
+ * applies to .astro components, not to React islands. Every selector here is therefore
+ * global, so all of them are namespaced under .contact-form or the generic .field.
+ *
+ * Only tokens — no literal colours. See src/styles/tokens.css.
+ */
+
+.contact-form {
+  display: grid;
+  gap: var(--space-6);
+  max-width: 44rem;
+}
+
+.contact-form__row {
+  display: grid;
+  gap: var(--space-6);
+  /* Without this, a field whose neighbour has a hint below it stretches its own input
+     to match the taller cell, and the two controls no longer line up. */
+  align-items: start;
+}
+
+@media (min-width: 40rem) {
+  .contact-form__row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* --- Fields ------------------------------------------------------------- */
+
+.field {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.field label {
+  font-weight: var(--weight-semibold);
+  font-size: var(--step-small);
+}
+
+.field__required,
+.field__optional {
+  font-family: var(--font-mono);
+  font-size: var(--step-label);
+  font-weight: var(--weight-body);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--color-text-dim);
+}
+
+.field input,
+.field select,
+.field textarea {
+  inline-size: 100%;
+  min-block-size: var(--target-min);
+  padding: var(--space-3);
+  background: var(--color-bg);
+  /* --color-line-strong, not --color-line: an input's boundary is meaningful
+     non-text content and must clear 3:1. See the note in tokens.css. */
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius);
+  color: var(--color-text);
+  transition:
+    border-color var(--duration-fast) var(--ease),
+    box-shadow var(--duration-fast) var(--ease);
+}
+
+.field textarea {
+  min-block-size: 9rem;
+  resize: vertical;
+  line-height: var(--leading-body);
+}
+
+.field select {
+  /* The native control, deliberately. A custom listbox would mean rebuilding keyboard
+     interaction, typeahead and the mobile picker, all of which the platform already
+     does better than a hand-rolled one. */
+  appearance: auto;
+}
+
+.field input:hover,
+.field select:hover,
+.field textarea:hover {
+  border-color: var(--color-text-dim);
+}
+
+.field input:focus-visible,
+.field select:focus-visible,
+.field textarea:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 1px;
+  border-color: var(--color-focus);
+}
+
+/* Failed fields are marked by colour AND by the message below them, because colour
+   alone is not an accessible way to say "this one". */
+.field input[aria-invalid="true"],
+.field select[aria-invalid="true"],
+.field textarea[aria-invalid="true"] {
+  border-color: var(--color-danger);
+  box-shadow: inset 0 0 0 1px var(--color-danger);
+}
+
+.field__hint {
+  font-size: var(--step-small);
+  color: var(--color-text-dim);
+}
+
+.field__error {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  font-size: var(--step-small);
+  font-weight: var(--weight-medium);
+  color: var(--color-danger);
+}
+
+.field__error::before {
+  /* A non-colour marker for the same information. aria-hidden is not available on a
+     pseudo-element, but generated content is not exposed to assistive technology by
+     most screen readers, and the message text carries the meaning regardless. */
+  content: "!";
+  display: grid;
+  place-items: center;
+  inline-size: 1.15em;
+  block-size: 1.15em;
+  margin-block-start: 0.15em;
+  border: 1px solid currentColor;
+  border-radius: var(--radius-pill);
+  font-size: 0.8em;
+  font-weight: var(--weight-bold);
+  flex: none;
+}
+
+/* --- Error summary ------------------------------------------------------ */
+
+.contact-form__summary {
+  padding: var(--space-5);
+  border: 2px solid var(--color-danger);
+  border-radius: var(--radius-lg);
+  background: var(--color-bg-raised);
+}
+
+.contact-form__summary:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.contact-form__summary h2 {
+  font-size: var(--step-h3);
+  color: var(--color-danger);
+}
+
+.contact-form__summary ul {
+  margin-block-start: var(--space-3);
+  padding-inline-start: var(--space-5);
+}
+
+.contact-form__summary li + li {
+  margin-block-start: var(--space-1);
+}
+
+.contact-form__summary a {
+  color: var(--color-danger);
+}
+
+/* --- Honeypot -----------------------------------------------------------
+ * Removed from layout and from the accessibility tree. NOT `display: none` on its
+ * own: some bots specifically skip fields hidden that way, so this is hidden the way
+ * a visually-hidden utility is, while `aria-hidden` and `tabindex="-1"` on the
+ * elements themselves keep humans away from it.
+ */
+
+.contact-form__trap {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* --- Actions and status -------------------------------------------------- */
+
+.contact-form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  align-items: center;
+}
+
+.contact-form__status:empty {
+  display: none;
+}
+
+.contact-form__alert {
+  padding: var(--space-4);
+  border: 1px solid var(--color-danger);
+  border-radius: var(--radius);
+  background: var(--color-bg-raised);
+  font-size: var(--step-small);
+}
+
+.contact-form__done {
+  display: grid;
+  gap: var(--space-3);
+  max-width: 44rem;
+  border-color: var(--color-accent);
+}
+
+.contact-form__done h2 {
+  font-size: var(--step-h2);
+}
+
+.contact-form__done p {
+  color: var(--color-text-dim);
+}

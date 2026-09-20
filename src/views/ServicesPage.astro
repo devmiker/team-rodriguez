@@ -1,0 +1,76 @@
+---
+/**
+ * The services page: every service in full, with what is included, an indicative
+ * starting price, and who on the team takes it on.
+ *
+ * Prices are shown as "from" figures with a note saying they are indicative and that
+ * the real number is fixed in writing first. That is the honest way to publish a price
+ * for work that genuinely varies, and it is far better than the alternative — no
+ * prices at all, which makes a small business owner assume they cannot afford you and
+ * close the tab.
+ */
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHero from "../components/PageHero.astro";
+import ServiceCard from "../components/ServiceCard.astro";
+import Icon from "../components/Icon.astro";
+import { toLocale } from "../i18n/locales";
+import { pathFor } from "../i18n/routes";
+import { useTranslations } from "../i18n/ui";
+import { SERVICES } from "../data/services";
+
+const locale = toLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+---
+
+<BaseLayout
+  page={{ route: "services" }}
+  title={t("services.title")}
+  description={t("services.description")}
+>
+  <PageHero
+    eyebrow={t("home.services.eyebrow")}
+    heading={t("services.heading")}
+    lead={t("services.lead")}
+  />
+
+  <section class="section">
+    <div class="page">
+      <div class="grid grid--2">
+        {SERVICES.map((service) => <ServiceCard service={service} locale={locale} detailed as="h2" />)}
+      </div>
+
+      <p class="price-note">{t("services.priceNote")}</p>
+    </div>
+  </section>
+
+  <section class="section band on-band" aria-labelledby="services-cta">
+    <div class="page cta">
+      <h2 id="services-cta">{t("services.cta.heading")}</h2>
+      <p class="lead">{t("services.cta.body")}</p>
+      <a class="button button--primary" href={pathFor({ route: "contact" }, locale)}>
+        {t("home.cta.button")}
+        <Icon name="arrowRight" size="1.05em" />
+      </a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .price-note {
+    margin-block-start: var(--space-8);
+    max-width: var(--measure);
+    font-size: var(--step-small);
+    color: var(--color-text-dim);
+  }
+
+  .cta {
+    display: grid;
+    gap: var(--space-5);
+    justify-items: start;
+  }
+
+  .cta h2 {
+    font-size: var(--step-h1);
+    max-width: 18ch;
+  }
+</style>

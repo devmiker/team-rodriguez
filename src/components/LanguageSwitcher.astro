@@ -1,0 +1,95 @@
+---
+/**
+ * The language switcher.
+ *
+ * Three plain links, not a dropdown. A dropdown for three items adds a disclosure
+ * widget, focus management, an Escape handler and an outside-click handler — all of
+ * which have to be built, tested and kept working — to hide two links. Three links fit.
+ *
+ * Every link goes to *this same page* in the other language, built with `pathFor()`,
+ * so switching language never dumps the visitor back on the home page. That is the
+ * single most common failure in multilingual sites and it is entirely avoidable.
+ *
+ * `hreflang` tells assistive technology and the browser what it is about to load, and
+ * each label is wrapped in `lang` so a screen reader pronounces "Deutsch" with German
+ * phonemes rather than reading it as English.
+ */
+import { LOCALE_META, LOCALES, type Locale } from "../i18n/locales";
+import { pathFor, type PageRef } from "../i18n/routes";
+import { useTranslations } from "../i18n/ui";
+
+interface Props {
+  page: PageRef;
+  locale: Locale;
+  class?: string;
+}
+
+const { page, locale, class: className } = Astro.props;
+const t = useTranslations(locale);
+---
+
+<nav class:list={["langs", className]} aria-label={t("lang.label")}>
+  <ul>
+    {
+      LOCALES.map((l) => (
+        <li>
+          <a
+            href={pathFor(page, l)}
+            hreflang={l}
+            lang={l}
+            class="lang"
+            aria-current={l === locale ? "true" : undefined}
+          >
+            <abbr title={LOCALE_META[l].name}>{l.toUpperCase()}</abbr>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</nav>
+
+<style>
+  ul {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .lang {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-inline-size: 2.5rem;
+    /* Below the 44px comfort figure, but above the WCAG 2.2 AA minimum of 24px, and
+       the items are spaced so the exclusion zones do not overlap. A 44px target for
+       each of three language codes would dominate the header. */
+    block-size: 2rem;
+    padding-inline: var(--space-2);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: var(--step-label);
+    letter-spacing: 0.05em;
+    color: var(--color-text-dim);
+    text-decoration: none;
+    transition: color var(--duration-fast) var(--ease);
+  }
+
+  .lang:hover {
+    color: var(--color-text);
+  }
+
+  .lang[aria-current="true"] {
+    color: var(--color-on-accent);
+    background: var(--color-accent);
+  }
+
+  /* An <abbr> with a title gets a dotted underline and a help cursor in most browsers.
+     The title is here for the tooltip and the accessible name, not the decoration. */
+  abbr {
+    text-decoration: none;
+    cursor: inherit;
+  }
+</style>

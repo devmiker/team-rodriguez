@@ -1,0 +1,178 @@
+---
+/**
+ * One promoted business.
+ *
+ * The whole card is a link, so the target is the size of the card rather than a small
+ * "visit" affordance — but the link is wrapped around the heading text only in the
+ * accessibility tree, via the stretched-link pattern below. A screen reader hears the
+ * business name as the link, not the entire card's text read out as one label.
+ *
+ * `rel` is built rather than fixed:
+ *   - `noopener` always, because these open in a new browsing context
+ *   - NOT `noreferrer` — a partner seeing referral traffic from us is the point
+ *   - NOT `nofollow` — these are genuine, unpaid recommendations, which is exactly
+ *     what a followed link is supposed to mean
+ *   - `sponsored` if and only if `partner.sponsored` is set, alongside a visible
+ *     label. Both are required. Undisclosed paid placement is deception, and in the
+ *     United States it is also an FTC matter.
+ */
+import { localized, type Locale } from "../i18n/locales";
+import { useTranslations } from "../i18n/ui";
+import type { Partner } from "../data/partners";
+import { initials } from "../data/team";
+import Icon from "./Icon.astro";
+
+interface Props {
+  partner: Partner;
+  locale: Locale;
+}
+
+const { partner, locale } = Astro.props;
+const t = useTranslations(locale);
+const rel = partner.sponsored ? "noopener sponsored" : "noopener";
+---
+
+<article class="partner card">
+  <div class="partner__head">
+    {
+      partner.logo ? (
+        <img
+          class="partner__logo"
+          src={`/partners/${partner.logo}`}
+          alt=""
+          width="56"
+          height="56"
+          loading="lazy"
+          decoding="async"
+        />
+      ) : (
+        <p class="partner__mark" aria-hidden="true">
+          {initials(partner.name)}
+        </p>
+      )
+    }
+    <p class="partner__category">{localized(partner.category, locale)}</p>
+  </div>
+
+  <h3 class="partner__name">
+    <a href={partner.url} rel={rel} target="_blank" class="partner__link">
+      {partner.name}
+      <Icon name="external" size="0.8em" />
+    </a>
+  </h3>
+
+  {partner.sponsored && <p class="partner__sponsored">Paid placement</p>}
+
+  <p class="partner__blurb">{localized(partner.blurb, locale)}</p>
+
+  <p class="partner__visit" aria-hidden="true">{t("partners.visit")}</p>
+</article>
+
+<style>
+  .partner {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    transition: border-color var(--duration-fast) var(--ease);
+  }
+
+  .partner:hover {
+    border-color: var(--color-accent);
+  }
+
+  /* Stretched link: the <a> keeps its own text as its accessible name, while its hit
+     area covers the card. `position: relative` on the card is what bounds it. */
+  .partner__link::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+  }
+
+  /* The focus ring must follow the link's real box, not the stretched pseudo-element,
+     or a keyboard user sees the whole card outlined with no idea what is focused. */
+  .partner__link:focus-visible {
+    outline: 3px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+
+  .partner__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+  }
+
+  .partner__logo,
+  .partner__mark {
+    inline-size: 3rem;
+    block-size: 3rem;
+    border-radius: var(--radius);
+    flex: none;
+  }
+
+  .partner__logo {
+    object-fit: contain;
+    background: var(--color-bg);
+  }
+
+  .partner__mark {
+    display: grid;
+    place-items: center;
+    margin: 0;
+    background: color-mix(in oklab, var(--brand-emerald) 18%, var(--color-bg));
+    font-family: var(--font-display);
+    font-weight: var(--weight-bold);
+  }
+
+  .partner__category {
+    font-family: var(--font-mono);
+    font-size: var(--step-label);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-text-dim);
+  }
+
+  .partner__name {
+    font-size: var(--step-h3);
+  }
+
+  .partner__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .partner:hover .partner__link {
+    color: var(--color-link);
+  }
+
+  .partner__sponsored {
+    align-self: flex-start;
+    padding: var(--space-1) var(--space-2-5);
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius-pill);
+    font-family: var(--font-mono);
+    font-size: var(--step-label);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+  }
+
+  .partner__blurb {
+    color: var(--color-text-dim);
+    font-size: var(--step-small);
+  }
+
+  .partner__visit {
+    margin-block-start: auto;
+    padding-block-start: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: var(--step-label);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-link);
+  }
+</style>

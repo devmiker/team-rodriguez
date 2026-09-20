@@ -1,0 +1,68 @@
+---
+/**
+ * Says so when a page is an unreviewed machine translation, and links to the English.
+ *
+ * It renders only when `LOCALE_META[locale].reviewed` is false, so it disappears by
+ * itself the moment a language is marked as read — nobody has to remember to remove it
+ * page by page.
+ *
+ * This is an honesty measure rather than a legal one. A visitor who hits an awkward
+ * sentence should be able to tell whether the business writes badly or the page was
+ * machine-translated, and get to the original either way.
+ */
+import { DEFAULT_LOCALE, LOCALE_META, type Locale } from "../i18n/locales";
+import { pathFor, type PageRef } from "../i18n/routes";
+import { useTranslations } from "../i18n/ui";
+import Icon from "./Icon.astro";
+
+interface Props {
+  page: PageRef;
+  locale: Locale;
+}
+
+const { page, locale } = Astro.props;
+const t = useTranslations(locale);
+const show = !LOCALE_META[locale].reviewed && locale !== DEFAULT_LOCALE;
+---
+
+{
+  show && (
+    /*
+      role="note" rather than <aside>. Inside <main>, an <aside> introduces a
+      complementary landmark, which makes this small notice a top-level region a
+      screen-reader user navigates past. role="note" says what it is without that.
+    */
+    <div class="notice" role="note">
+      <div class="page notice__inner">
+        <Icon name="alert" size="1.1em" />
+        <p>
+          {t("translation.machine")}{" "}
+          <a href={pathFor(page, DEFAULT_LOCALE)} hreflang={DEFAULT_LOCALE} lang={DEFAULT_LOCALE}>
+            {t("translation.readOriginal")}
+          </a>
+        </p>
+      </div>
+    </div>
+  )
+}
+
+<style>
+  .notice {
+    background: var(--color-bg-raised);
+    border-block-end: 1px solid var(--color-line);
+  }
+
+  .notice__inner {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    padding-block: var(--space-3);
+    font-size: var(--step-small);
+    color: var(--color-text-dim);
+  }
+
+  .notice__inner :global(svg) {
+    margin-block-start: 0.15em;
+    color: var(--color-accent);
+  }
+</style>

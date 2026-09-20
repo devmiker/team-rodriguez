@@ -1,0 +1,7 @@
+# Generated at build time by the `seoFiles` integration in astro.config.mjs.
+# This checked-in copy is the pre-launch default and is overwritten in dist/.
+#
+# While LAUNCHED is false in src/data/company.ts, everything is disallowed — a site
+# with placeholder legal pages and unwritten case studies should not be indexed.
+User-agent: *
+Disallow: /

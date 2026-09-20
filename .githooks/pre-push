@@ -1,0 +1,8 @@
+#!/bin/sh
+# Runs `npm run verify` before a push, so CI is not where you find out.
+#
+# Enabled by `npm install` (see the "prepare" script in package.json), which points
+# core.hooksPath at this directory. Skip it for a one-off with `git push --no-verify`.
+set -e
+echo "pre-push: running npm run verify…"
+npm run verify

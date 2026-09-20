@@ -1,0 +1,123 @@
+/* Small-screen navigation panel.
+ *
+ * Global selectors, namespaced under .mobile-nav — Astro's style scoping does not
+ * reach React islands. Only tokens, no literal colours.
+ */
+
+.mobile-nav__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--target-min);
+  block-size: var(--target-min);
+  padding: 0;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+  color: inherit;
+  cursor: pointer;
+}
+
+.mobile-nav__button:hover {
+  border-color: var(--color-line-on-band);
+}
+
+.mobile-nav__scrim {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-overlay);
+  background: var(--overlay);
+}
+
+.mobile-nav__panel {
+  position: fixed;
+  inset-block: 0;
+  inset-inline-end: 0;
+  z-index: var(--z-dialog);
+  inline-size: min(22rem, 88vw);
+  padding: var(--space-16) var(--space-6) var(--space-8);
+  overflow-y: auto;
+  background: var(--color-bg);
+  color: var(--color-text);
+  border-inline-start: 1px solid var(--color-line);
+  box-shadow: var(--shadow-card);
+}
+
+/* `hidden` on a positioned element is overridden by the display above in some
+   browsers, so it is restated. Without this the panel is present and focusable
+   while closed. */
+.mobile-nav__panel[hidden] {
+  display: none;
+}
+
+.mobile-nav__links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-1);
+}
+
+.mobile-nav__links a {
+  display: flex;
+  align-items: center;
+  min-block-size: var(--target-min);
+  padding: var(--space-3);
+  border-radius: var(--radius);
+  font-family: var(--font-display);
+  font-size: var(--step-h3);
+  font-weight: var(--weight-bold);
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.mobile-nav__links a:hover {
+  background: var(--color-bg-raised);
+}
+
+.mobile-nav__links a[aria-current="page"] {
+  color: var(--color-link);
+  box-shadow: inset 2px 0 0 var(--color-accent);
+}
+
+.mobile-nav__langs {
+  margin-block-start: var(--space-8);
+  padding-block-start: var(--space-6);
+  border-block-start: 1px solid var(--color-line);
+}
+
+.mobile-nav__langs-heading {
+  font-family: var(--font-mono);
+  font-size: var(--step-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--color-text-dim);
+}
+
+.mobile-nav__langs ul {
+  list-style: none;
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-1);
+}
+
+.mobile-nav__langs a {
+  display: flex;
+  align-items: center;
+  min-block-size: var(--target-min);
+  padding-inline: var(--space-3);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-dim);
+  text-decoration: none;
+}
+
+.mobile-nav__langs a:hover {
+  color: var(--color-text);
+  background: var(--color-bg-raised);
+}
+
+.mobile-nav__langs a[aria-current="true"] {
+  color: var(--color-on-accent);
+  background: var(--color-accent);
+}

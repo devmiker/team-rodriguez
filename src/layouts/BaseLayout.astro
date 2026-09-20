@@ -1,0 +1,91 @@
+---
+/**
+ * The shell every page renders inside: document head, skip link, header, main landmark
+ * and footer.
+ *
+ *   <BaseLayout page={{ route: "services" }} title="Services" description="…">
+ *
+ * The language comes from the URL via `Astro.currentLocale`, never from a prop, so a
+ * page cannot declare one language while living under another's path.
+ *
+ * Page-specific head content — extra JSON-LD, a preload — goes in the `head` slot.
+ */
+import { Font } from "astro:assets";
+import Seo from "../components/Seo.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import ThemeScript from "../components/ThemeScript.astro";
+import TranslationNotice from "../components/TranslationNotice.astro";
+import LanguageSwitcher from "../components/LanguageSwitcher.astro";
+import { LOCALE_META, toLocale } from "../i18n/locales";
+import type { PageRef } from "../i18n/routes";
+import { useTranslations } from "../i18n/ui";
+import "../styles/global.css";
+
+interface Props {
+  page: PageRef;
+  title: string;
+  description: string;
+  noindex?: boolean;
+}
+
+const { page, title, description, noindex } = Astro.props;
+const locale = toLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+---
+
+<!doctype html>
+<html lang={locale} dir={LOCALE_META[locale].dir}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    {/* Before anything else that paints, or the page flashes the wrong theme. */}
+    <ThemeScript />
+
+    {/* SVG only. Every browser released in the last several years supports it, and a
+        second .ico is another request for the handful that do not.
+        TODO: add public/apple-touch-icon.png (180x180) before launch — iOS ignores
+        SVG favicons and falls back to a screenshot of the page. */}
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    {/*
+      No <link rel="preload"> for fonts. Each family is split by unicode-range, and
+      preloading would force every file down on every page regardless of what the page
+      actually renders. The browser fetches only what it needs, and the fallback
+      metrics declared in astro.config.mjs keep layout shift small meanwhile.
+    */}
+    <Font cssVariable="--font-space-grotesk" />
+    <Font cssVariable="--font-inter" />
+    <Font cssVariable="--font-jetbrains-mono" />
+
+    <Seo page={page} locale={locale} title={title} description={description} noindex={noindex} />
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">{t("a11y.skipToContent")}</a>
+
+    <SiteHeader page={page} locale={locale} />
+
+    <main id="main" tabindex="-1">
+      {/* Inside <main>, not above it — see the note in TranslationNotice.astro. */}
+      <TranslationNotice page={page} locale={locale} />
+      <slot />
+    </main>
+
+    <SiteFooter locale={locale}>
+      <LanguageSwitcher slot="languages" page={page} locale={locale} />
+    </SiteFooter>
+  </body>
+</html>
+
+<style>
+  /* `tabindex="-1"` makes <main> focusable so the skip link can move focus to it.
+     Browsers draw a focus ring on a programmatically focused element, which here is
+     a ring around the entire page — so it is suppressed on this one element only.
+     The visitor already knows where they went: they just clicked the link that
+     took them there. */
+  main:focus {
+    outline: none;
+  }
+</style>

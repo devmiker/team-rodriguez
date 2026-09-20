@@ -1,0 +1,70 @@
+---
+/**
+ * Everything in <head> that a search engine or a link preview reads.
+ *
+ * Canonical, hreflang and Open Graph all come from `seoFor()`, which builds them with
+ * the same `pathFor()` the navigation uses — so the URL announced here is by
+ * construction a URL that exists.
+ */
+import { COMPANY, absoluteUrl } from "../data/company";
+import type { Locale } from "../i18n/locales";
+import type { PageRef } from "../i18n/routes";
+import { useTranslations } from "../i18n/ui";
+import { seoFor, organizationJsonLd, webPageJsonLd } from "../lib/seo";
+import JsonLd from "./JsonLd.astro";
+
+interface Props {
+  page: PageRef;
+  locale: Locale;
+  title: string;
+  description: string;
+  noindex?: boolean;
+}
+
+const { page, locale, title, description, noindex } = Astro.props;
+const t = useTranslations(locale);
+const seo = seoFor(page, locale, { noindex });
+
+/** The <title>. The home page's title already names the company, so it is not doubled. */
+const documentTitle = page.route === "home" ? title : `${title} — ${t("site.name")}`;
+
+const organization = organizationJsonLd(locale);
+const webPage = webPageJsonLd(page, locale, documentTitle, description);
+---
+
+<title>{documentTitle}</title>
+<meta name="description" content={description} />
+
+{
+  /* Only emit a canonical when we know the production origin. A canonical pointing at
+     a placeholder domain is worse than none — it tells a search engine the real page
+     lives somewhere that does not exist. */
+  Astro.site && <link rel="canonical" href={seo.canonical} />
+}
+
+{
+  Astro.site &&
+    seo.alternates.map(({ hreflang, href }) => (
+      <link rel="alternate" hreflang={hreflang} href={href} />
+    ))
+}
+
+{seo.noindex && <meta name="robots" content="noindex, nofollow" />}
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content={t("site.name")} />
+<meta property="og:title" content={documentTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:locale" content={seo.ogLocale} />
+{seo.ogLocaleAlternates.map((og) => <meta property="og:locale:alternate" content={og} />)}
+{Astro.site && <meta property="og:url" content={seo.canonical} />}
+{Astro.site && <meta property="og:image" content={absoluteUrl("/og.png")} />}
+{
+  /* Alt text on the preview image, for the screen readers that read link previews. */
+  Astro.site && <meta property="og:image:alt" content={COMPANY.name} />
+}
+
+<meta name="twitter:card" content="summary_large_image" />
+
+{organization && <JsonLd data={organization} />}
+{webPage && <JsonLd data={webPage} />}

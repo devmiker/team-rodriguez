@@ -1,0 +1,263 @@
+/* Team Rodriguez — design tokens
+ *
+ * No colour value appears anywhere else in the codebase. If you find yourself typing a
+ * hex code in a component, the token you need is missing — add it here instead.
+ *
+ * Two layers:
+ *   1. Brand — fixed values, identical in both themes. Never used directly by a
+ *      component; they exist so the semantic layer has something to point at.
+ *   2. Semantic (--color-*) — what components actually use. These switch with the
+ *      theme, which is why a component never needs a dark-mode override.
+ *
+ * Every semantic text/background pair is checked against WCAG AA by tokens.test.ts, in
+ * both themes. Add a pair here and add it to that test, or the contrast guarantee
+ * quietly stops covering the whole palette.
+ *
+ * The palette: emerald as the accent that carries action and identity, navy as the
+ * structural dark. Emerald is a difficult colour to use honestly — the bright, vivid
+ * value everyone reaches for (#10b981) fails contrast against white at body size
+ * (2.8:1), so it never sits behind or acts as text in the light theme. Two derivatives
+ * do that work: a deepened emerald for light backgrounds, a brightened one for dark.
+ */
+
+:root {
+  /* --- 1. Brand ---------------------------------------------------------- */
+
+  /* The signature emerald. Flat decoration, logo, large display fills and
+     borders only — NEVER text, and never a field behind text in the light theme,
+     where it reaches only 2.79:1 on white. */
+  --brand-emerald: #10b981;
+
+  /* Light-theme accent: buttons, links, focus rings. Darkened until white text on it
+     reaches 6.50:1 and it reads as a link on both light surfaces. */
+  --brand-emerald-deep: #046b52;
+  --brand-emerald-deeper: #035744; /* hover / pressed */
+
+  /* Dark-theme accent: the same hue lifted until it carries text weight on navy
+     (10.11:1). Text on top of it is always --brand-ink-emerald. */
+  --brand-emerald-bright: #34d8a0;
+  --brand-emerald-brighter: #5ce4b6; /* hover / pressed */
+  --brand-ink-emerald: #04231c;
+
+  /* Navy: the structural dark. Bands, headers, footers, and the dark theme's page. */
+  --brand-navy: #0d1b2a;
+  --brand-navy-deep: #050d16;
+  --brand-navy-raised: #13243a;
+
+  --brand-mist: #f1f6f4; /* light raised surface, faintly green so it sits with emerald */
+  --brand-white: #ffffff;
+
+  /* Reserved for genuine errors. Not a decorative colour. */
+  --brand-danger: #b3261e;
+  --brand-danger-bright: #ff9d94;
+
+  /* --- 2. Semantic — light theme (default) ------------------------------- */
+
+  color-scheme: light;
+
+  --color-bg: #ffffff;
+  --color-bg-raised: #f1f6f4;
+  /* Header, footer, and any section that inverts. */
+  --color-bg-band: #0d1b2a;
+
+  --color-text: #0d1b2a;
+  --color-text-dim: #4a5a6a;
+  --color-text-on-band: #e8eef5;
+  --color-text-dim-on-band: #a3b4c7;
+
+  /* --color-line is decorative separation and is deliberately faint — it does not meet
+     3:1 and must never be the only thing marking an interactive boundary. Anything a
+     visitor has to see and aim at (input borders, control outlines) uses
+     --color-line-strong, which does. */
+  --color-line: #d7e2de;
+  --color-line-strong: #6b7c8c;
+  --color-line-on-band: #24384f;
+
+  --color-link: #046b52;
+  --color-link-on-band: #34d8a0;
+
+  --color-accent: var(--brand-emerald-deep);
+  --color-accent-hover: var(--brand-emerald-deeper);
+  --color-on-accent: var(--brand-white);
+
+  --color-focus: #046b52;
+  --color-focus-on-band: #34d8a0;
+
+  --color-danger: #b3261e;
+  --color-success: #046b52;
+
+  --shadow-card: 0 18px 40px -28px rgb(13 27 42 / 0.4);
+  --shadow-raised: 0 1px 2px rgb(13 27 42 / 0.06), 0 8px 24px -16px rgb(13 27 42 / 0.25);
+  --overlay: rgb(13 27 42 / 0.66);
+}
+
+/* --- Dark theme ---------------------------------------------------------
+ * Applied two ways, and both must stay in step:
+ *   - the device setting, via prefers-color-scheme (works with JavaScript off)
+ *   - an explicit choice, via [data-theme] set by ThemeScript before first paint
+ * The declarations are shared through a custom property block below so there is one
+ * copy of the values, not two.
+ */
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
+    --color-bg: #0b1420;
+    --color-bg-raised: #13243a;
+    --color-bg-band: #050d16;
+
+    --color-text: #e8eef5;
+    --color-text-dim: #9fb1c4;
+    --color-text-on-band: #e8eef5;
+    --color-text-dim-on-band: #9fb1c4;
+
+    --color-line: #1e3350;
+    --color-line-strong: #5d7186;
+    --color-line-on-band: #1a2c44;
+
+    --color-link: #34d8a0;
+    --color-link-on-band: #34d8a0;
+
+    --color-accent: var(--brand-emerald-bright);
+    --color-accent-hover: var(--brand-emerald-brighter);
+    --color-on-accent: var(--brand-ink-emerald);
+
+    --color-focus: #34d8a0;
+    --color-focus-on-band: #34d8a0;
+
+    --color-danger: #ff9d94;
+    --color-success: #34d8a0;
+
+    --shadow-card: 0 18px 40px -24px rgb(0 0 0 / 0.7);
+    --shadow-raised: 0 1px 2px rgb(0 0 0 / 0.5), 0 8px 24px -16px rgb(0 0 0 / 0.6);
+    --overlay: rgb(5 13 22 / 0.78);
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --color-bg: #0b1420;
+  --color-bg-raised: #13243a;
+  --color-bg-band: #050d16;
+
+  --color-text: #e8eef5;
+  --color-text-dim: #9fb1c4;
+  --color-text-on-band: #e8eef5;
+  --color-text-dim-on-band: #9fb1c4;
+
+  --color-line: #1e3350;
+  --color-line-strong: #5d7186;
+  --color-line-on-band: #1a2c44;
+
+  --color-link: #34d8a0;
+  --color-link-on-band: #34d8a0;
+
+  --color-accent: var(--brand-emerald-bright);
+  --color-accent-hover: var(--brand-emerald-brighter);
+  --color-on-accent: var(--brand-ink-emerald);
+
+  --color-focus: #34d8a0;
+  --color-focus-on-band: #34d8a0;
+
+  --color-danger: #ff9d94;
+  --color-success: #34d8a0;
+
+  --shadow-card: 0 18px 40px -24px rgb(0 0 0 / 0.7);
+  --shadow-raised: 0 1px 2px rgb(0 0 0 / 0.5), 0 8px 24px -16px rgb(0 0 0 / 0.6);
+  --overlay: rgb(5 13 22 / 0.78);
+}
+
+/* --- Type ----------------------------------------------------------------
+ * Families are declared in astro.config.mjs (Astro Fonts API, self-hosted from the
+ * @fontsource packages) and rendered by <Font /> in the layout. Do NOT add a
+ * <link> to fonts.googleapis.com: that is a third-party request on every page load,
+ * it would need a CSP exception, and in the EU it is a personal-data transfer that
+ * requires consent. Self-hosting avoids all three.
+ */
+
+:root {
+  --font-display: var(--font-space-grotesk);
+  --font-body: var(--font-inter);
+  --font-mono: var(--font-jetbrains-mono);
+
+  /* --- Scale ---
+     Fluid where the size should track the viewport, fixed where it should not.
+     A heading that grows with the screen is a heading; body text that does is a
+     readability problem. */
+
+  --step-hero: clamp(2.75rem, 7vw, 5rem);
+  --step-display: clamp(2.25rem, 5.5vw, 3.75rem);
+  --step-h1: clamp(2rem, 4.5vw, 3rem);
+  --step-h2: clamp(1.625rem, 3.2vw, 2.25rem);
+  --step-h3: 1.3125rem;
+  --step-lead: clamp(1.0625rem, 1.6vw, 1.25rem);
+  --step-body: 1rem;
+  --step-small: 0.875rem;
+  --step-label: 0.75rem;
+
+  --tracking-display: -0.02em;
+  --tracking-tight: -0.01em;
+  --tracking-label: 0.12em;
+
+  --leading-display: 1.05;
+  --leading-heading: 1.15;
+  --leading-body: 1.65;
+
+  --weight-body: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  /* --- Space ---
+     One ramp in quarter-rem steps: --space-N is N × 0.25rem, so the number IS the
+     size. Two half steps earn their place because controls need finer spacing than a
+     quarter rem allows. */
+
+  --space-1: 0.25rem;
+  --space-1-5: 0.375rem;
+  --space-2: 0.5rem;
+  --space-2-5: 0.625rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+
+  /* Vertical rhythm between page sections is fluid, so it is its own short scale. */
+  --rhythm-tight: clamp(2.5rem, 5vw, 3.5rem);
+  --rhythm: clamp(3.5rem, 7vw, 5.5rem);
+  --rhythm-loose: clamp(4.5rem, 9vw, 7.5rem);
+
+  /* --- Measure, radius, motion --- */
+
+  --measure: 68ch;
+  --measure-narrow: 46ch;
+  --page-max: 78rem;
+  --page-gutter: clamp(1rem, 4vw, 2.5rem);
+
+  --radius-sm: 0.375rem;
+  --radius: 0.625rem;
+  --radius-lg: 1rem;
+  --radius-pill: 999px;
+
+  /* The smallest a pointer target is allowed to be (WCAG 2.2 Target Size, 24×24 CSS
+     px minimum; 44 is the comfortable figure and what we use for anything a thumb
+     reaches for). targetSize.test.ts enforces that controls declare one of these. */
+  --target-min: 44px;
+
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+  --duration-fast: 120ms;
+  --duration: 220ms;
+
+  --z-header: 100;
+  --z-overlay: 200;
+  --z-dialog: 300;
+  --z-skip-link: 400;
+}

@@ -1,0 +1,157 @@
+---
+/**
+ * One service: icon, name, summary, starting price, what is included, and — because
+ * the team page and the services page describe the same work from two directions —
+ * who on the team actually takes it on.
+ *
+ * `detailed` switches between the short card used on the home page and the full entry
+ * used on the services page. One component rather than two keeps the two views from
+ * describing the same service differently.
+ */
+import type { Locale } from "../i18n/locales";
+import { localized } from "../i18n/locales";
+import { useTranslations } from "../i18n/ui";
+import type { Service } from "../data/services";
+import { teamForService } from "../data/team";
+import type { IconName } from "./iconPaths";
+import Icon from "./Icon.astro";
+
+interface Props {
+  service: Service;
+  locale: Locale;
+  detailed?: boolean;
+  /** Heading level, so the card fits whatever section it is dropped into. */
+  as?: "h2" | "h3";
+}
+
+const { service, locale, detailed = false, as: Heading = "h3" } = Astro.props;
+const t = useTranslations(locale);
+const people = detailed ? teamForService(service.id) : [];
+
+/** Prices are formatted in the visitor's language: "$3,500" / "3.500 $". */
+const price =
+  service.priceFrom === undefined
+    ? undefined
+    : new Intl.NumberFormat(locale, {
+        style: "currency",
+        currency: service.currency,
+        maximumFractionDigits: 0,
+      }).format(service.priceFrom);
+---
+
+<article class="service card">
+  <Icon name={service.icon as IconName} size="1.75rem" class="service__icon" />
+
+  <Heading class="service__name">{localized(service.name, locale)}</Heading>
+
+  {price && (
+    <p class="service__price">
+      <span class="service__price-label">{t("services.from")}</span>
+      <span class="service__price-value">{price}</span>
+    </p>
+  )}
+
+  <p class="service__summary">{localized(service.summary, locale)}</p>
+
+  {
+    detailed && (
+      <>
+        <h4 class="service__sub">{t("services.includes")}</h4>
+        <ul class="service__list">
+          {service.includes.map((item) => (
+            <li>
+              <Icon name="check" size="1.1em" class="service__check" />
+              <span>{localized(item, locale)}</span>
+            </li>
+          ))}
+        </ul>
+
+        {people.length > 0 && (
+          <p class="service__people">
+            <span class="service__sub">{t("services.who")}</span>
+            <span>{people.map((p) => p.name).join(", ")}</span>
+          </p>
+        )}
+      </>
+    )
+  }
+</article>
+
+<style>
+  .service {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .service__icon {
+    color: var(--color-accent);
+  }
+
+  .service__name {
+    font-size: var(--step-h3);
+  }
+
+  .service__price {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-2);
+    margin: 0;
+  }
+
+  .service__price-label {
+    font-family: var(--font-mono);
+    font-size: var(--step-label);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-text-dim);
+  }
+
+  .service__price-value {
+    font-family: var(--font-display);
+    font-size: var(--step-h3);
+    font-weight: var(--weight-bold);
+  }
+
+  .service__summary {
+    color: var(--color-text-dim);
+  }
+
+  .service__sub {
+    font-family: var(--font-mono);
+    font-size: var(--step-label);
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-text-dim);
+    margin-block-start: var(--space-2);
+  }
+
+  .service__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .service__list li {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-2);
+    font-size: var(--step-small);
+  }
+
+  .service__check {
+    margin-block-start: 0.28em;
+    color: var(--color-accent);
+  }
+
+  .service__people {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    margin: 0;
+    font-size: var(--step-small);
+  }
+</style>

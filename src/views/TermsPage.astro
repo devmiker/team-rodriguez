@@ -1,0 +1,39 @@
+---
+/**
+ * Terms of service.
+ *
+ * Genuinely not written yet, so the page says so and is not indexed. Terms have to be
+ * drafted against the company's real client contracts; a generic template copied off
+ * the internet is worse than an honest placeholder, because it creates the impression
+ * that terms exist and were agreed.
+ */
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHero from "../components/PageHero.astro";
+import PendingNotice from "../components/PendingNotice.astro";
+import { toLocale } from "../i18n/locales";
+import { pathFor } from "../i18n/routes";
+import { useTranslations } from "../i18n/ui";
+import { TERMS_SUPPLIED } from "../data/legal";
+
+const locale = toLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+---
+
+<BaseLayout
+  page={{ route: "terms" }}
+  title={t("terms.title")}
+  description={t("terms.description")}
+  noindex={!TERMS_SUPPLIED}
+>
+  <PageHero heading={t("terms.heading")} />
+
+  <section class="section">
+    <div class="page">
+      <PendingNotice
+        message={t("terms.pending")}
+        actionHref={pathFor({ route: "contact" }, locale)}
+        actionLabel={t("home.cta.button")}
+      />
+    </div>
+  </section>
+</BaseLayout>

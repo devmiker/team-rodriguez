@@ -1,0 +1,50 @@
+---
+/**
+ * What a page shows when its content genuinely is not ready yet.
+ *
+ * The alternative — inventing three case studies and a testimonial — is the thing this
+ * component exists to prevent. A page that says "we are writing these up, ask us on a
+ * call" costs a visitor nothing and costs the business nothing. A page with fabricated
+ * clients on it costs the business everything the first time someone checks.
+ *
+ * Pages using this should also pass `noindex` to the layout, so a placeholder does not
+ * become the page that ranks for the company's name.
+ */
+import Icon from "./Icon.astro";
+
+interface Props {
+  message: string;
+  /** Optional call to action, e.g. a link to the contact page. */
+  actionHref?: string;
+  actionLabel?: string;
+}
+
+const { message, actionHref, actionLabel } = Astro.props;
+---
+
+<div class="pending card">
+  <Icon name="alert" size="1.5rem" class="pending__icon" />
+  <p>{message}</p>
+  {
+    actionHref && actionLabel && (
+      <a class="button button--primary" href={actionHref}>
+        {actionLabel}
+        <Icon name="arrowRight" size="1.05em" />
+      </a>
+    )
+  }
+</div>
+
+<style>
+  .pending {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-4);
+    max-width: var(--measure);
+  }
+
+  .pending__icon {
+    color: var(--color-accent);
+  }
+</style>

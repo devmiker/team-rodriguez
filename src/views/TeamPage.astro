@@ -1,0 +1,54 @@
+---
+/**
+ * The team page: everyone who is published, and the services each of them takes on.
+ *
+ * While nobody's profile is finished the page shows the pending notice instead of an
+ * empty grid, and passes `noindex` so a placeholder does not become the page that
+ * ranks for the company's name.
+ */
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHero from "../components/PageHero.astro";
+import PendingNotice from "../components/PendingNotice.astro";
+import TeamCard from "../components/TeamCard.astro";
+import { toLocale } from "../i18n/locales";
+import { pathFor } from "../i18n/routes";
+import { useTranslations } from "../i18n/ui";
+import { publishedTeam } from "../data/team";
+
+const locale = toLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+const team = publishedTeam();
+---
+
+<BaseLayout
+  page={{ route: "team" }}
+  title={t("team.title")}
+  description={t("team.description")}
+  noindex={team.length === 0}
+>
+  <PageHero
+    eyebrow={t("home.team.eyebrow")}
+    heading={t("team.heading")}
+    lead={t("team.lead")}
+  />
+
+  <section class="section">
+    <div class="page">
+      {
+        team.length > 0 ? (
+          <div class="grid grid--3">
+            {team.map((member) => (
+              <TeamCard member={member} locale={locale} />
+            ))}
+          </div>
+        ) : (
+          <PendingNotice
+            message={t("team.pending")}
+            actionHref={pathFor({ route: "contact" }, locale)}
+            actionLabel={t("home.cta.button")}
+          />
+        )
+      }
+    </div>
+  </section>
+</BaseLayout>

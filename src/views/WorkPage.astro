@@ -1,0 +1,134 @@
+---
+/**
+ * Selected work.
+ *
+ * Shows only case studies flagged `published` in src/data/work.ts. While none are,
+ * the page says the write-ups are in progress and offers a call instead — which is
+ * true, costs nothing, and is a great deal better than three invented clients.
+ */
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHero from "../components/PageHero.astro";
+import PendingNotice from "../components/PendingNotice.astro";
+import Icon from "../components/Icon.astro";
+import { localized, toLocale } from "../i18n/locales";
+import { pathFor } from "../i18n/routes";
+import { useTranslations } from "../i18n/ui";
+import { publishedCaseStudies } from "../data/work";
+
+const locale = toLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+const studies = publishedCaseStudies();
+---
+
+<BaseLayout
+  page={{ route: "work" }}
+  title={t("work.title")}
+  description={t("work.description")}
+  noindex={studies.length === 0}
+>
+  <PageHero heading={t("work.heading")} lead={t("work.lead")} />
+
+  <section class="section">
+    <div class="page">
+      {
+        studies.length > 0 ? (
+          <div class="grid grid--2">
+            {studies.map((study) => (
+              <article class="study card">
+                <p class="study__meta">
+                  <span>{study.client}</span>
+                  <span aria-hidden="true">·</span>
+                  <span>{study.year}</span>
+                </p>
+                <h2 class="study__title">{localized(study.title, locale)}</h2>
+                <p class="study__brief">{localized(study.brief, locale)}</p>
+                <p class="study__approach">{localized(study.approach, locale)}</p>
+
+                {study.result && (
+                  <p class="study__result">
+                    <span class="study__label">{t("work.result")}</span>
+                    <span>{localized(study.result, locale)}</span>
+                  </p>
+                )}
+
+                <p class="study__stack">
+                  <span class="study__label">{t("work.stack")}</span>
+                  <span>{study.stack.join(" · ")}</span>
+                </p>
+
+                {study.url && (
+                  <a href={study.url} rel="noopener" target="_blank" class="study__link">
+                    {t("work.visit")}
+                    <Icon name="external" size="0.9em" />
+                  </a>
+                )}
+              </article>
+            ))}
+          </div>
+        ) : (
+          <PendingNotice
+            message={t("work.pending")}
+            actionHref={pathFor({ route: "contact" }, locale)}
+            actionLabel={t("home.cta.button")}
+          />
+        )
+      }
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .study {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .study__meta {
+    display: flex;
+    gap: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: var(--step-label);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-text-dim);
+  }
+
+  .study__title {
+    font-size: var(--step-h3);
+  }
+
+  .study__brief,
+  .study__approach {
+    color: var(--color-text-dim);
+  }
+
+  .study__label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: var(--step-label);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-text-dim);
+  }
+
+  .study__result {
+    padding: var(--space-4);
+    border-inline-start: 3px solid var(--color-accent);
+    background: var(--color-bg);
+    border-radius: var(--radius-sm);
+  }
+
+  .study__stack {
+    font-size: var(--step-small);
+  }
+
+  .study__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-block-size: var(--target-min);
+    margin-block-start: auto;
+    font-weight: var(--weight-semibold);
+  }
+</style>

@@ -1,0 +1,46 @@
+---
+/**
+ * Where a form submitted without JavaScript lands.
+ *
+ * Never linked from anywhere and marked `noindex` in ROUTES, so reaching it any other
+ * way just shows a message and a way back rather than looking like a broken page.
+ */
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Icon from "../components/Icon.astro";
+import { toLocale } from "../i18n/locales";
+import { pathFor } from "../i18n/routes";
+import { useTranslations } from "../i18n/ui";
+
+const locale = toLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+---
+
+<BaseLayout
+  page={{ route: "thanks" }}
+  title={t("thanks.title")}
+  description={t("thanks.description")}
+>
+  <section class="section">
+    <div class="page thanks">
+      <Icon name="check" size="2.5rem" class="thanks__icon" />
+      <h1>{t("thanks.heading")}</h1>
+      <p class="lead">{t("thanks.body")}</p>
+      <a class="button button--secondary" href={pathFor({ route: "home" }, locale)}>
+        {t("thanks.back")}
+      </a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .thanks {
+    display: grid;
+    gap: var(--space-5);
+    justify-items: start;
+    max-width: var(--measure);
+  }
+
+  .thanks__icon {
+    color: var(--color-accent);
+  }
+</style>

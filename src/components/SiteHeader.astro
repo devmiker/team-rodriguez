@@ -1,0 +1,179 @@
+---
+/**
+ * The header: wordmark, primary navigation, language switcher, theme toggle, and the
+ * small-screen menu.
+ *
+ * Desktop navigation and the mobile island render the same link list built here, so
+ * the two can never disagree about what is in the menu.
+ *
+ * The wordmark carries the `<Name />` motif from Mike's portfolio — the angle brackets
+ * are decorative, so they are marked `aria-hidden` and a screen reader hears the
+ * company name on its own rather than "less than Team Rodriguez slash greater than".
+ */
+import { LOCALE_META, LOCALES, type Locale } from "../i18n/locales";
+import { NAV_ROUTES, pathFor, type PageRef } from "../i18n/routes";
+import { useTranslations } from "../i18n/ui";
+import LanguageSwitcher from "./LanguageSwitcher.astro";
+import ThemeToggle from "./ThemeToggle.astro";
+import MobileNav from "./islands/MobileNav.tsx";
+
+interface Props {
+  page: PageRef;
+  locale: Locale;
+}
+
+const { page, locale } = Astro.props;
+const t = useTranslations(locale);
+
+const links = NAV_ROUTES.map((route) => ({
+  href: pathFor({ route }, locale),
+  label: t(`${route}.title` as Parameters<typeof t>[0]),
+  current: route === page.route,
+}));
+
+const languages = LOCALES.map((l) => ({
+  href: pathFor(page, l),
+  code: l,
+  name: LOCALE_META[l].name,
+  current: l === locale,
+}));
+---
+
+<header class="header band on-band">
+  <div class="page header__inner">
+    <a class="wordmark" href={pathFor({ route: "home" }, locale)}>
+      <span aria-hidden="true" class="wordmark__bracket">&lt;</span>
+      <span>{t("site.name")}</span>
+      <span aria-hidden="true" class="wordmark__bracket">/&gt;</span>
+    </a>
+
+    <nav class="nav" aria-label={t("nav.label")}>
+      <ul>
+        {
+          links.map((link) => (
+            <li>
+              <a href={link.href} aria-current={link.current ? "page" : undefined}>
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="header__tools">
+      <LanguageSwitcher page={page} locale={locale} class="header__langs" />
+      <ThemeToggle locale={locale} />
+      <div class="header__mobile">
+        {/*
+          `client:media` so the island's JavaScript is never downloaded on a viewport
+          that will never show it. The markup is server-rendered either way, so the
+          button is present before any script arrives — it simply does nothing until
+          hydration, which on a phone is a few hundred milliseconds.
+        */}
+        <MobileNav
+          client:media="(max-width: 52rem)"
+          links={links}
+          languages={languages}
+          openLabel={t("nav.openMenu")}
+          closeLabel={t("nav.closeMenu")}
+          navLabel={t("nav.label")}
+          languageLabel={t("lang.label")}
+        />
+      </div>
+    </div>
+  </div>
+</header>
+
+<style>
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: var(--z-header);
+    border-block-end: 1px solid var(--color-line-on-band);
+  }
+
+  .header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    min-block-size: var(--space-16);
+  }
+
+  .wordmark {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2em;
+    font-family: var(--font-mono);
+    font-size: var(--step-small);
+    font-weight: var(--weight-bold);
+    letter-spacing: 0.02em;
+    color: var(--color-text-on-band);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .wordmark__bracket {
+    color: var(--color-link-on-band);
+  }
+
+  .nav {
+    display: none;
+    margin-inline-start: auto;
+  }
+
+  .nav ul {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav a {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: var(--target-min);
+    padding-inline: var(--space-3);
+    border-radius: var(--radius-sm);
+    font-size: var(--step-small);
+    font-weight: var(--weight-medium);
+    color: var(--color-text-dim-on-band);
+    text-decoration: none;
+    transition: color var(--duration-fast) var(--ease);
+  }
+
+  .nav a:hover {
+    color: var(--color-text-on-band);
+  }
+
+  /* The current page is marked twice over: colour, and a rule under it. Colour alone
+     would be the only signal for a visitor who cannot distinguish these two greys. */
+  .nav a[aria-current="page"] {
+    color: var(--color-text-on-band);
+    box-shadow: inset 0 -2px 0 var(--color-link-on-band);
+  }
+
+  .header__tools {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .header__langs {
+    display: none;
+  }
+
+  @media (min-width: 52.0625rem) {
+    .nav,
+    .header__langs {
+      display: block;
+    }
+
+    .header__mobile {
+      display: none;
+    }
+  }
+</style>

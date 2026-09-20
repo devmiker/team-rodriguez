@@ -1,0 +1,21 @@
+---
+/**
+ * A structured-data block.
+ *
+ * `set:html` with `JSON.stringify` rather than interpolation: `</script>` appearing
+ * inside a string value would otherwise close the element early and turn the rest of
+ * the data into markup. `JSON.stringify` escapes the quotes but not the slash, so the
+ * one remaining sequence is escaped explicitly below.
+ *
+ * This block is data, not code — the browser never executes it — which is why
+ * `script-src` in the CSP does not apply to it and it is not hashed. See src/lib/csp.ts.
+ */
+interface Props {
+  data: Record<string, unknown>;
+}
+
+const { data } = Astro.props;
+const json = JSON.stringify(data).replace(/</g, "\\u003c");
+---
+
+<script type="application/ld+json" is:inline set:html={json} />

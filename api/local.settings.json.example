@@ -1,0 +1,15 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "FUNCTIONS_WORKER_RUNTIME": "node",
+    "AzureWebJobsStorage": "",
+
+    "COMMENT_1": "Copy this file to local.settings.json (gitignored) and fill in real values.",
+    "COMMENT_2": "In Azure these live in the Static Web App's Configuration -> Application settings, never in the repo.",
+
+    "CONTACT_TO": "you@example.com",
+    "CONTACT_FROM": "Team Rodriguez <website@your-verified-domain.com>",
+    "RESEND_API_KEY": "re_xxxxxxxxxxxxxxxxxxxx",
+    "ALLOWED_ORIGIN": "http://localhost:4321"
+  }
+}

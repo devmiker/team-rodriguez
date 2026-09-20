@@ -1,0 +1,169 @@
+---
+/**
+ * The contact page.
+ *
+ * All the form's text is resolved here, in the page's language, and handed to the
+ * island as a plain object. The island itself imports no translation machinery, which
+ * keeps the string tables for three languages out of the client bundle — only the
+ * handful of strings this page actually uses gets serialised into the HTML.
+ *
+ * The form is `client:visible`: it is server-rendered and works without JavaScript, so
+ * there is no reason to hydrate it before it is on screen.
+ */
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHero from "../components/PageHero.astro";
+import Icon from "../components/Icon.astro";
+import ContactForm from "../components/islands/ContactForm.tsx";
+import { COMPANY } from "../data/company";
+import { toLocale } from "../i18n/locales";
+import { pathFor } from "../i18n/routes";
+import { useTranslations } from "../i18n/ui";
+import { BUDGETS, PROJECT_TYPES, TIMELINES } from "../lib/contact";
+
+const locale = toLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+
+/** Enumerated option labels, built from the same lists the validator checks against. */
+const projectTypeOptions = Object.fromEntries(
+  PROJECT_TYPES.map((v) => [v, t(`form.projectType.${v}` as Parameters<typeof t>[0])]),
+);
+const budgetOptions = Object.fromEntries(
+  BUDGETS.map((v) => [v, t(`form.budget.${v}` as Parameters<typeof t>[0])]),
+);
+const timelineOptions = Object.fromEntries(
+  TIMELINES.map((v) => [v, t(`form.timeline.${v}` as Parameters<typeof t>[0])]),
+);
+
+const labels = {
+  name: t("form.name.label"),
+  nameError: t("form.name.error"),
+  email: t("form.email.label"),
+  emailHint: t("form.email.hint"),
+  emailError: t("form.email.error"),
+  company: t("form.company.label"),
+  optional: t("form.company.optional"),
+  projectType: t("form.projectType.label"),
+  projectTypePlaceholder: t("form.projectType.placeholder"),
+  projectTypeError: t("form.projectType.error"),
+  projectTypeOptions,
+  budget: t("form.budget.label"),
+  budgetHint: t("form.budget.hint"),
+  budgetOptions,
+  timeline: t("form.timeline.label"),
+  timelineOptions,
+  message: t("form.message.label"),
+  messageHint: t("form.message.hint"),
+  messageError: t("form.message.error"),
+  messageTooLong: t("form.message.tooLong"),
+  required: t("form.required"),
+  submit: t("form.submit"),
+  submitting: t("form.submitting"),
+  errorSummaryHeading: t("form.errorSummary.heading"),
+  successHeading: t("form.success.heading"),
+  successBody: t("form.success.body"),
+  failureHeading: t("form.failure.heading"),
+  failureBody: t("form.failure.body"),
+  rateLimited: t("form.rateLimited"),
+  noscript: t("form.noscript"),
+};
+---
+
+<BaseLayout
+  page={{ route: "contact" }}
+  title={t("contact.title")}
+  description={t("contact.description")}
+>
+  <PageHero heading={t("contact.heading")} lead={t("contact.lead")} />
+
+  <section class="section">
+    <div class="page contact">
+      <div class="contact__form">
+        <ContactForm
+          client:visible
+          labels={labels}
+          redirectTo={pathFor({ route: "thanks" }, locale)}
+        />
+      </div>
+
+      <aside class="contact__aside" aria-label={t("contact.response.heading")}>
+        <div class="card">
+          <h2 class="contact__heading">{t("contact.response.heading")}</h2>
+          <p>{t("contact.response.body")}</p>
+        </div>
+
+        <div class="card">
+          <h2 class="contact__heading">{t("contact.direct.heading")}</h2>
+          <p>{t("contact.direct.body")}</p>
+          <p class="contact__email">
+            <a href={`mailto:${COMPANY.email}`}>
+              <Icon name="mail" size="1em" />
+              <span>{COMPANY.email}</span>
+            </a>
+          </p>
+        </div>
+
+        <p class="contact__privacy">
+          <Icon name="shield" size="1.1em" class="contact__shield" />
+          <span>{t("contact.privacy")}</span>
+        </p>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .contact {
+    display: grid;
+    gap: var(--rhythm-tight);
+    align-items: start;
+  }
+
+  @media (min-width: 64rem) {
+    .contact {
+      grid-template-columns: minmax(0, 1.6fr) minmax(18rem, 1fr);
+      gap: var(--space-16);
+    }
+  }
+
+  .contact__aside {
+    display: grid;
+    gap: var(--space-5);
+  }
+
+  .contact__heading {
+    font-size: var(--step-h3);
+    margin-block-end: var(--space-3);
+  }
+
+  .contact__aside p {
+    font-size: var(--step-small);
+    color: var(--color-text-dim);
+  }
+
+  .contact__email {
+    margin-block-start: var(--space-3);
+  }
+
+  .contact__email a {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-block-size: var(--target-min);
+    font-weight: var(--weight-semibold);
+    overflow-wrap: anywhere;
+  }
+
+  .contact__privacy {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    font-size: var(--step-small);
+    color: var(--color-text-dim);
+  }
+
+  .contact__shield {
+    margin-block-start: 0.2em;
+    color: var(--color-accent);
+    flex: none;
+  }
+</style>

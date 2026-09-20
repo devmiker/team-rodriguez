@@ -1,0 +1,26 @@
+---
+/**
+ * Applies a saved theme choice before first paint.
+ *
+ * This has to be inline and render-blocking in <head>. A bundled module runs after
+ * first paint, which means a visitor who chose dark sees a white flash on every
+ * navigation — a small thing that makes a site feel broken, and genuinely unpleasant
+ * in a dark room.
+ *
+ * Kept to four lines on purpose: every byte is hashed into the Content-Security-Policy
+ * at build time, and the logic it mirrors lives — and is tested — in src/lib/theme.ts.
+ *
+ * With no saved choice it does nothing at all, and CSS follows the device setting.
+ */
+import { THEME_ATTRIBUTE, THEME_STORAGE_KEY, THEMES } from "../lib/theme";
+---
+
+<script
+  is:inline
+  define:vars={{ key: THEME_STORAGE_KEY, attribute: THEME_ATTRIBUTE, themes: THEMES }}
+>
+  try {
+    const saved = localStorage.getItem(key);
+    if (themes.includes(saved)) document.documentElement.setAttribute(attribute, saved);
+  } catch {}
+</script>
