@@ -16,3 +16,12 @@ api/local.settings.json
 .DS_Store
 Thumbs.db
 *.swp
+
+# The Claude desktop app writes chat attachments here when a file cannot be saved
+# directly — anything under .github/ is blocked, so the CI workflow arrives this way.
+# Move the file where it belongs; this entry only stops a stray copy being committed.
+Claude outputs/
+
+# Long commit messages get written here and passed with `git commit -F`, which is the
+# only sane way to write a message with real paragraphs on Windows. Never committed.
+commit-msg.txt

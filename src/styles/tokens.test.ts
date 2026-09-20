@@ -149,6 +149,44 @@ describe("the two dark-theme declarations", () => {
   });
 });
 
+describe("the favicon", () => {
+  /**
+   * The favicon is one of the very few places a brand colour legitimately lives
+   * outside tokens.css — it is an asset, not a stylesheet, so `--brand-navy` cannot
+   * reach it.
+   *
+   * That exemption is exactly how it drifted: the navy was lightened across the whole
+   * palette and the favicon kept the old near-black for a day, which nobody would have
+   * noticed until someone compared a browser tab against the header. This test closes
+   * the gap the token layer cannot.
+   */
+  const favicon = readFileSync(
+    fileURLToPath(new URL("../../public/favicon.svg", import.meta.url)),
+    "utf8",
+  );
+
+  it("uses the brand navy as its field", () => {
+    expect(favicon.toLowerCase()).toContain(light["--brand-navy"]!.toLowerCase());
+  });
+
+  it("uses the bright emerald as its mark", () => {
+    // The bright one, not the deep one: the field behind it is navy, so this is the
+    // dark-theme pairing even in a light browser chrome.
+    expect(favicon.toLowerCase()).toContain(light["--brand-emerald-bright"]!.toLowerCase());
+  });
+
+  it("contains no colour that is not a brand token", () => {
+    const brand = new Set(
+      Object.entries(light)
+        .filter(([name]) => name.startsWith("--brand-"))
+        .map(([, value]) => value.toLowerCase()),
+    );
+    for (const hex of favicon.toLowerCase().match(/#[0-9a-f]{6}/g) ?? []) {
+      expect(brand, `favicon uses ${hex}, which is not a --brand-* token`).toContain(hex);
+    }
+  });
+});
+
 describe("the brand layer", () => {
   it("never reaches a component directly — every --color-* is a literal or a brand var", () => {
     for (const [name, value] of Object.entries({ ...light, ...dark })) {

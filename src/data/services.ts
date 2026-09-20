@@ -32,7 +32,7 @@ export const SERVICES: Service[] = [
     id: "website",
     icon: "layout",
     currency: "USD",
-    priceFrom: 3500,
+    priceFrom: 875,
     name: {
       en: "Website design and build",
       de: "Website gestalten und bauen",
@@ -75,7 +75,7 @@ export const SERVICES: Service[] = [
     id: "shop",
     icon: "cart",
     currency: "USD",
-    priceFrom: 6500,
+    priceFrom: 1625,
     name: {
       en: "Online shop",
       de: "Online-Shop",
@@ -113,7 +113,7 @@ export const SERVICES: Service[] = [
     id: "care",
     icon: "shield",
     currency: "USD",
-    priceFrom: 95,
+    priceFrom: 24,
     name: {
       en: "Care and hosting",
       de: "Betreuung und Hosting",
@@ -156,7 +156,7 @@ export const SERVICES: Service[] = [
     id: "audit",
     icon: "gauge",
     currency: "USD",
-    priceFrom: 900,
+    priceFrom: 225,
     name: {
       en: "Audit: speed, accessibility, search",
       de: "Audit: Tempo, Barrierefreiheit, Auffindbarkeit",

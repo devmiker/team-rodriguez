@@ -9,7 +9,6 @@
  */
 import { allPages, assertUniquePaths } from "../../i18n/pages";
 import type { PageRef } from "../../i18n/routes";
-import { publishedCaseStudies } from "../../data/work";
 
 import ContactPage from "../../views/ContactPage.astro";
 import HomePage from "../../views/HomePage.astro";
@@ -23,10 +22,11 @@ import WorkPage from "../../views/WorkPage.astro";
 
 export async function getStaticPaths() {
   /*
-   * Detail pages come from the published case studies, so an unpublished one does not
-   * merely render as nothing — its URL is never built at all.
+   * No detail pages yet: the work page is a gallery that links straight out to each
+   * live site. `allPages` still takes per-route detail slugs, so adding case-study
+   * pages later is a one-line change here and a view.
    */
-  const pages = allPages({ work: publishedCaseStudies().map((c) => c.slug) });
+  const pages = allPages();
   assertUniquePaths(pages);
 
   return pages.map(({ locale, page, path }) => ({

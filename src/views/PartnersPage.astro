@@ -35,7 +35,7 @@ const partners = publishedPartners();
     <div class="page">
       {
         partners.length > 0 ? (
-          <div class="grid grid--3">
+          <div class="grid grid--3" data-reveal-group>
             {partners.map((partner) => (
               <PartnerCard partner={partner} locale={locale} />
             ))}

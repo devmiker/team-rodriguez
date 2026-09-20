@@ -1,5 +1,6 @@
 /**
- * The site's languages. English is the source; German and Spanish are translations.
+ * The site's languages. English is the source, Spanish is second in the UI, and
+ * German is last while it is still being learned.
  *
  * Adding a language starts here and the type system walks you through the rest:
  * `LOCALE_META` needs an entry, `src/i18n/strings/` needs a table (and the `UiStrings`
@@ -9,7 +10,7 @@
  * routes and sitemap follow automatically.
  */
 
-export const LOCALES = ["en", "de", "es"] as const;
+export const LOCALES = ["en", "es", "de"] as const;
 export type Locale = (typeof LOCALES)[number];
 
 export const DEFAULT_LOCALE: Locale = "en";

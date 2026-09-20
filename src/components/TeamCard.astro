@@ -49,8 +49,11 @@ const profileLinks = [
           /* The photo adds nothing a screen reader needs that the name below does not
              already give, so it is decorative: empty alt, not a description of a face. */
           alt=""
-          width="96"
-          height="96"
+          /* The file's intrinsic size, not the 64px it renders at. These attributes
+             exist to give the browser an aspect ratio before the bytes arrive, which
+             is what reserves the space and stops the card jumping as it loads. */
+          width="256"
+          height="256"
           loading="lazy"
           decoding="async"
         />
@@ -68,7 +71,7 @@ const profileLinks = [
     </div>
   </div>
 
-  <p class="member__bio">{localized(member.bio, locale)}</p>
+  {member.bio && <p class="member__bio">{localized(member.bio, locale)}</p>}
 
   {
     services.length > 0 && (

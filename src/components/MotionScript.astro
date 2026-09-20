@@ -1,0 +1,81 @@
+---
+/**
+ * Turns the motion system on, and drives the two things CSS alone cannot do:
+ * noticing that an element has entered the viewport, and noticing that the page
+ * has scrolled at all.
+ *
+ * ── Why this is written the way it is ────────────────────────────────────────
+ *
+ * The attribute comes FIRST and the observer second, and that order is the whole
+ * safety design. `data-motion="on"` is what arms every hiding rule in motion.css.
+ * If this script is missing, blocked, throws, or the browser has no
+ * IntersectionObserver, the attribute is never set and nothing is ever hidden —
+ * the page just renders, unanimated. A scroll-reveal built the other way round
+ * (hide in CSS, reveal with JS) is one failed request away from a blank page.
+ *
+ * It is inline and in `<head>` for the same reason ThemeScript is: the attribute
+ * has to be on `<html>` before first paint, or content briefly renders visible
+ * and then hides itself, which is worse than no animation at all. Its bytes are
+ * hashed into the Content-Security-Policy at build time, so it is kept short.
+ *
+ * `prefers-reduced-motion` is read here rather than left to CSS because this is
+ * the one place that can decline to animate at all, instead of animating quickly.
+ * A visitor who has asked their operating system for less motion gets a static
+ * page — no observer is created and no listener is attached.
+ *
+ * The media query is watched rather than read once: the preference can be changed
+ * while the page is open, and a page that keeps animating after someone turns
+ * reduced motion on has ignored them.
+ */
+---
+
+<script is:inline>
+  (() => {
+    try {
+      const root = document.documentElement;
+      const query = matchMedia("(prefers-reduced-motion: no-preference)");
+      const supported = "IntersectionObserver" in window;
+
+      const apply = () => {
+        if (query.matches && supported) root.setAttribute("data-motion", "on");
+        else root.removeAttribute("data-motion");
+      };
+      apply();
+      query.addEventListener("change", apply);
+
+      // The header's scrolled state. `passive` so it can never delay a scroll,
+      // and a plain attribute toggle so the work per event is one comparison.
+      const onScroll = () => {
+        if (scrollY > 8) root.setAttribute("data-scrolled", "");
+        else root.removeAttribute("data-scrolled");
+      };
+      onScroll();
+      addEventListener("scroll", onScroll, { passive: true });
+
+      if (!supported) return;
+
+      addEventListener("DOMContentLoaded", () => {
+        const seen = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (!entry.isIntersecting) continue;
+              entry.target.setAttribute("data-revealed", "");
+              // Reveal once. Re-animating on the way back up is a tic, not a
+              // feature, and it keeps the observer alive for the page's life.
+              seen.unobserve(entry.target);
+            }
+          },
+          // Fires slightly before the element reaches the bottom edge, so the
+          // movement has finished by the time it is comfortably in view.
+          { rootMargin: "0px 0px -8% 0px", threshold: 0 },
+        );
+
+        for (const el of document.querySelectorAll("[data-reveal], [data-reveal-group]")) {
+          seen.observe(el);
+        }
+      });
+    } catch {
+      // Any failure leaves data-motion unset, which leaves every element visible.
+    }
+  })();
+</script>

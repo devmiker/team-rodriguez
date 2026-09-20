@@ -1,0 +1,283 @@
+/* Team Rodriguez — motion
+ *
+ * Everything on this site that moves is declared here, and all of it obeys one
+ * contract. Read the contract before adding anything.
+ *
+ * ── The contract ─────────────────────────────────────────────────────────────
+ *
+ *  1. NOTHING IS HIDDEN UNLESS MOTION IS PROVABLY AVAILABLE.
+ *
+ *     Every hiding rule is scoped to `:root[data-motion="on"]`, an attribute set
+ *     by MotionScript.astro only when the visitor has not asked for reduced
+ *     motion AND IntersectionObserver exists. So if the script never runs, if it
+ *     throws, if JavaScript is off, if the browser is ancient, or if the visitor
+ *     has reduced motion on — the attribute is absent and every element is simply
+ *     visible. The failure mode of this entire file is "no animation", never
+ *     "invisible content".
+ *
+ *     This is the single most important thing here. Scroll-reveal implemented the
+ *     usual way (hide in CSS, show with JS) turns a whole page blank the day the
+ *     bundle fails to load, and nobody notices until a client calls.
+ *
+ *  2. Only `opacity` and `transform` are animated. Both are composited, so they
+ *     do not trigger layout or paint. Animating height, top or margin on scroll
+ *     is how a site ends up janky on the mid-range Android phone most small
+ *     business customers actually own.
+ *
+ *  3. Reduced motion is honoured by removing the animation, not by speeding it
+ *     up. global.css clamps every duration to 0.01ms, which is enough for a
+ *     transition but NOT safe for a filled animation — so the reduced-motion
+ *     block at the bottom of this file explicitly restores the finished state.
+ *
+ *  4. Nothing here moves the page itself. No scroll hijacking, no smooth-scroll
+ *     library, no "slow the wheel down so it feels premium". It breaks find-in-
+ *     page, breaks the scrollbar, breaks keyboard paging, and is the single most
+ *     common complaint about sites that look like the ones this borrows from.
+ *
+ * ── What was borrowed, and from where ────────────────────────────────────────
+ *
+ *  The references (ludo-stuttgart.de, kongs-gym.de, koox.co.uk) share one
+ *  vocabulary despite being built on three different platforms:
+ *    - a short fade-and-rise as things enter the viewport, ~0.5–0.6s on a
+ *      decelerating curve (koox runs exactly cubic-bezier(0, 0, 0.3, 1), which
+ *      is what --ease-out is)
+ *    - staggered children, so a row of cards arrives as one gesture
+ *    - a header that gains weight once the page has moved
+ *    - a lift on hover, and a nudge on the thing that says "go"
+ *
+ *  What was deliberately NOT borrowed: their parallax hero images (we have no
+ *  photography, and parallax on type is nausea-inducing), their loading screens,
+ *  and koox's shimmer loops (decoration that never stops is decoration that
+ *  stops being noticed and starts being irritating).
+ */
+
+/* --- Cross-document view transitions -------------------------------------
+ *
+ * A short cross-fade between pages, with the header held still across the
+ * navigation so it does not blink. This is the native CSS feature: no router, no
+ * client-side navigation, no JavaScript at all. Browsers that do not support it
+ * simply navigate normally, which is what they do today.
+ *
+ * Inside `prefers-reduced-motion: no-preference` because an unexpected page
+ * cross-fade is exactly the kind of thing that criterion exists for.
+ */
+
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 260ms;
+    animation-timing-function: var(--ease-out);
+  }
+
+  /* The new page rises very slightly as it fades in — the same gesture as a
+     reveal, so arriving on a new page feels like the same site. */
+  ::view-transition-new(root) {
+    animation-name: vt-enter;
+  }
+}
+
+@keyframes vt-enter {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+}
+
+/* --- Scroll reveal --------------------------------------------------------
+ *
+ * `data-reveal` on anything that should fade and rise as it enters the viewport.
+ * `data-reveal-group` on a container whose direct children should do it in
+ * sequence. MotionScript.astro adds `data-revealed` once an element has been
+ * seen, and then stops watching it — a reveal happens once, never on the way
+ * back up.
+ */
+
+:root[data-motion="on"] [data-reveal],
+:root[data-motion="on"] [data-reveal-group] > * {
+  opacity: 0;
+  transform: translateY(var(--reveal-shift));
+  transition:
+    opacity var(--duration-slow) var(--ease-out) var(--reveal-delay, 0ms),
+    transform var(--duration-slow) var(--ease-out) var(--reveal-delay, 0ms);
+}
+
+:root[data-motion="on"] [data-reveal][data-revealed],
+:root[data-motion="on"] [data-reveal-group][data-revealed] > * {
+  opacity: 1;
+  transform: none;
+}
+
+/* Stagger by position rather than by an inline style attribute. Inline styles
+   would need `style-src 'unsafe-inline'` in the Content-Security-Policy, and
+   giving that up for a visual flourish is a bad trade. Eight is plenty: no grid
+   on this site is longer, and a ninth item just arrives with the eighth. */
+:root[data-motion="on"] [data-reveal-group] > *:nth-child(1) { --reveal-delay: 0ms; }
+:root[data-motion="on"] [data-reveal-group] > *:nth-child(2) { --reveal-delay: calc(var(--stagger) * 1); }
+:root[data-motion="on"] [data-reveal-group] > *:nth-child(3) { --reveal-delay: calc(var(--stagger) * 2); }
+:root[data-motion="on"] [data-reveal-group] > *:nth-child(4) { --reveal-delay: calc(var(--stagger) * 3); }
+:root[data-motion="on"] [data-reveal-group] > *:nth-child(5) { --reveal-delay: calc(var(--stagger) * 4); }
+:root[data-motion="on"] [data-reveal-group] > *:nth-child(6) { --reveal-delay: calc(var(--stagger) * 5); }
+:root[data-motion="on"] [data-reveal-group] > *:nth-child(7) { --reveal-delay: calc(var(--stagger) * 6); }
+:root[data-motion="on"] [data-reveal-group] > *:nth-child(n + 8) { --reveal-delay: calc(var(--stagger) * 7); }
+
+/* A shorter travel for text blocks, which look wrong sliding as far as a card. */
+[data-reveal="text"] {
+  --reveal-shift: 0.75rem;
+}
+
+/* --- Page entrance --------------------------------------------------------
+ *
+ * The hero does not wait for a scroll — it is already on screen. It animates on
+ * load instead, in the reading order of the content, so the eye is led down to
+ * the call to action rather than having the whole block appear at once.
+ *
+ * Kept under 700ms end to end. This sits in front of the page's most important
+ * text, and an entrance the visitor has to wait through is a cost, not a feature.
+ */
+
+:root[data-motion="on"] [data-enter] > * {
+  animation: enter-rise var(--duration-slow) var(--ease-out) both;
+}
+
+:root[data-motion="on"] [data-enter] > *:nth-child(1) { animation-delay: 60ms; }
+:root[data-motion="on"] [data-enter] > *:nth-child(2) { animation-delay: 130ms; }
+:root[data-motion="on"] [data-enter] > *:nth-child(3) { animation-delay: 200ms; }
+:root[data-motion="on"] [data-enter] > *:nth-child(4) { animation-delay: 270ms; }
+:root[data-motion="on"] [data-enter] > *:nth-child(n + 5) { animation-delay: 340ms; }
+
+@keyframes enter-rise {
+  from {
+    opacity: 0;
+    transform: translateY(var(--reveal-shift));
+  }
+}
+
+/* --- Header ---------------------------------------------------------------
+ *
+ * Gains a shadow and a firmer edge once the page has moved, so it separates from
+ * the content scrolling under it. Deliberately does NOT change height: a sticky
+ * header that shrinks makes the content under it jump at the moment the visitor
+ * is reading it.
+ */
+
+.header {
+  transition:
+    box-shadow var(--duration) var(--ease),
+    border-color var(--duration) var(--ease);
+}
+
+:root[data-scrolled] .header {
+  border-block-end-color: color-mix(in oklab, var(--brand-emerald) 35%, transparent);
+  box-shadow: 0 10px 30px -20px rgb(0 0 0 / 0.6);
+}
+
+/* Held still across a view transition, so it does not cross-fade with itself. */
+.header {
+  view-transition-name: site-header;
+}
+
+/* --- Hover ----------------------------------------------------------------
+ *
+ * Pointer-only. `@media (hover: hover)` keeps these off touch screens, where a
+ * "hover" is a tap that has already happened and the effect just looks like a
+ * glitch on the way to the next page.
+ */
+
+@media (hover: hover) {
+  .card {
+    transition:
+      transform var(--duration) var(--ease-spring),
+      border-color var(--duration) var(--ease),
+      box-shadow var(--duration) var(--ease);
+  }
+
+  .card:hover {
+    transform: translateY(-3px);
+    border-color: color-mix(in oklab, var(--color-accent) 45%, var(--color-line));
+    box-shadow: var(--shadow-card);
+  }
+
+  /* The arrow leans towards where it is about to take you. Two pixels: enough to
+     register, not enough to look like it is trying to escape. */
+  .button svg,
+  .more-link svg,
+  .study__link svg {
+    transition: transform var(--duration) var(--ease-spring);
+  }
+
+  .button:hover svg,
+  .more-link:hover svg,
+  .study__link:hover svg {
+    transform: translateX(2px);
+  }
+}
+
+/* --- Navigation underline -------------------------------------------------
+ *
+ * Grows from the left on hover. The current page already carries a permanent
+ * rule (see SiteHeader.astro), so this only ever animates on the others.
+ */
+
+@media (hover: hover) {
+  /* The pseudo-element needs a positioned ancestor, and the rule that sizes the
+     link lives in SiteHeader.astro where it is scoped. Setting it here keeps the
+     whole underline in one place. */
+  .nav a {
+    position: relative;
+  }
+
+  .nav a::after {
+    content: "";
+    position: absolute;
+    inset-inline: var(--space-3);
+    inset-block-end: 0.55rem;
+    block-size: 2px;
+    background: var(--color-link-on-band);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--duration) var(--ease-out);
+  }
+
+  .nav a:hover::after {
+    transform: scaleX(1);
+  }
+
+  /* The current page's own rule is drawn by box-shadow; no second line. */
+  .nav a[aria-current="page"]::after {
+    display: none;
+  }
+}
+
+/* --- Reduced motion -------------------------------------------------------
+ *
+ * The belt to global.css's braces.
+ *
+ * global.css clamps every duration to 0.01ms, which finishes a transition
+ * instantly — fine. But an `animation` with `animation-fill-mode: both` and a
+ * near-zero duration can still land on its FROM state in some engines, which
+ * would leave the hero invisible. So the finished state is restored explicitly
+ * here rather than relying on the clamp.
+ *
+ * `data-motion` is not set at all under reduced motion, so in practice none of
+ * these rules should have anything to do. They exist because "should" is not a
+ * guarantee, and the cost of being wrong is a blank page.
+ */
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal],
+  [data-reveal-group] > *,
+  [data-enter] > * {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .card:hover {
+    transform: none;
+  }
+}

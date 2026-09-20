@@ -36,7 +36,7 @@ const team = publishedTeam();
     <div class="page">
       {
         team.length > 0 ? (
-          <div class="grid grid--3">
+          <div class="grid grid--3" data-reveal-group>
             {team.map((member) => (
               <TeamCard member={member} locale={locale} />
             ))}

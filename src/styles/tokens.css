@@ -16,7 +16,7 @@
  * The palette: emerald as the accent that carries action and identity, navy as the
  * structural dark. Emerald is a difficult colour to use honestly — the bright, vivid
  * value everyone reaches for (#10b981) fails contrast against white at body size
- * (2.8:1), so it never sits behind or acts as text in the light theme. Two derivatives
+ * (2.54:1), so it never sits behind or acts as text in the light theme. Two derivatives
  * do that work: a deepened emerald for light backgrounds, a brightened one for dark.
  */
 
@@ -25,24 +25,33 @@
 
   /* The signature emerald. Flat decoration, logo, large display fills and
      borders only — NEVER text, and never a field behind text in the light theme,
-     where it reaches only 2.79:1 on white. */
+     where it reaches only 2.54:1 on white. tokens.test.ts asserts that figure stays
+     under 4.5, which is the guard rail on any future "make the green lighter". */
   --brand-emerald: #10b981;
 
-  /* Light-theme accent: buttons, links, focus rings. Darkened until white text on it
-     reaches 6.50:1 and it reads as a link on both light surfaces. */
+  /* Light-theme accent: buttons, links, focus rings. Deep enough that white text on
+     it reaches 6.50:1 and it reads as a link on both light surfaces. Deliberately not
+     lightened towards the vivid emerald above: that direction runs out of contrast
+     fast, and tokens.test.ts fails rather than letting it slide. Going darker is the
+     safe direction if the green ever needs to feel heavier. */
   --brand-emerald-deep: #046b52;
   --brand-emerald-deeper: #035744; /* hover / pressed */
 
   /* Dark-theme accent: the same hue lifted until it carries text weight on navy
-     (10.11:1). Text on top of it is always --brand-ink-emerald. */
+     (10.10:1). Text on top of it is always --brand-ink-emerald. */
   --brand-emerald-bright: #34d8a0;
   --brand-emerald-brighter: #5ce4b6; /* hover / pressed */
   --brand-ink-emerald: #04231c;
 
-  /* Navy: the structural dark. Bands, headers, footers, and the dark theme's page. */
-  --brand-navy: #0d1b2a;
-  --brand-navy-deep: #050d16;
-  --brand-navy-raised: #13243a;
+  /* Navy: the structural dark. Bands, headers, footers, and the dark theme's page.
+     Lightened from the near-black first draft (#0d1b2a) so it reads as navy rather
+     than as ink — that draft was dark enough to look black in most rooms, which cost
+     the palette its blue half. Light text on it still has plenty of room: 12.74:1 for
+     body text on the band. Every blue-grey derived from it — the dim text, the rules,
+     the dark theme's surfaces — was lifted by the same amount to stay in family. */
+  --brand-navy: #17293f;
+  --brand-navy-deep: #0e1e30;
+  --brand-navy-raised: #1e3351;
 
   --brand-mist: #f1f6f4; /* light raised surface, faintly green so it sits with emerald */
   --brand-white: #ffffff;
@@ -58,20 +67,20 @@
   --color-bg: #ffffff;
   --color-bg-raised: #f1f6f4;
   /* Header, footer, and any section that inverts. */
-  --color-bg-band: #0d1b2a;
+  --color-bg-band: #17293f;
 
-  --color-text: #0d1b2a;
-  --color-text-dim: #4a5a6a;
-  --color-text-on-band: #e8eef5;
-  --color-text-dim-on-band: #a3b4c7;
+  --color-text: #17293f;
+  --color-text-dim: #51637a;
+  --color-text-on-band: #e9eff7;
+  --color-text-dim-on-band: #aabbcd;
 
   /* --color-line is decorative separation and is deliberately faint — it does not meet
      3:1 and must never be the only thing marking an interactive boundary. Anything a
      visitor has to see and aim at (input borders, control outlines) uses
      --color-line-strong, which does. */
-  --color-line: #d7e2de;
-  --color-line-strong: #6b7c8c;
-  --color-line-on-band: #24384f;
+  --color-line: #dce6e2;
+  --color-line-strong: #6d7f92;
+  --color-line-on-band: #2e4763;
 
   --color-link: #046b52;
   --color-link-on-band: #34d8a0;
@@ -86,9 +95,9 @@
   --color-danger: #b3261e;
   --color-success: #046b52;
 
-  --shadow-card: 0 18px 40px -28px rgb(13 27 42 / 0.4);
-  --shadow-raised: 0 1px 2px rgb(13 27 42 / 0.06), 0 8px 24px -16px rgb(13 27 42 / 0.25);
-  --overlay: rgb(13 27 42 / 0.66);
+  --shadow-card: 0 18px 40px -28px rgb(23 41 63 / 0.4);
+  --shadow-raised: 0 1px 2px rgb(23 41 63 / 0.06), 0 8px 24px -16px rgb(23 41 63 / 0.25);
+  --overlay: rgb(23 41 63 / 0.66);
 }
 
 /* --- Dark theme ---------------------------------------------------------
@@ -103,18 +112,18 @@
   :root:not([data-theme="light"]) {
     color-scheme: dark;
 
-    --color-bg: #0b1420;
-    --color-bg-raised: #13243a;
-    --color-bg-band: #050d16;
+    --color-bg: #121f31;
+    --color-bg-raised: #1e3351;
+    --color-bg-band: #0e1e30;
 
-    --color-text: #e8eef5;
-    --color-text-dim: #9fb1c4;
-    --color-text-on-band: #e8eef5;
-    --color-text-dim-on-band: #9fb1c4;
+    --color-text: #e9eff7;
+    --color-text-dim: #a6b8cb;
+    --color-text-on-band: #e9eff7;
+    --color-text-dim-on-band: #a6b8cb;
 
-    --color-line: #1e3350;
-    --color-line-strong: #5d7186;
-    --color-line-on-band: #1a2c44;
+    --color-line: #26405f;
+    --color-line-strong: #708aa4;
+    --color-line-on-band: #24395a;
 
     --color-link: #34d8a0;
     --color-link-on-band: #34d8a0;
@@ -131,25 +140,25 @@
 
     --shadow-card: 0 18px 40px -24px rgb(0 0 0 / 0.7);
     --shadow-raised: 0 1px 2px rgb(0 0 0 / 0.5), 0 8px 24px -16px rgb(0 0 0 / 0.6);
-    --overlay: rgb(5 13 22 / 0.78);
+    --overlay: rgb(14 30 48 / 0.78);
   }
 }
 
 :root[data-theme="dark"] {
   color-scheme: dark;
 
-  --color-bg: #0b1420;
-  --color-bg-raised: #13243a;
-  --color-bg-band: #050d16;
+  --color-bg: #121f31;
+  --color-bg-raised: #1e3351;
+  --color-bg-band: #0e1e30;
 
-  --color-text: #e8eef5;
-  --color-text-dim: #9fb1c4;
-  --color-text-on-band: #e8eef5;
-  --color-text-dim-on-band: #9fb1c4;
+  --color-text: #e9eff7;
+  --color-text-dim: #a6b8cb;
+  --color-text-on-band: #e9eff7;
+  --color-text-dim-on-band: #a6b8cb;
 
-  --color-line: #1e3350;
-  --color-line-strong: #5d7186;
-  --color-line-on-band: #1a2c44;
+  --color-line: #26405f;
+  --color-line-strong: #708aa4;
+  --color-line-on-band: #24395a;
 
   --color-link: #34d8a0;
   --color-link-on-band: #34d8a0;
@@ -166,7 +175,7 @@
 
   --shadow-card: 0 18px 40px -24px rgb(0 0 0 / 0.7);
   --shadow-raised: 0 1px 2px rgb(0 0 0 / 0.5), 0 8px 24px -16px rgb(0 0 0 / 0.6);
-  --overlay: rgb(5 13 22 / 0.78);
+  --overlay: rgb(14 30 48 / 0.78);
 }
 
 /* --- Type ----------------------------------------------------------------
@@ -252,9 +261,39 @@
      reaches for). targetSize.test.ts enforces that controls declare one of these. */
   --target-min: 44px;
 
+  /* --- Motion ---
+     One vocabulary for the whole site, so nothing has to invent a duration.
+     The system that uses these lives in motion.css; read its header before
+     adding anything that moves.
+
+     Curves:
+       --ease        general-purpose, for state changes a pointer causes
+       --ease-out    things ARRIVING: fast start, long settle. Everything that
+                     enters on scroll or on load uses this. It is the curve the
+                     reference sites use almost universally, and the reason
+                     reveals read as "arriving" rather than "sliding".
+       --ease-spring a slight overshoot, for hover lifts only. Never for entrances:
+                     a page full of overshooting elements is exhausting.
+
+     Durations: the eye reads anything under ~100ms as instant and anything over
+     ~700ms as slow. Hover feedback sits at the bottom, entrances at the top. */
+
   --ease: cubic-bezier(0.2, 0, 0, 1);
+  --ease-out: cubic-bezier(0, 0, 0.3, 1);
+  --ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
+
   --duration-fast: 120ms;
   --duration: 220ms;
+  --duration-slow: 620ms;
+
+  /* How far a revealing element travels. Small on purpose — a long journey draws
+     attention to the animation rather than to what arrived. */
+  --reveal-shift: 1.25rem;
+
+  /* The gap between staggered siblings. Four items at 70ms finish in about a
+     fifth of a second after the first, which reads as one gesture rather than
+     as a queue. */
+  --stagger: 70ms;
 
   --z-header: 100;
   --z-overlay: 200;

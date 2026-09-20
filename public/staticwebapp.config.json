@@ -31,5 +31,8 @@
     "Cross-Origin-Resource-Policy": "same-origin",
     "X-Robots-Tag": "noindex, nofollow"
   },
-  "trailingSlash": "auto"
+  "trailingSlash": "auto",
+  "platform": {
+    "apiRuntime": "node:22"
+  }
 }

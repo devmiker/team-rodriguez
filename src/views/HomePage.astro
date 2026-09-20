@@ -37,7 +37,7 @@ const steps = [1, 2, 3, 4] as const;
 <BaseLayout page={{ route: "home" }} title={t("home.title")} description={t("home.description")}>
   {/* --- Hero --- */}
   <section class="hero">
-    <div class="page hero__inner">
+    <div class="page hero__inner" data-enter>
       <p class="eyebrow">
         <span aria-hidden="true">&lt;</span>{t("home.hero.eyebrow")}<span aria-hidden="true"
           >&nbsp;/&gt;</span
@@ -56,7 +56,7 @@ const steps = [1, 2, 3, 4] as const;
         </a>
       </div>
 
-      <ul class="proof">
+      <ul class="proof" data-reveal-group>
         {
           proofPoints.map((point) => (
             <li>
@@ -72,15 +72,17 @@ const steps = [1, 2, 3, 4] as const;
   {/* --- Services --- */}
   <section class="section" aria-labelledby="home-services">
     <div class="page">
-      <p class="eyebrow">{t("home.services.eyebrow")}</p>
-      <h2 id="home-services">{t("home.services.heading")}</h2>
-      <p class="lead section__lead">{t("home.services.body")}</p>
+      <div data-reveal="text">
+        <p class="eyebrow">{t("home.services.eyebrow")}</p>
+        <h2 id="home-services">{t("home.services.heading")}</h2>
+        <p class="lead section__lead">{t("home.services.body")}</p>
+      </div>
 
-      <div class="grid grid--4 section__body">
+      <div class="grid grid--4 section__body" data-reveal-group>
         {SERVICES.map((service) => <ServiceCard service={service} locale={locale} />)}
       </div>
 
-      <p class="section__more">
+      <p class="section__more" data-reveal="text">
         <a href={pathFor({ route: "services" }, locale)} class="more-link">
           {t("home.services.cta")}
           <Icon name="arrowRight" size="1em" />
@@ -92,13 +94,15 @@ const steps = [1, 2, 3, 4] as const;
   {/* --- Process --- */}
   <section class="section band on-band" aria-labelledby="home-process">
     <div class="page">
-      <p class="eyebrow">{t("home.process.eyebrow")}</p>
-      <h2 id="home-process">{t("home.process.heading")}</h2>
-      <p class="lead section__lead">{t("home.process.body")}</p>
+      <div data-reveal="text">
+        <p class="eyebrow">{t("home.process.eyebrow")}</p>
+        <h2 id="home-process">{t("home.process.heading")}</h2>
+        <p class="lead section__lead">{t("home.process.body")}</p>
+      </div>
 
       {/* An ordered list, because the steps happen in this order and that fact should
           reach a screen reader as structure rather than as visual numbering. */}
-      <ol class="steps section__body">
+      <ol class="steps section__body" data-reveal-group>
         {
           steps.map((n) => (
             <li class="step">
@@ -121,17 +125,19 @@ const steps = [1, 2, 3, 4] as const;
     team.length > 0 && (
       <section class="section" aria-labelledby="home-team">
         <div class="page">
-          <p class="eyebrow">{t("home.team.eyebrow")}</p>
-          <h2 id="home-team">{t("home.team.heading")}</h2>
-          <p class="lead section__lead">{t("home.team.body")}</p>
+          <div data-reveal="text">
+            <p class="eyebrow">{t("home.team.eyebrow")}</p>
+            <h2 id="home-team">{t("home.team.heading")}</h2>
+            <p class="lead section__lead">{t("home.team.body")}</p>
+          </div>
 
-          <div class="grid grid--3 section__body">
+          <div class="grid grid--3 section__body" data-reveal-group>
             {team.slice(0, 3).map((member) => (
               <TeamCard member={member} locale={locale} />
             ))}
           </div>
 
-          <p class="section__more">
+          <p class="section__more" data-reveal="text">
             <a href={pathFor({ route: "team" }, locale)} class="more-link">
               {t("home.team.cta")}
               <Icon name="arrowRight" size="1em" />
@@ -147,17 +153,19 @@ const steps = [1, 2, 3, 4] as const;
     partners.length > 0 && (
       <section class="section" aria-labelledby="home-partners">
         <div class="page">
-          <p class="eyebrow">{t("home.partners.eyebrow")}</p>
-          <h2 id="home-partners">{t("home.partners.heading")}</h2>
-          <p class="lead section__lead">{t("home.partners.body")}</p>
+          <div data-reveal="text">
+            <p class="eyebrow">{t("home.partners.eyebrow")}</p>
+            <h2 id="home-partners">{t("home.partners.heading")}</h2>
+            <p class="lead section__lead">{t("home.partners.body")}</p>
+          </div>
 
-          <div class="grid grid--3 section__body">
+          <div class="grid grid--3 section__body" data-reveal-group>
             {partners.slice(0, 3).map((partner) => (
               <PartnerCard partner={partner} locale={locale} />
             ))}
           </div>
 
-          <p class="section__more">
+          <p class="section__more" data-reveal="text">
             <a href={pathFor({ route: "partners" }, locale)} class="more-link">
               {t("home.partners.cta")}
               <Icon name="arrowRight" size="1em" />
@@ -170,7 +178,7 @@ const steps = [1, 2, 3, 4] as const;
 
   {/* --- Closing call to action --- */}
   <section class="section cta" aria-labelledby="home-cta">
-    <div class="page cta__inner">
+    <div class="page cta__inner" data-reveal>
       <h2 id="home-cta">{t("home.cta.heading")}</h2>
       <p class="lead">{t("home.cta.body")}</p>
       <a class="button button--primary" href={pathFor({ route: "contact" }, locale)}>

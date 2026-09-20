@@ -12,7 +12,10 @@ Where the project is, and what has to happen before it can go live.
 - Contact form: works without JavaScript, validated identically on both sides
 - Azure Function endpoint with spam defence, rate limiting and header-injection guards
 - Generated Content-Security-Policy, full security header set, launch gate on indexing
-- 185 tests, plus an axe-core pass over every built page in both themes
+- Motion: scroll reveals with staggered grids, a hero entrance, a header that gains
+  weight on scroll, hover lifts, and a native cross-page view transition — all CSS plus
+  one inline script, and all of it inert under `prefers-reduced-motion`
+- 197 tests, plus an axe-core pass over every built page in both themes
 - CI: typecheck, test, build, audit, accessibility, deploy (skips until a token exists)
 
 ## Before launch — blocking
@@ -33,7 +36,9 @@ These are in rough dependency order. Nothing below can be skipped.
    agreement to appear. Then `published: true`.
 7. **Real prices.** Confirm or replace the figures in `src/data/services.ts`.
 8. **Manual accessibility pass.** Keyboard only, then a screen reader. The automated
-   audit catches about a third of real problems.
+   audit catches about a third of real problems. Include a pass with reduced motion
+   turned on at the OS level — the tests assert the contract, but seeing it is
+   cheaper than trusting it.
 9. **Flip `LAUNCHED` to `true`.** This turns on indexing, the sitemap and structured
    data all at once.
 10. **Set `CSP_MODE=enforce`** — after watching the report-only policy in a real browser
@@ -43,7 +48,9 @@ These are in rough dependency order. Nothing below can be skipped.
 
 - `public/og.png` (1200×630) for link previews, and `public/apple-touch-icon.png` (180×180)
 - Team photographs, 640×640 or larger, into `public/team/`
-- At least one real case study in `src/data/work.ts` with a measured result
+- Screenshots for the work gallery — see `public/work/README.md`
+- A first genuine client project, which is the only thing that fills the "For clients"
+  column. Until then the gallery is honest about what it is showing.
 - A first partner or two, with their agreement
 
 ## Later

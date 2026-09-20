@@ -14,6 +14,7 @@ import { Font } from "astro:assets";
 import Seo from "../components/Seo.astro";
 import SiteFooter from "../components/SiteFooter.astro";
 import SiteHeader from "../components/SiteHeader.astro";
+import MotionScript from "../components/MotionScript.astro";
 import ThemeScript from "../components/ThemeScript.astro";
 import TranslationNotice from "../components/TranslationNotice.astro";
 import LanguageSwitcher from "../components/LanguageSwitcher.astro";
@@ -40,8 +41,10 @@ const t = useTranslations(locale);
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    {/* Before anything else that paints, or the page flashes the wrong theme. */}
+    {/* Both before anything paints: the theme, or the page flashes the wrong one;
+        the motion flag, or content renders visible and then hides itself. */}
     <ThemeScript />
+    <MotionScript />
 
     {/* SVG only. Every browser released in the last several years supports it, and a
         second .ico is another request for the handful that do not.

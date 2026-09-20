@@ -16,7 +16,7 @@ const { eyebrow, heading, lead } = Astro.props;
 ---
 
 <div class="hero">
-  <div class="page">
+  <div class="page" data-enter>
     {eyebrow && <p class="eyebrow">{eyebrow}</p>}
     <h1>{heading}</h1>
     {lead && <p class="lead">{lead}</p>}

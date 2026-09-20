@@ -35,16 +35,16 @@ const t = useTranslations(locale);
 
   <section class="section">
     <div class="page">
-      <div class="grid grid--2">
+      <div class="grid grid--2" data-reveal-group>
         {SERVICES.map((service) => <ServiceCard service={service} locale={locale} detailed as="h2" />)}
       </div>
 
-      <p class="price-note">{t("services.priceNote")}</p>
+      <p class="price-note" data-reveal="text">{t("services.priceNote")}</p>
     </div>
   </section>
 
   <section class="section band on-band" aria-labelledby="services-cta">
-    <div class="page cta">
+    <div class="page cta" data-reveal>
       <h2 id="services-cta">{t("services.cta.heading")}</h2>
       <p class="lead">{t("services.cta.body")}</p>
       <a class="button button--primary" href={pathFor({ route: "contact" }, locale)}>

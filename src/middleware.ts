@@ -1,5 +1,6 @@
 import { defineMiddleware } from "astro:middleware";
 import { assertServiceIdsExist } from "./data/team";
+import { assertBuiltByIdsExist } from "./data/work";
 
 /**
  * Check the data model before any page renders.
@@ -13,5 +14,6 @@ import { assertServiceIdsExist } from "./data/team";
  */
 export const onRequest = defineMiddleware(async (_context, next) => {
   assertServiceIdsExist();
+  assertBuiltByIdsExist();
   return next();
 });

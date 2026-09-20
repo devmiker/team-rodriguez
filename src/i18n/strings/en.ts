@@ -119,12 +119,20 @@ export const en = {
   "work.title": "Work",
   "work.description": "Selected projects and what they were built to do.",
   "work.heading": "Selected work",
-  "work.lead": "A few projects, what the brief was, and what changed afterwards.",
+  "work.lead":
+    "Everything we have built, in two groups: work for businesses, and the projects we built to learn. Both are labelled, because they are not the same thing.",
   "work.pending":
     "Case studies are being written up. In the meantime, we are happy to walk you through recent work on a call — including the parts that did not go to plan.",
   "work.visit": "Visit the site",
-  "work.result": "Result",
   "work.stack": "Built with",
+  "work.builtBy": "Built by",
+  "work.opensNewTab": "(opens in a new tab)",
+  "work.category.client": "For clients",
+  "work.category.clientBlurb":
+    "Sites built for a business, for its actual customers.",
+  "work.category.practice": "Our own projects",
+  "work.category.practiceBlurb":
+    "Built to learn something, or for ourselves. Shown because how someone practises tells you as much as what they ship.",
 
   // --- Team -------------------------------------------------------------
   "team.title": "Team",

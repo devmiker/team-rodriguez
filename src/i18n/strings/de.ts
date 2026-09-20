@@ -121,12 +121,20 @@ export const de: UiStrings = {
   "work.title": "Projekte",
   "work.description": "Ausgewählte Projekte und wozu sie gebaut wurden.",
   "work.heading": "Ausgewählte Projekte",
-  "work.lead": "Einige Projekte, die Aufgabenstellung dahinter und was sich danach verändert hat.",
+  "work.lead":
+    "Alles, was wir gebaut haben, in zwei Gruppen: Arbeiten für Unternehmen und Projekte, an denen wir gelernt haben. Beide sind als solche gekennzeichnet, denn sie sind nicht dasselbe.",
   "work.pending":
     "Die Projektberichte werden gerade geschrieben. Bis dahin führen wir Sie gern telefonisch durch aktuelle Arbeiten — auch durch die Teile, die nicht nach Plan liefen.",
   "work.visit": "Zur Website",
-  "work.result": "Ergebnis",
   "work.stack": "Gebaut mit",
+  "work.builtBy": "Gebaut von",
+  "work.opensNewTab": "(öffnet in einem neuen Tab)",
+  "work.category.client": "Für Kundschaft",
+  "work.category.clientBlurb":
+    "Websites für ein Unternehmen, für dessen tatsächliche Kundschaft gebaut.",
+  "work.category.practice": "Eigene Projekte",
+  "work.category.practiceBlurb":
+    "Gebaut, um etwas zu lernen, oder für uns selbst. Wir zeigen sie, weil die Art zu üben genauso viel verrät wie das fertige Ergebnis.",
 
   // --- Team -------------------------------------------------------------
   "team.title": "Team",

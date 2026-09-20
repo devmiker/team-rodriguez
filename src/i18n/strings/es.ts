@@ -121,12 +121,20 @@ export const es: UiStrings = {
   "work.title": "Proyectos",
   "work.description": "Proyectos seleccionados y para qué se construyeron.",
   "work.heading": "Proyectos seleccionados",
-  "work.lead": "Algunos proyectos, cuál era el encargo y qué cambió después.",
+  "work.lead":
+    "Todo lo que hemos construido, en dos grupos: trabajo para negocios y proyectos hechos para aprender. Ambos están etiquetados, porque no son lo mismo.",
   "work.pending":
     "Estamos redactando los casos de estudio. Mientras tanto, le enseñamos con gusto trabajos recientes en una llamada — incluidas las partes que no salieron según lo previsto.",
   "work.visit": "Ver el sitio",
-  "work.result": "Resultado",
   "work.stack": "Hecho con",
+  "work.builtBy": "Hecho por",
+  "work.opensNewTab": "(se abre en una pestaña nueva)",
+  "work.category.client": "Para clientes",
+  "work.category.clientBlurb":
+    "Sitios hechos para un negocio, pensando en sus clientes reales.",
+  "work.category.practice": "Proyectos propios",
+  "work.category.practiceBlurb":
+    "Hechos para aprender algo, o para nosotros mismos. Los mostramos porque cómo se practica dice tanto como lo que se entrega.",
 
   // --- Team -------------------------------------------------------------
   "team.title": "Equipo",

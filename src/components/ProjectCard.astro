@@ -1,0 +1,279 @@
+---
+/**
+ * One project in the work gallery: a preview of the site, what it is, who built it,
+ * what it was built with, and a link straight to the live thing.
+ *
+ * ── The preview ──────────────────────────────────────────────────────────────
+ *  With a screenshot in `public/work/`, that is what shows. Without one, the card
+ *  draws a browser frame — window buttons, an address bar with the real domain in
+ *  it, and a tint from the brand palette.
+ *
+ *  That placeholder is a design, not a fallback. The alternative patterns are all
+ *  worse: a grey box reads as a broken image, a "coming soon" label reads as an
+ *  unfinished site, and an <iframe> of the live page would mean a third-party
+ *  request on every load (against rule 6), a CSP exception, and letting someone
+ *  else's JavaScript run inside this page. A drawn frame costs nothing, loads
+ *  instantly, and still tells the visitor which site they are about to open.
+ *
+ * ── Opening in a new tab ─────────────────────────────────────────────────────
+ *  These links go to other people's sites, so they open in a new tab — the
+ *  visitor keeps their place in the gallery. That has an accessibility cost:
+ *  taking over the window without warning is disorienting, especially for a
+ *  screen-reader user who now has a back button that does nothing. So every such
+ *  link carries a visually-hidden "(opens in a new tab)", which is the standard
+ *  fix and is why the announcement is in the markup rather than a tooltip.
+ *
+ *  `rel="noopener"` because a new browsing context otherwise gets a handle back
+ *  to this one. Not `noreferrer` — these are our own projects and the referral is
+ *  fine — and not `nofollow`, because these are genuine links to real work.
+ */
+import { localized, type Locale } from "../i18n/locales";
+import { useTranslations } from "../i18n/ui";
+import { displayDomain, type Project } from "../data/work";
+import { TEAM } from "../data/team";
+import Icon from "./Icon.astro";
+
+interface Props {
+  project: Project;
+  locale: Locale;
+}
+
+const { project, locale } = Astro.props;
+const t = useTranslations(locale);
+
+const domain = displayDomain(project.url);
+
+/** Credits, resolved to names. Ids are validated at build time by the middleware. */
+const builders = project.builtBy
+  .map((id) => TEAM.find((m) => m.id === id)?.name)
+  .filter((name): name is string => Boolean(name));
+---
+
+<article class="project card">
+  <a
+    class="project__preview"
+    href={project.url}
+    target="_blank"
+    rel="noopener"
+    tabindex="-1"
+    aria-hidden="true"
+  >
+    {
+      /* Duplicate of the real link below, purely so the image is clickable for a
+         mouse. Hidden from assistive technology and removed from the tab order, so
+         it is never announced twice or stopped at. */
+    }
+    {
+      project.image ? (
+        <img
+          src={`/work/${project.image}`}
+          alt={project.imageAlt ? localized(project.imageAlt, locale) : ""}
+          width="800"
+          height="500"
+          loading="lazy"
+          decoding="async"
+        />
+      ) : (
+        <span class="frame">
+          <span class="frame__bar">
+            <span class="frame__dot" />
+            <span class="frame__dot" />
+            <span class="frame__dot" />
+            <span class="frame__url">{domain}</span>
+          </span>
+          <span class="frame__body">
+            <span class="frame__mark">{project.name}</span>
+          </span>
+        </span>
+      )
+    }
+  </a>
+
+  <div class="project__body">
+    <p class="project__meta">
+      <span>{domain}</span>
+      {project.year && <span aria-hidden="true">·</span>}
+      {project.year && <span>{project.year}</span>}
+    </p>
+
+    <h3 class="project__name">
+      <a href={project.url} target="_blank" rel="noopener">
+        {project.name}
+        <Icon name="external" size="0.8em" />
+        <span class="visually-hidden">{t("work.opensNewTab")}</span>
+      </a>
+    </h3>
+
+    <p class="project__summary">{localized(project.summary, locale)}</p>
+
+    {
+      builders.length > 0 && (
+        <p class="project__credit">
+          <span class="project__label">{t("work.builtBy")}</span>
+          <span>{builders.join(" · ")}</span>
+        </p>
+      )
+    }
+
+    <p class="project__stack">
+      <span class="project__label">{t("work.stack")}</span>
+      <span>{project.stack.join(" · ")}</span>
+    </p>
+  </div>
+</article>
+
+<style>
+  .project {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .project__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: 0 var(--space-6) var(--space-6);
+  }
+
+  /* --- Preview --- */
+
+  .project__preview {
+    display: block;
+    /* The preview is an image (or a drawn frame), not a run of text. Without this
+       the global link styles underline the domain and the wordmark inside it. */
+    text-decoration: none;
+    color: inherit;
+    aspect-ratio: 8 / 5;
+    background: var(--color-bg);
+    border-block-end: 1px solid var(--color-line);
+    overflow: hidden;
+  }
+
+  .project__preview img {
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+    /* Anchored to the top: a screenshot of a landing page is interesting at the
+       top and repetitive further down. */
+    object-position: top center;
+  }
+
+  /* --- Drawn browser frame (no screenshot yet) --- */
+
+  .frame {
+    display: flex;
+    flex-direction: column;
+    block-size: 100%;
+    background: linear-gradient(
+      160deg,
+      color-mix(in oklab, var(--brand-emerald) 14%, var(--color-bg-raised)),
+      var(--color-bg-raised) 60%
+    );
+  }
+
+  .frame__bar {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1-5);
+    padding: var(--space-2-5) var(--space-3);
+    background: var(--color-bg);
+    border-block-end: 1px solid var(--color-line);
+  }
+
+  .frame__dot {
+    inline-size: 0.5rem;
+    block-size: 0.5rem;
+    border-radius: var(--radius-pill);
+    background: var(--color-line-strong);
+    opacity: 0.55;
+    flex: none;
+  }
+
+  .frame__url {
+    margin-inline-start: var(--space-2);
+    padding: var(--space-1) var(--space-3);
+    flex: 1;
+    border-radius: var(--radius-pill);
+    background: var(--color-bg-raised);
+    font-family: var(--font-mono);
+    font-size: var(--step-label);
+    color: var(--color-text-dim);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .frame__body {
+    display: grid;
+    place-items: center;
+    flex: 1;
+    padding: var(--space-6);
+  }
+
+  .frame__mark {
+    font-family: var(--font-display);
+    font-size: var(--step-h2);
+    font-weight: var(--weight-bold);
+    letter-spacing: var(--tracking-tight);
+    color: var(--color-text);
+    text-align: center;
+    text-wrap: balance;
+  }
+
+  /* --- Text --- */
+
+  .project__meta,
+  .project__label {
+    font-family: var(--font-mono);
+    font-size: var(--step-label);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-text-dim);
+  }
+
+  .project__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .project__name {
+    font-size: var(--step-h3);
+  }
+
+  .project__name a {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-block-size: var(--target-min);
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .project__name a:hover {
+    color: var(--color-link);
+    text-decoration: underline;
+  }
+
+  .project__summary {
+    color: var(--color-text-dim);
+  }
+
+  .project__credit,
+  .project__stack {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-2);
+    margin: 0;
+    font-size: var(--step-small);
+  }
+
+  .project__stack {
+    margin-block-start: auto;
+    padding-block-start: var(--space-2);
+  }
+</style>

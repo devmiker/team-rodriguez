@@ -56,15 +56,24 @@ export const COMPANY = {
   phone: undefined as string | undefined,
 
   /**
-   * Where the business operates from. Shown in the footer and used for the
-   * `areaServed` hint in structured data.
+   * Where the business operates from, as shown in the footer.
+   *
+   * Deliberately a region rather than a city. A small studio working remotely gains
+   * nothing from publishing the town it happens to sit in, and a home-office address
+   * on a business site is personal information that cannot be taken back once it has
+   * been crawled. "United States" tells a prospective client the two things they
+   * actually need — the time zone band, and who they would be contracting with.
    */
-  location: "Raleigh, North Carolina",
+  location: "Remote · United States",
 
   /**
-   * TODO: the registered business address. A North Carolina LLC files a registered
-   * agent address that is public record anyway; whether to publish it here is a
-   * choice, but structured data for a local business is not worth emitting without it.
+   * TODO: the registered business address, if you decide to publish one at all.
+   *
+   * An LLC files a registered agent address that becomes public record either way,
+   * but that is not a reason to put it on the website — and if you use a registered
+   * agent service, theirs is the address of record rather than yours. Leave this
+   * undefined and the footer and structured data simply omit it, which is the right
+   * default for a remote business.
    */
   address: undefined as
     | { street: string; city: string; region: string; postalCode: string; country: string }
