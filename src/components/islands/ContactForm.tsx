@@ -83,6 +83,8 @@ export interface ContactFormProps {
   redirectTo: string;
   /** The API path. A prop so a test can point it somewhere harmless. */
   action?: string;
+  /** Temporary shutdown while the form backend is not ready. */
+  disabled?: boolean;
 }
 
 type Status = "idle" | "sending" | "sent" | "failed" | "rate-limited";
@@ -95,6 +97,7 @@ export default function ContactForm({
   labels,
   redirectTo,
   action = "/api/contact",
+  disabled = false,
 }: ContactFormProps) {
   const [errors, setErrors] = useState<FieldErrors>({});
   const [status, setStatus] = useState<Status>("idle");
@@ -211,6 +214,15 @@ export default function ContactForm({
     );
   }
 
+  if (disabled) {
+    return (
+      <div className="contact-form__done card" role="status" aria-live="polite">
+        <h2>Contact form temporarily unavailable</h2>
+        <p>We are pausing enquiries while the form is being finalised. Please email us directly instead.</p>
+      </div>
+    );
+  }
+
   return (
     <form
       ref={formRef}
@@ -270,6 +282,7 @@ export default function ContactForm({
             required
             maxLength={LIMITS.name}
             autoComplete="name"
+            disabled={disabled}
             aria-invalid={errors.name ? true : undefined}
             aria-describedby={describedBy(errors.name && `${ids.name}-error`)}
           />
@@ -292,6 +305,7 @@ export default function ContactForm({
             maxLength={LIMITS.email}
             autoComplete="email"
             inputMode="email"
+            disabled={disabled}
             aria-invalid={errors.email ? true : undefined}
             aria-describedby={describedBy(
               `${ids.email}-hint`,
@@ -319,6 +333,7 @@ export default function ContactForm({
           type="text"
           maxLength={LIMITS.company}
           autoComplete="organization"
+          disabled={disabled}
         />
       </div>
 
@@ -331,6 +346,7 @@ export default function ContactForm({
           name="projectType"
           required
           defaultValue=""
+          disabled={disabled}
           aria-invalid={errors.projectType ? true : undefined}
           aria-describedby={describedBy(errors.projectType && `${ids.projectType}-error`)}
         >
@@ -357,6 +373,7 @@ export default function ContactForm({
             id={ids.budget}
             name="budget"
             defaultValue="unsure"
+            disabled={disabled}
             aria-describedby={`${ids.budget}-hint`}
           >
             {BUDGETS.map((value) => (
@@ -372,7 +389,7 @@ export default function ContactForm({
 
         <div className="field">
           <label htmlFor={ids.timeline}>{labels.timeline}</label>
-          <select id={ids.timeline} name="timeline" defaultValue="flexible">
+          <select id={ids.timeline} name="timeline" defaultValue="flexible" disabled={disabled}>
             {TIMELINES.map((value) => (
               <option key={value} value={value}>
                 {labels.timelineOptions[value]}
@@ -392,6 +409,7 @@ export default function ContactForm({
           rows={7}
           required
           maxLength={LIMITS.message}
+          disabled={disabled}
           aria-invalid={errors.message ? true : undefined}
           aria-describedby={describedBy(
             `${ids.message}-hint`,
@@ -409,7 +427,11 @@ export default function ContactForm({
       </div>
 
       <div className="contact-form__actions">
-        <button type="submit" className="button button--primary" disabled={status === "sending"}>
+        <button
+          type="submit"
+          className="button button--primary"
+          disabled={status === "sending" || disabled}
+        >
           {status === "sending" ? labels.submitting : labels.submit}
         </button>
       </div>

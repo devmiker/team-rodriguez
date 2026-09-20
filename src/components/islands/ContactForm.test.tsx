@@ -181,6 +181,27 @@ describe("failed submission", () => {
   });
 });
 
+describe("temporarily closed state", () => {
+  it("disables all inputs and blocks submit while keeping the form visible", () => {
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+
+    const { container } = render(
+      <ContactForm labels={labels} redirectTo="/en/thanks/" disabled />,
+    );
+
+    const form = container.querySelector("form")!;
+    expect(form.querySelectorAll("input, select, textarea, button")).toHaveLength(11);
+    for (const control of form.querySelectorAll("input, select, textarea, button")) {
+      expect((control as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement | HTMLButtonElement).disabled).toBe(true);
+    }
+
+    fireEvent.submit(form);
+    expect(fetchMock).not.toHaveBeenCalled();
+    vi.unstubAllGlobals();
+  });
+});
+
 describe("successful submission", () => {
   it("posts JSON and then shows the confirmation", async () => {
     const fetchMock = vi.fn().mockResolvedValue({ ok: true, status: 200 });
