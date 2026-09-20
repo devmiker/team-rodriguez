@@ -33,6 +33,10 @@ jobs:
 
       - run: npm ci
 
+      # The repo-level Astro type-check scans the entire tree, including api/, so the
+      # Azure Functions package must exist before `astro check` runs.
+      - run: npm --prefix api ci
+
       # Fail on a known vulnerability here rather than discovering it at review time.
       - run: npm audit --audit-level=moderate
 
@@ -51,7 +55,6 @@ jobs:
 
       - name: Build and audit the API
         run: |
-          npm --prefix api ci
           npm --prefix api audit --audit-level=moderate
           npm --prefix api run build
 
