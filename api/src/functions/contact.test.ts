@@ -8,7 +8,7 @@
  */
 
 import { describe, expect, it } from "vitest";
-import { safeRedirect } from "./contact";
+import { safeRedirect } from "./contact.js";
 
 describe("safeRedirect", () => {
   it.each(["/en/thanks/", "/de/danke/", "/es/gracias/", "/en/", "/de/kontakt/"])(
