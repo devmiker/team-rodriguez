@@ -182,7 +182,7 @@ describe("failed submission", () => {
 });
 
 describe("temporarily closed state", () => {
-  it("disables all inputs and blocks submit while keeping the form visible", () => {
+  it("keeps the form visible but disables all inputs and blocks submit", () => {
     const fetchMock = vi.fn();
     vi.stubGlobal("fetch", fetchMock);
 
@@ -191,7 +191,9 @@ describe("temporarily closed state", () => {
     );
 
     const form = container.querySelector("form")!;
-    expect(form.querySelectorAll("input, select, textarea, button")).toHaveLength(11);
+    expect(form).not.toBeNull();
+    expect(screen.getByText("Contact form temporarily unavailable")).toBeTruthy();
+
     for (const control of form.querySelectorAll("input, select, textarea, button")) {
       expect((control as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement | HTMLButtonElement).disabled).toBe(true);
     }

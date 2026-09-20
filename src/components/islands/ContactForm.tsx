@@ -157,6 +157,8 @@ export default function ContactForm({
 
   const onSubmit: SubmitHandler = async (event) => {
     event.preventDefault();
+    if (disabled) return;
+
     const form = event.currentTarget;
     const data = Object.fromEntries(new FormData(form));
 
@@ -214,15 +216,6 @@ export default function ContactForm({
     );
   }
 
-  if (disabled) {
-    return (
-      <div className="contact-form__done card" role="status" aria-live="polite">
-        <h2>Contact form temporarily unavailable</h2>
-        <p>We are pausing enquiries while the form is being finalised. Please email us directly instead.</p>
-      </div>
-    );
-  }
-
   return (
     <form
       ref={formRef}
@@ -232,6 +225,12 @@ export default function ContactForm({
       onSubmit={onSubmit}
       noValidate
     >
+      {disabled && (
+        <div className="contact-form__notice card" role="status" aria-live="polite">
+          <h2>Contact form temporarily unavailable</h2>
+          <p>We are pausing enquiries while the form is being finalised. Please email us directly instead.</p>
+        </div>
+      )}
       {/* Where the no-JavaScript path should land. Validated server-side against the
           site's own known paths — never used as an open redirect. */}
       <input type="hidden" name="redirectTo" value={redirectTo} />
