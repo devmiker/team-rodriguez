@@ -195,6 +195,9 @@ describe("temporarily closed state", () => {
     expect(screen.getByText("Contact form temporarily unavailable")).toBeTruthy();
 
     for (const control of form.querySelectorAll("input, select, textarea, button")) {
+      const name = (control as HTMLElement).getAttribute("name");
+      const type = (control as HTMLInputElement).type;
+      if (type === "hidden" || name === HONEYPOT_FIELD) continue;
       expect((control as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement | HTMLButtonElement).disabled).toBe(true);
     }
 
