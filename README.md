@@ -1,8 +1,11 @@
 # Team Rodriguez
 
 Marketing site for a small software studio that builds websites for small businesses.
-Astro 7, React islands, TypeScript, three languages, light and dark, no third-party
-anything.
+Astro 7, React islands, TypeScript, three languages (English, Spanish, German), light
+and dark, no third-party anything.
+
+The site presents languages in the header order English → Spanish → German, with
+English as the default source language and Spanish as the second navigation language.
 
 > **Not live yet.** `LAUNCHED` in `src/data/company.ts` is `false`, which means every
 > page is `noindex`, no sitemap is written and `robots.txt` disallows everything. See
@@ -52,7 +55,7 @@ src/components/ .astro components; islands/ holds the two React ones
 src/views/      One per page
 src/styles/     tokens.css is the palette; nothing else may contain a colour
 api/            The Azure Function behind the contact form
-docs/           SECURITY.md, ROADMAP.md
+docs/           DEPLOY.md, SECURITY.md, ROADMAP.md
 AGENTS.md       The working context. Read this before changing anything.
 ```
 
@@ -77,6 +80,9 @@ apart.
 `<form method="post">`. React upgrades it in place to an inline submit with field-level
 errors.
 
+**Language order is intentional.** The site presents English, then Spanish, then German
+in the header and language switcher, matching the studio’s current communication mix.
+
 **Validation is one module, run twice.** `src/lib/contact.ts` is imported by both the
 browser island and the Azure Function.
 
@@ -93,6 +99,10 @@ at build time, so the policy cannot drift from what shipped.
 Azure Static Web Apps, from `.github/workflows/ci.yml` on a push to `main`. The deploy
 step skips with a warning until `AZURE_STATIC_WEB_APPS_API_TOKEN` exists as a
 repository secret, so `main` stays green in the meantime.
+
+**Setting it up the first time: [`docs/DEPLOY.md`](docs/DEPLOY.md).** It covers creating
+the Azure resource, the mail configuration, the custom domain, and the order the launch
+switches have to be thrown in. It also records why this is not on GitHub Pages.
 
 **Repository variables** (Settings → Secrets and variables → Actions → Variables):
 

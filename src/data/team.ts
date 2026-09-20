@@ -16,15 +16,30 @@
  * agreement, and let them read their own entry, before flipping their flag.
  *
  * ── TODO ─────────────────────────────────────────────────────────────────────
- *  Francisco's and Luis's entries need their own words. What is here is a
- *  placeholder drafted from what is publicly visible, which is not the same as
- *  something they have agreed to have published about them — so both are
- *  `published: false` until they have seen it and said yes.
+ *  Francisco and Luis are published at Mike's request. Two things still need
+ *  doing, and neither is a code change:
  *
- *  Photos go in `public/team/` as square images, at least 640×640, and the
- *  filename goes in `photo`. Leave `photo` undefined and the card renders
- *  initials in a tinted circle instead, which looks deliberate rather than
- *  unfinished — so there is no hurry about photography.
+ *    1. Both should read their own entry and approve it. It publishes their
+ *       name, their specialisms and a link to their profile.
+ *    2. Both need a `bio` in their own words, and Luis needs his real title.
+ *
+ *  `bio` is optional on purpose. A card without one renders cleanly — name,
+ *  role, what they take on, what they work in — rather than carrying a sentence
+ *  someone else invented for them. An empty field is honest; a fabricated one
+ *  is not, and it is the kind of thing a colleague notices.
+ *
+ *  Locations are regions, not cities, for the reason given in company.ts: a
+ *  person's home town is personal information and a remote studio gains nothing
+ *  from publishing it. Leave `location` undefined to omit it entirely.
+ *
+ *  Photos live in `public/team/` and the filename goes in `photo`. They are
+ *  square WebP at 256x256 — the card renders the avatar at 64px, so 256 covers a
+ *  2x display with room to spare, and the three of them together weigh under
+ *  20 KB. Anything larger is bytes nobody sees.
+ *
+ *  Leave `photo` undefined and the card renders initials in a tinted circle
+ *  instead, which looks deliberate rather than unfinished — so a new colleague
+ *  can be added before there is a photograph of them.
  * ─────────────────────────────────────────────────────────────────────────────
  */
 
@@ -39,8 +54,12 @@ export interface TeamMember {
   role: LocalizedText;
   /** Where they are. Optional — some people would rather not say. */
   location?: string;
-  /** Two or three sentences. What they do and what they are good at — not a CV. */
-  bio: LocalizedText;
+  /**
+   * Two or three sentences, in their own words. Optional: a card without a bio
+   * looks deliberate, and is far better than one carrying words its subject never
+   * wrote. Leave it undefined until the person has supplied one.
+   */
+  bio?: LocalizedText;
   /** Which services in `SERVICES` this person takes on. Ids, checked at build time. */
   services: string[];
   /** Short technology labels. Not translated: these are proper nouns. */
@@ -66,7 +85,7 @@ export const TEAM: TeamMember[] = [
       de: "Gründer, Softwareentwickler",
       es: "Fundador, ingeniero de software",
     },
-    location: "Raleigh, North Carolina",
+    location: "United States · Remote",
     // TODO: rewrite in your own words. Drafted from your portfolio — it is a starting
     // point, not your biography.
     bio: {
@@ -76,7 +95,8 @@ export const TEAM: TeamMember[] = [
     },
     services: ["website", "shop", "care", "audit"],
     focus: ["TypeScript", "React", "Astro", "C#", "Accessibility"],
-    speaks: ["en"],
+    speaks: ["en", "es", "de"],
+    photo: "mike.webp",
     links: {
       github: "https://github.com/devmiker",
       linkedin: "https://www.linkedin.com/in/mike-l-rodriguez/",
@@ -85,8 +105,7 @@ export const TEAM: TeamMember[] = [
   },
   {
     id: "francisco-martinez",
-    // TODO: Francisco needs to read this entry and agree to it before this goes true.
-    published: false,
+    published: true,
     name: "Francisco Martinez",
     role: {
       en: "Software engineer, front end",
@@ -104,30 +123,27 @@ export const TEAM: TeamMember[] = [
     services: ["website", "shop"],
     focus: ["JavaScript", "React", "HTML", "CSS"],
     speaks: ["en", "es"],
+    photo: "francisco.webp",
     links: {
       linkedin: "https://www.linkedin.com/in/francisco-martinez-me/",
     },
   },
   {
     id: "luis-inzunza",
-    // TODO: Luis needs to read this entry and agree to it before this goes true.
-    published: false,
+    published: true,
     name: "Luis Inzunza",
     role: {
-      // TODO: Luis's actual title — his LinkedIn is behind a sign-in wall, so this is
-      // a guess and should not be published as one.
+      // TODO: Luis's actual title. His LinkedIn sits behind a sign-in wall, so this
+      // is the generic form rather than a guess dressed up as a fact. Ask him.
       en: "Software engineer",
       de: "Softwareentwickler",
       es: "Ingeniero de software",
     },
-    // TODO: Luis's own words.
-    bio: {
-      en: "Placeholder. Not rendered while `published` is false — ask Luis for two sentences and his preferred title before turning this on.",
-      de: "Platzhalter. Wird nicht gerendert, solange `published` false ist.",
-      es: "Marcador de posición. No se renderiza mientras `published` sea false.",
-    },
+    // No bio: nobody has asked Luis for one yet, so there is nothing honest to put
+    // here. The card renders without it. TODO: two sentences from Luis.
     services: ["website", "care"],
     focus: ["JavaScript"],
+    photo: "luis.webp",
     links: {
       linkedin: "https://www.linkedin.com/in/luis-inzu/",
     },
