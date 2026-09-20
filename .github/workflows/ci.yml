@@ -1,0 +1,102 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# Read-only by default. The deploy job below needs nothing more, because the Static
+# Web Apps action authenticates with its own deployment token rather than with
+# GITHUB_TOKEN.
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Check, test, build, audit
+    runs-on: ubuntu-latest
+    steps:
+      # Actions are pinned to a commit SHA, not a tag. A tag can be moved to point at
+      # different code; a SHA cannot. This is the single most effective thing you can
+      # do about supply-chain risk in a workflow, and Dependabot keeps the pins fresh.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # Fail on a known vulnerability here rather than discovering it at review time.
+      - run: npm audit --audit-level=moderate
+
+      # astro check -> vitest -> astro build -> axe. The build also runs the data-model
+      # checks in src/middleware.ts, so a broken data file fails here too.
+      - run: npm run verify
+        env:
+          # Repository variables: Settings -> Secrets and variables -> Actions.
+          # SITE_URL  the production origin. Until it is set, every page is noindex
+          #           and no sitemap is written (see astro.config.mjs).
+          # CSP_MODE  "enforce" turns the generated Content-Security-Policy from
+          #           report-only into a blocking one. Leave unset until it has been
+          #           watched on the live site for a while.
+          SITE_URL: ${{ vars.SITE_URL }}
+          CSP_MODE: ${{ vars.CSP_MODE }}
+
+      - name: Build and audit the API
+        run: |
+          npm --prefix api ci
+          npm --prefix api audit --audit-level=moderate
+          npm --prefix api run build
+
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: site
+          path: |
+            dist
+            api
+            !api/node_modules
+          retention-days: 7
+
+  deploy:
+    name: Deploy to Azure Static Web Apps
+    needs: verify
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          name: site
+
+      # Skip with a warning until the Azure resource exists and its deployment token is
+      # saved as a repository secret, so main stays green in the meantime.
+      - name: Check deployment token
+        id: token
+        env:
+          TOKEN: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+        run: |
+          if [ -z "$TOKEN" ]; then
+            echo "::warning::AZURE_STATIC_WEB_APPS_API_TOKEN is not set; skipping deploy."
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "ready=true" >> "$GITHUB_OUTPUT"
+
+      - name: Upload build
+        if: steps.token.outputs.ready == 'true'
+        uses: Azure/static-web-apps-deploy@4d27395796ac319302594769cfe812bd207490b1 # v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          action: upload
+          app_location: dist
+          api_location: api
+          skip_app_build: true
+          # The API is compiled in the verify job and uploaded already built, so the
+          # platform must not try to build it again.
+          skip_api_build: true

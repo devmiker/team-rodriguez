@@ -1,0 +1,29 @@
+# Dependency updates.
+#
+# Three ecosystems, because this repository has three dependency trees and a stale one
+# is a stale one regardless of which. The GitHub Actions entry matters more than it
+# looks: the workflow pins actions to commit SHAs, and without this those pins would
+# quietly rot.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      # One PR for the routine patch churn, separate PRs for anything that could
+      # actually break — which is where review effort is worth spending.
+      patch:
+        update-types: [patch]
+
+  - package-ecosystem: npm
+    directory: "/api"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
