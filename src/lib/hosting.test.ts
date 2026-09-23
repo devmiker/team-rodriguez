@@ -113,3 +113,13 @@ describe("the hand-written headers", () => {
     expect(root?.statusCode).toBe(301);
   });
 });
+
+describe("caching", () => {
+  it("keeps Astro's hashed files for a year", () => {
+    // Every file under /_astro/ carries a content hash, so a new build is a new URL.
+    // Azure's default is 30 seconds with revalidation, which re-checks every font on
+    // every page and can let them visibly swap again.
+    const route = config.routes?.find((r: { route: string }) => r.route === "/_astro/*");
+    expect(route?.headers?.["Cache-Control"]).toBe("public, max-age=31536000, immutable");
+  });
+});

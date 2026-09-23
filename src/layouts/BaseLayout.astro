@@ -53,13 +53,13 @@ const t = useTranslations(locale);
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
     {/*
-      No <link rel="preload"> for fonts. Each family is split by unicode-range, and
-      preloading would force every file down on every page regardless of what the page
-      actually renders. The browser fetches only what it needs, and the fallback
-      metrics declared in astro.config.mjs keep layout shift small meanwhile.
+      Two preloads: the heading face (Space Grotesk 700) and body text (Inter 400).
+      Every family here is latin-only, so each preload is exactly one file. Without
+      them the page painted in fallback fonts and restyled a second later; see the note
+      on `face()` in astro.config.mjs.
     */}
-    <Font cssVariable="--font-space-grotesk" />
-    <Font cssVariable="--font-inter" />
+    <Font cssVariable="--font-space-grotesk" preload={[{ weight: 700 }]} />
+    <Font cssVariable="--font-inter" preload={[{ weight: 400 }]} />
     <Font cssVariable="--font-jetbrains-mono" />
 
     <Seo page={page} locale={locale} title={title} description={description} noindex={noindex} />

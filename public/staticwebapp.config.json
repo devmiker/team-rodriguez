@@ -1,18 +1,35 @@
 {
   "routes": [
     {
+      "route": "/_astro/*",
+      "headers": {
+        "Cache-Control": "public, max-age=31536000, immutable"
+      }
+    },
+    {
       "route": "/",
       "redirect": "/en/",
       "statusCode": 301
     },
     {
       "route": "/api/contact",
-      "methods": ["POST"],
-      "allowedRoles": ["anonymous"]
+      "methods": [
+        "POST"
+      ],
+      "allowedRoles": [
+        "anonymous"
+      ]
     },
     {
       "route": "/api/*",
-      "methods": ["GET", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"],
+      "methods": [
+        "GET",
+        "PUT",
+        "PATCH",
+        "DELETE",
+        "HEAD",
+        "OPTIONS"
+      ],
       "statusCode": 405
     }
   ],

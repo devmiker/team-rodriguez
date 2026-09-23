@@ -34,12 +34,24 @@ const LATIN = /** @type {[string, ...string[]]} */ ([
 /**
  * One @font-face: a @fontsource file and the CSS weight it answers to.
  *
+ * ── Why the display face is `block` and preloaded ─────────────────────────
+ *
+ * With every face `swap` and nothing preloaded, the browser found the font files only
+ * after reading the CSS, painted headings in the fallback, then restyled them about a
+ * second later on a phone: the page visibly changed font after loading. Found on
+ * cafe-con-compas (2026-09-23), which shares this setup. Now Space Grotesk is `block`,
+ * so a heading appears once in its own face, and BaseLayout preloads Space Grotesk 700
+ * and Inter 400, one latin file each, so the wait is one small request. Inter stays
+ * `swap`: body text must never be invisible.
+ *
  * @param {string} pkg     @fontsource package name, e.g. "inter"
  * @param {number} weight  CSS weight this face serves
+ * @param {"swap" | "block"} [display]
  */
-const face = (pkg, weight) => ({
+const face = (pkg, weight, display = "swap") => ({
   weight,
   style: /** @type {const} */ ("normal"),
+  display,
   src: /** @type {[string]} */ ([`@fontsource/${pkg}/files/${pkg}-latin-${weight}-normal.woff2`]),
   unicodeRange: LATIN,
 });
@@ -252,7 +264,7 @@ export default defineConfig({
       fallbacks: ["system-ui", "sans-serif"],
       options: {
         variants: /** @type {[ReturnType<typeof face>, ...ReturnType<typeof face>[]]} */ (
-          [500, 700].map((w) => face("space-grotesk", w))
+          [500, 700].map((w) => face("space-grotesk", w, "block"))
         ),
       },
     },
