@@ -145,6 +145,7 @@ export const es: UiStrings = {
   "team.pending": "Estamos redactando los perfiles del equipo.",
   "team.focus": "Especialidad",
   "team.offers": "De qué se encargan",
+  "team.highlights": "Más allá del código",
   "team.speaks": "Trabaja en",
   "team.profile": "Perfil",
 

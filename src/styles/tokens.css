@@ -56,6 +56,24 @@
   --brand-mist: #f1f6f4; /* light raised surface, faintly green so it sits with emerald */
   --brand-white: #ffffff;
 
+  /* The scenery: the forest, the sky, and what hangs in it (Scenery.astro). Pure
+     decoration — none of these ever sits behind or acts as text, so none of them is
+     in the contrast pairs. The sun is blue and the moon is green on purpose: the
+     sky body is the one place the palette is allowed to be playful. */
+  --brand-sun-blue: #3d8bfd;
+  --brand-sun-glow: #b9dcff;
+  --brand-moon-green: #a8f5d2;
+  --brand-moon-crater: #74d9ae;
+  --brand-star: #dfe9f5;
+  --brand-sky-day: #e8f3fc;
+  --brand-sky-night: #0d1a2d;
+  --brand-pine-mist: #dfeee8;
+  --brand-pine-sage: #a9d3c2;
+  --brand-pine-deep: #2f7d62;
+  --brand-pine-night-far: #1b314a;
+  --brand-pine-night-mid: #163b3b;
+  --brand-pine-night-near: #0c2925;
+
   /* Reserved for genuine errors. Not a decorative colour. */
   --brand-danger: #b3261e;
   --brand-danger-bright: #ff9d94;
@@ -98,6 +116,18 @@
   --shadow-card: 0 18px 40px -28px rgb(23 41 63 / 0.4);
   --shadow-raised: 0 1px 2px rgb(23 41 63 / 0.06), 0 8px 24px -16px rgb(23 41 63 / 0.25);
   --overlay: rgb(23 41 63 / 0.66);
+
+  /* Scenery. Decorative only — see the brand note above. */
+  --color-sun: var(--brand-sun-blue);
+  --color-sun-glow: var(--brand-sun-glow);
+  --color-moon: var(--brand-moon-green);
+  --color-moon-glow: var(--brand-emerald-bright);
+  --color-moon-crater: var(--brand-moon-crater);
+  --color-star: var(--brand-star);
+  --color-sky: var(--brand-sky-day);
+  --color-forest-far: var(--brand-pine-mist);
+  --color-forest-mid: var(--brand-pine-sage);
+  --color-forest-near: var(--brand-pine-deep);
 }
 
 /* --- Dark theme ---------------------------------------------------------
@@ -141,6 +171,11 @@
     --shadow-card: 0 18px 40px -24px rgb(0 0 0 / 0.7);
     --shadow-raised: 0 1px 2px rgb(0 0 0 / 0.5), 0 8px 24px -16px rgb(0 0 0 / 0.6);
     --overlay: rgb(14 30 48 / 0.78);
+
+    --color-sky: var(--brand-sky-night);
+    --color-forest-far: var(--brand-pine-night-far);
+    --color-forest-mid: var(--brand-pine-night-mid);
+    --color-forest-near: var(--brand-pine-night-near);
   }
 }
 
@@ -176,6 +211,11 @@
   --shadow-card: 0 18px 40px -24px rgb(0 0 0 / 0.7);
   --shadow-raised: 0 1px 2px rgb(0 0 0 / 0.5), 0 8px 24px -16px rgb(0 0 0 / 0.6);
   --overlay: rgb(14 30 48 / 0.78);
+
+  --color-sky: var(--brand-sky-night);
+  --color-forest-far: var(--brand-pine-night-far);
+  --color-forest-mid: var(--brand-pine-night-mid);
+  --color-forest-near: var(--brand-pine-night-near);
 }
 
 /* --- Type ----------------------------------------------------------------

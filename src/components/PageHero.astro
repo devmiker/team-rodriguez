@@ -6,6 +6,8 @@
  * same place in the document. That consistency is what makes heading navigation
  * useful to a screen-reader user.
  */
+import Scenery from "./Scenery.astro";
+
 interface Props {
   eyebrow?: string;
   heading: string;
@@ -16,6 +18,8 @@ const { eyebrow, heading, lead } = Astro.props;
 ---
 
 <div class="hero">
+  {/* Seeded by the heading, so each inner page has its own stretch of forest. */}
+  <Scenery seed={heading} />
   <div class="page" data-enter>
     {eyebrow && <p class="eyebrow">{eyebrow}</p>}
     <h1>{heading}</h1>
@@ -25,7 +29,12 @@ const { eyebrow, heading, lead } = Astro.props;
 
 <style>
   .hero {
-    padding-block: var(--rhythm-tight);
+    --scene-forest: clamp(3.5rem, 9vw, 6.5rem);
+    --scene-body: clamp(3rem, 8vw, 6rem);
+    --scene-body-top: var(--space-6);
+    position: relative;
+    isolation: isolate;
+    padding-block: var(--rhythm-tight) calc(var(--rhythm-tight) + var(--scene-forest));
     border-block-end: 1px solid var(--color-line);
     background:
       radial-gradient(

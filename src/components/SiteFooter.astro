@@ -10,6 +10,7 @@ import type { Locale } from "../i18n/locales";
 import { LEGAL_ROUTES, NAV_ROUTES, pathFor } from "../i18n/routes";
 import { useTranslations } from "../i18n/ui";
 import Icon from "./Icon.astro";
+import Scenery from "./Scenery.astro";
 
 interface Props {
   locale: Locale;
@@ -35,6 +36,8 @@ const socialLinks: FooterLink[] = [
 ---
 
 <footer class="footer band on-band">
+  {/* A tree line growing out of the top edge of the footer, in the band colour. */}
+  <Scenery seed="footer" variant="band" />
   <div class="page">
     <div class="footer__grid">
       <div class="footer__about">
@@ -126,6 +129,8 @@ const socialLinks: FooterLink[] = [
 
 <style>
   .footer {
+    position: relative;
+    isolation: isolate;
     padding-block: var(--rhythm-tight) var(--space-8);
     border-block-start: 1px solid var(--color-line-on-band);
   }

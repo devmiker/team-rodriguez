@@ -11,6 +11,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import Icon from "../components/Icon.astro";
 import ServiceCard from "../components/ServiceCard.astro";
 import TeamCard from "../components/TeamCard.astro";
+import Scenery from "../components/Scenery.astro";
 import PartnerCard from "../components/PartnerCard.astro";
 import { toLocale } from "../i18n/locales";
 import { pathFor } from "../i18n/routes";
@@ -37,6 +38,7 @@ const steps = [1, 2, 3, 4] as const;
 <BaseLayout page={{ route: "home" }} title={t("home.title")} description={t("home.description")}>
   {/* --- Hero --- */}
   <section class="hero">
+    <Scenery seed="home" />
     <div class="page hero__inner" data-enter>
       <p class="eyebrow">
         <span aria-hidden="true">&lt;</span>{t("home.hero.eyebrow")}<span aria-hidden="true"
@@ -191,7 +193,10 @@ const steps = [1, 2, 3, 4] as const;
 
 <style>
   .hero {
-    padding-block: var(--rhythm) var(--rhythm-tight);
+    --scene-forest: clamp(5.5rem, 15vw, 11rem);
+    position: relative;
+    isolation: isolate;
+    padding-block: var(--rhythm) calc(var(--rhythm-tight) + var(--scene-forest));
     background:
       radial-gradient(
         70rem 28rem at 10% -20%,

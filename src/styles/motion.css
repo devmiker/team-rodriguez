@@ -252,6 +252,54 @@
   }
 }
 
+/* --- Theme switch ---------------------------------------------------------
+ *
+ * ThemeToggle.astro wraps the switch in a same-document view transition and grows
+ * the new theme out of the button as a circle (the clip-path itself is a Web
+ * Animation there, because its centre is computed). This block does the rest:
+ *
+ *   - turns off the page cross-fade above while a theme switch is running, so
+ *     the circle is a clean edge rather than a fade on top of a fade
+ *   - takes the header out of its own transition group for the duration, so it
+ *     changes with the circle instead of cross-fading separately
+ *   - sets the sun and rises the moon (or the reverse) in the scenery, which
+ *     is live inside the new snapshot and so animates while the circle grows
+ *   - gives the toggle icon a quarter turn as it swaps
+ *
+ * All of it sits inside no-preference. The toggle script also checks, and skips
+ * the transition entirely under reduced motion.
+ */
+
+@media (prefers-reduced-motion: no-preference) {
+  :root[data-theme-switching]::view-transition-old(root),
+  :root[data-theme-switching]::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+  }
+
+  :root[data-theme-switching] .header {
+    view-transition-name: none;
+  }
+
+  .sky-body,
+  .scene__stars {
+    transition:
+      transform var(--duration-slow) var(--ease-out),
+      opacity var(--duration-slow) var(--ease-out);
+  }
+
+  :root[data-theme-switching] .theme-toggle svg {
+    animation: icon-turn 460ms var(--ease-spring);
+  }
+}
+
+@keyframes icon-turn {
+  from {
+    opacity: 0;
+    transform: rotate(-90deg) scale(0.6);
+  }
+}
+
 /* --- Reduced motion -------------------------------------------------------
  *
  * The belt to global.css's braces.

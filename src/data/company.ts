@@ -98,7 +98,7 @@ export const COMPANY = {
    */
   social: {
     github: "https://github.com/devmiker" as string | undefined,
-    linkedin: "https://www.linkedin.com/in/mike-l-rodriguez/" as string | undefined,
+    linkedin: "https://www.linkedin.com/in/dev-mike-r/" as string | undefined,
   },
 
   foundedYear: 2026,

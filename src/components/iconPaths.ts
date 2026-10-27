@@ -26,6 +26,7 @@ export const ICON_PATHS = {
   chevronDown: "M6 9l6 6 6-6",
   arrowRight: "M4 12h15M13 6l6 6-6 6",
   check: "M4 12.5l5 5L20 6.5",
+  tree: "M12 3l-5 7h3l-4 6h12l-4-6h3zM12 16v5",
 
   // Theme
   sun: "M12 4V2M12 22v-2M6 6L4.5 4.5M19.5 19.5L18 18M4 12H2M22 12h-2M6 18l-1.5 1.5M19.5 4.5L18 6M16 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0",

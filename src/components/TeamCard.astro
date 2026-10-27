@@ -1,7 +1,12 @@
 ---
 /**
- * One team member: photo or initials, name, role, bio, the services they take on, the
- * technologies they work in, and links to their own profiles.
+ * One team member: a cover strip of their own forest, photo or initials, name, role,
+ * bio, a few facts beyond the job, the services they take on, the technologies they
+ * work in, and links to their own profiles.
+ *
+ * The cover is <Scenery> seeded by the member's id, so each person gets a different
+ * stretch of trees — the same one every build — under the same sun or moon as the
+ * rest of the site.
  *
  * The services are rendered as the service names from `src/data/services.ts` rather
  * than free text on the person, so what a person is shown offering is always something
@@ -17,6 +22,7 @@ import { useTranslations } from "../i18n/ui";
 import { initials, type TeamMember } from "../data/team";
 import { serviceById } from "../data/services";
 import Icon from "./Icon.astro";
+import Scenery from "./Scenery.astro";
 
 interface Props {
   member: TeamMember;
@@ -40,6 +46,10 @@ const profileLinks = [
 ---
 
 <article class="member card">
+  <div class="member__cover">
+    <Scenery seed={member.id} variant="card" />
+  </div>
+
   <div class="member__head">
     {
       member.photo ? (
@@ -72,6 +82,22 @@ const profileLinks = [
   </div>
 
   {member.bio && <p class="member__bio">{localized(member.bio, locale)}</p>}
+
+  {
+    member.highlights && member.highlights.length > 0 && (
+      <div class="member__block">
+        <h4 class="member__sub">{t("team.highlights")}</h4>
+        <ul class="member__highlights">
+          {member.highlights.map((item) => (
+            <li>
+              <Icon name="tree" size="1.1em" class="member__highlight-icon" />
+              <span>{localized(item, locale)}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )
+  }
 
   {
     services.length > 0 && (
@@ -128,12 +154,34 @@ const profileLinks = [
     display: flex;
     flex-direction: column;
     gap: var(--space-4);
+    overflow: hidden;
   }
 
+  /* Bleeds to the card's edges by cancelling the card's padding. */
+  .member__cover {
+    position: relative;
+    isolation: isolate;
+    block-size: 5.5rem;
+    margin: calc(-1 * var(--space-6)) calc(-1 * var(--space-6)) 0;
+    border-block-end: 1px solid var(--color-line);
+  }
+
+  /* The avatar sits on the tree line, half over the cover; the name stays below it.
+     Positioned so it paints above the cover, which is its own stacking context. */
   .member__head {
+    position: relative;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: var(--space-4);
+  }
+
+  .member__head > div {
+    padding-block-start: var(--space-2);
+  }
+
+  .member__photo,
+  .member__initials {
+    margin-block-start: calc(-1 * var(--space-10));
   }
 
   .member__photo,
@@ -142,6 +190,12 @@ const profileLinks = [
     block-size: 4rem;
     border-radius: var(--radius-pill);
     flex: none;
+  }
+
+  .member__photo,
+  .member__initials {
+    position: relative;
+    box-shadow: 0 0 0 4px var(--color-bg-raised);
   }
 
   .member__photo {
@@ -217,6 +271,26 @@ const profileLinks = [
   .tag--accent {
     border-color: color-mix(in oklab, var(--color-accent) 45%, transparent);
     color: var(--color-link);
+  }
+
+  .member__highlights {
+    display: grid;
+    gap: var(--space-2);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .member__highlights li {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-2);
+    font-size: var(--step-small);
+  }
+
+  :global(.member__highlight-icon) {
+    margin-block-start: 0.2em;
+    color: var(--color-accent);
   }
 
   .member__languages {

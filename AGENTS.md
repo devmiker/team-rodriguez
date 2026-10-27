@@ -152,6 +152,15 @@ the last one breaks find-in-page, the scrollbar and keyboard paging, and is the 
 common complaint about sites built this way. Page transitions use the native
 `@view-transition` rule, so there is no client-side router to go wrong.
 
+**The scenery is the site's one playful element.** Evergreen ridges, a blue sun by day
+and a green moon with stars by night (`Scenery.astro`), behind the heroes, on each team
+card's cover, and as a tree line on the footer. The trees are generated at build time
+from a seed, so each placement differs but every build is identical, and they are drawn
+as repeating SVG patterns because one path per tree added 65 KB to the home page.
+Switching theme grows the new theme out of the toggle as a circle (a same-document view
+transition) while the sun sets and the moon rises. Under reduced motion, or without
+View Transitions, it just switches.
+
 **CSP is generated, not written.** `astro.config.mjs` hashes every inline script and
 style the build produced. A hand-maintained policy drifts the first time someone edits
 an inline script, and the usual fix — `'unsafe-inline'` — throws away most of the value.

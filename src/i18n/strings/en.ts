@@ -144,6 +144,7 @@ export const en = {
   "team.focus": "Focus",
   "team.offers": "What they take on",
   "team.speaks": "Works in",
+  "team.highlights": "Beyond the code",
   "team.profile": "Profile",
 
   // --- Partners ---------------------------------------------------------

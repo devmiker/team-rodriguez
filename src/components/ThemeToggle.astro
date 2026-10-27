@@ -15,9 +15,17 @@
  * two places — the device setting and `data-theme` — and a label that disagrees with
  * the colours is worse than no label.
  *
- * The toggle itself is four lines of inline script. It is inline because bundling it
- * would delay the first click on an otherwise-static page, and its bytes are hashed
- * into the CSP at build time.
+ * The toggle itself is a short inline script. It is inline because bundling it would
+ * delay the first click on an otherwise-static page, and its bytes are hashed into the
+ * CSP at build time.
+ *
+ * Switching is animated with a same-document view transition: the new theme is
+ * revealed as a circle growing out of this button, while the sun sets and the moon
+ * rises in the scenery (Scenery.astro; the CSS half lives in motion.css). The circle
+ * is driven by the Web Animations API because its centre is wherever the button
+ * happens to be, and an inline `style` would need `'unsafe-inline'` in the CSP.
+ * With no View Transitions support, or with reduced motion requested, the theme just
+ * switches — the animation is never in the way of the change itself.
  */
 import Icon from "./Icon.astro";
 import { THEME_ATTRIBUTE, THEME_STORAGE_KEY } from "../lib/theme";
@@ -39,16 +47,38 @@ const t = useTranslations(Astro.props.locale);
 </button>
 
 <script is:inline define:vars={{ key: THEME_STORAGE_KEY, attribute: THEME_ATTRIBUTE }}>
-  document.querySelector("[data-theme-toggle]")?.addEventListener("click", () => {
+  document.querySelector("[data-theme-toggle]")?.addEventListener("click", (event) => {
+    const root = document.documentElement;
     const dark =
-      document.documentElement.getAttribute(attribute) === "dark" ||
-      (!document.documentElement.hasAttribute(attribute) &&
-        matchMedia("(prefers-color-scheme: dark)").matches);
+      root.getAttribute(attribute) === "dark" ||
+      (!root.hasAttribute(attribute) && matchMedia("(prefers-color-scheme: dark)").matches);
     const next = dark ? "light" : "dark";
-    document.documentElement.setAttribute(attribute, next);
-    try {
-      localStorage.setItem(key, next);
-    } catch {}
+    const apply = () => {
+      root.setAttribute(attribute, next);
+      try {
+        localStorage.setItem(key, next);
+      } catch {}
+    };
+    // The new theme spreads out from the button as a circle. Without view
+    // transitions, or with reduced motion asked for, it simply switches.
+    if (!document.startViewTransition || !matchMedia("(prefers-reduced-motion: no-preference)").matches) {
+      return apply();
+    }
+    const box = event.currentTarget.getBoundingClientRect();
+    const x = box.left + box.width / 2;
+    const y = box.top + box.height / 2;
+    const r = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+    root.setAttribute("data-theme-switching", "");
+    const transition = document.startViewTransition(apply);
+    transition.ready
+      .then(() =>
+        root.animate(
+          { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${r}px at ${x}px ${y}px)`] },
+          { duration: 460, easing: "cubic-bezier(0, 0, 0.3, 1)", pseudoElement: "::view-transition-new(root)" },
+        ),
+      )
+      .catch(() => {});
+    transition.finished.finally(() => root.removeAttribute("data-theme-switching"));
   });
 </script>
 

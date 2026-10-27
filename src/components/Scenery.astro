@@ -1,0 +1,348 @@
+---
+/**
+ * The landscape behind a hero or a card: a ridge of evergreens in three depths, and a
+ * sky with a blue sun in the light theme and a green moon (with stars) in the dark one.
+ *
+ * Pure decoration. The whole thing is `aria-hidden`, takes no pointer events, and is
+ * drawn behind its parent's content, so it can never cost a visitor anything but a
+ * few kilobytes. The parent must be `position: relative; isolation: isolate`.
+ *
+ * ── How it is drawn ──────────────────────────────────────────────────────────
+ *
+ * The trees are generated here at build time from `seed`, so every placement gets its
+ * own forest but the same page always renders the same one (a random forest would
+ * change the HTML on every build, and with it the cache). Each layer is ONE path, so a
+ * hero with sixty trees is still three DOM nodes.
+ *
+ * The forest SVG uses `xMidYMax slice`: trees keep their shape at every width and the
+ * sides are cropped, rather than the whole ridge being squashed on a phone.
+ *
+ * ── Which sky body shows ─────────────────────────────────────────────────────
+ *
+ * Both are always in the markup and CSS picks one, with the same selector pattern as
+ * ThemeToggle.astro and tokens.css: device setting first, explicit `data-theme`
+ * second. No script decides anything here, so the right sky renders with JavaScript
+ * off. The set-and-rise when the theme switches is a transition in motion.css.
+ *
+ * Colours come from the `--color-sun/moon/forest-*` tokens.
+ */
+
+interface Props {
+  /** Any string. Same seed, same forest. */
+  seed: string;
+  /** "hero" is the full scene; "card" is a short cover strip; "band" is a single
+   *  silhouette in the band colour, for the top edge of the footer. */
+  variant?: "hero" | "card" | "band";
+}
+
+const { seed, variant = "hero" } = Astro.props;
+
+/** A small, fast, deterministic PRNG (mulberry32) seeded from a string hash. */
+function random(seedText: string): () => number {
+  let h = 1779033703 ^ seedText.length;
+  for (const ch of seedText) {
+    h = Math.imul(h ^ ch.charCodeAt(0), 3432918353);
+    h = (h << 13) | (h >>> 19);
+  }
+  return () => {
+    h = (h + 0x6d2b79f5) | 0;
+    let t = Math.imul(h ^ (h >>> 15), 1 | h);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+/* Each drawing is much wider than it is tall, so with `slice` the HEIGHT is always the
+   constraining side: the sides get cropped, never the treetops. If the tops ever look
+   sliced flat, the box has become wider than W:H allows — widen W, do not shrink H.
+   Widening costs nothing: the trees are a repeating pattern, not one path per tree. */
+const W = 4000;
+const H = variant === "hero" ? 220 : variant === "card" ? 120 : 90;
+const r1 = (n: number) => Math.round(n);
+
+/** One fir: three stepped tiers and a stub of trunk, as a closed polygon. */
+function fir(x: number, base: number, h: number): string {
+  const w = h * 0.46;
+  const right: [number, number][] = [
+    [0.2, 0.7],
+    [0.11, 0.7],
+    [0.34, 0.4],
+    [0.19, 0.4],
+    [0.5, 0.1],
+    [0.06, 0.1],
+    [0.06, 0],
+  ];
+  const pts: [number, number][] = [[x, base - h]];
+  for (const [dx, dy] of right) pts.push([x + w * dx, base - h * dy]);
+  for (const [dx, dy] of [...right].reverse()) pts.push([x - w * dx, base - h * dy]);
+  // Relative steps after the first point: short numbers, roughly half the bytes.
+  const abs = pts.map(([px, py]) => [r1(px), r1(py)] as const);
+  let d = `M${abs[0]![0]} ${abs[0]![1]}l`;
+  for (let i = 1; i < abs.length; i++) d += `${abs[i]![0] - abs[i - 1]![0]} ${abs[i]![1] - abs[i - 1]![1]} `;
+  return d.trimEnd().replace(/ -/g, "-") + "z";
+}
+
+/**
+ * One tile of a ridge: a few firs and the ground they stand on, drawn so the tile
+ * repeats seamlessly (a tree that crosses an edge is drawn again on the other side).
+ * Each layer gets a different tile width, so the repeats never line up and the eye
+ * does not catch the pattern — and the page carries a dozen trees per layer instead
+ * of a hundred.
+ */
+function ridge(
+  next: () => number,
+  tile: number,
+  min: number,
+  max: number,
+  gap: number,
+  ground: number,
+): string {
+  let d = `M0 ${H - ground}H${tile}V${H}H0Z`;
+  for (let x = gap * next(); x < tile; x += gap * (0.55 + next() * 0.9)) {
+    const h = min + (max - min) * next();
+    const half = h * 0.23;
+    d += fir(x, H - ground + 2, h);
+    if (x - half < 0) d += fir(x + tile, H - ground + 2, h);
+    if (x + half > tile) d += fir(x - tile, H - ground + 2, h);
+  }
+  return d;
+}
+
+const next = random(`${variant}:${seed}`);
+/* Unique per placement, because pattern ids share one namespace per page. */
+const uid = `${variant}-${Math.floor(next() * 1e9).toString(36)}`;
+const layers = (
+  variant === "band"
+    ? [{ tone: "band", d: ridge(next, 700, 38, 84, 34, 0), tile: 700 }]
+    : variant === "card"
+      ? [
+          { tone: "far", d: ridge(next, 270, 34, 60, 30, 10), tile: 270 },
+          { tone: "mid", d: ridge(next, 390, 46, 80, 46, 6), tile: 390 },
+          { tone: "near", d: ridge(next, 610, 60, 104, 92, 0), tile: 610 },
+        ]
+      : [
+          { tone: "far", d: ridge(next, 530, 64, 112, 34, 18), tile: 530 },
+          { tone: "mid", d: ridge(next, 770, 86, 148, 54, 10), tile: 770 },
+          { tone: "near", d: ridge(next, 1130, 110, 196, 120, 0), tile: 1130 },
+        ]
+).map((layer) => ({ ...layer, id: `fir-${uid}-${layer.tone}` }));
+
+/* Stars for the dark sky: kept to the top two thirds so none sit among the trees. */
+const stars =
+  variant === "band"
+    ? []
+    : Array.from({ length: variant === "hero" ? 38 : 12 }, () => ({
+        // In a hero, most stars sit to the right of the text column and the rest in a
+        // thin strip along the top; the SVG is anchored to the right edge (xMax) so
+        // that stays true at every width.
+        ...(variant === "hero" && next() < 0.75
+          ? { cx: r1(820 + next() * 380), cy: r1(next() * 330) }
+          : { cx: r1(next() * 1200), cy: r1(next() * (variant === "hero" ? 48 : 380)) }),
+        big: next() < 0.3,
+      }));
+
+/* All the stars as two paths (small and large) of zero-length round-capped strokes,
+   rather than one element each. */
+const starPath = (big: boolean) =>
+  stars
+    .filter((s) => s.big === big)
+    .map((s) => `M${s.cx} ${s.cy}h0`)
+    .join("");
+
+const craters = [
+  { cx: 86, cy: 88, r: 9 },
+  { cx: 116, cy: 112, r: 6 },
+  { cx: 96, cy: 124, r: 4 },
+];
+---
+
+<div class:list={["scene", `scene--${variant}`]} aria-hidden="true">
+  {
+    stars.length > 0 && (
+      <svg class="scene__stars" viewBox="0 0 1200 600" preserveAspectRatio="xMaxYMin slice">
+        <path d={starPath(false)} stroke-width="2.2" />
+        <path d={starPath(true)} stroke-width="3.6" />
+      </svg>
+    )
+  }
+
+  {
+    variant !== "band" && (
+      <svg class="scene__body" viewBox="0 0 200 200">
+        <g class="sky-body sky-body--sun">
+          <circle class="sun__glow" cx="100" cy="100" r="92" opacity="0.35" />
+          <circle class="sun__glow" cx="100" cy="100" r="66" opacity="0.55" />
+          <circle class="sun__disc" cx="100" cy="100" r="44" />
+        </g>
+        <g class="sky-body sky-body--moon">
+          <circle class="moon__glow" cx="100" cy="100" r="84" opacity="0.14" />
+          <circle class="moon__disc" cx="100" cy="100" r="44" />
+          {craters.map((c) => (
+            <circle class="moon__crater" cx={c.cx} cy={c.cy} r={c.r} />
+          ))}
+        </g>
+      </svg>
+    )
+  }
+
+  <svg class="scene__forest" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMax slice">
+    <defs>
+      {
+        layers.map((layer) => (
+          <pattern id={layer.id} patternUnits="userSpaceOnUse" width={layer.tile} height={H}>
+            <path class={`forest--${layer.tone}`} d={layer.d} />
+          </pattern>
+        ))
+      }
+    </defs>
+    {layers.map((layer) => <rect width={W} height={H} fill={`url(#${layer.id})`} />)}
+  </svg>
+</div>
+
+<style>
+  .scene {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .scene svg {
+    position: absolute;
+    display: block;
+  }
+
+  /* --- Forest --- */
+
+  .scene__forest {
+    inset-inline: 0;
+    inset-block-end: 0;
+    inline-size: 100%;
+    block-size: var(--scene-forest, 9rem);
+  }
+
+  .forest--far {
+    fill: var(--color-forest-far);
+  }
+
+  .forest--mid {
+    fill: var(--color-forest-mid);
+  }
+
+  .forest--near {
+    fill: var(--color-forest-near);
+  }
+
+  .forest--band {
+    fill: var(--color-bg-band);
+  }
+
+  /* --- Sky --- */
+
+  .scene__stars {
+    inset: 0;
+    inline-size: 100%;
+    block-size: 100%;
+    stroke: var(--color-star);
+    stroke-linecap: round;
+  }
+
+  .scene__body {
+    inset-block-start: var(--scene-body-top, var(--space-8));
+    inset-inline-end: var(--scene-body-end, var(--page-gutter));
+    inline-size: var(--scene-body, clamp(4rem, 11vw, 9rem));
+    block-size: var(--scene-body, clamp(4rem, 11vw, 9rem));
+    overflow: visible;
+  }
+
+  /* On a narrow screen the text spans the full width, so the sky keeps to the top. */
+  @media (max-width: 52rem) {
+    .scene--hero .scene__stars {
+      block-size: var(--space-12);
+    }
+  }
+
+  .sun__glow {
+    fill: var(--color-sun-glow);
+  }
+
+  .sun__disc {
+    fill: var(--color-sun);
+  }
+
+  .moon__glow {
+    fill: var(--color-moon-glow);
+  }
+
+  .moon__disc {
+    fill: var(--color-moon);
+  }
+
+  .moon__crater {
+    fill: var(--color-moon-crater);
+  }
+
+  .sky-body {
+    transform-box: view-box;
+    transform-origin: 50% 50%;
+  }
+
+  /* Light by default: the sun is up, the moon and stars are set below the horizon.
+     "Set" is a transform plus opacity rather than display:none so that motion.css
+     can animate the change; this file only decides the end states. */
+  .sky-body--moon {
+    opacity: 0;
+    transform: translateY(70%) scale(0.85);
+  }
+
+  .scene__stars {
+    opacity: 0;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :global(:root:not([data-theme="light"])) .sky-body--sun {
+      opacity: 0;
+      transform: translateY(70%) scale(0.85);
+    }
+
+    :global(:root:not([data-theme="light"])) .sky-body--moon {
+      opacity: 1;
+      transform: none;
+    }
+
+    :global(:root:not([data-theme="light"])) .scene__stars {
+      opacity: 1;
+    }
+  }
+
+  :global(:root[data-theme="dark"]) .sky-body--sun {
+    opacity: 0;
+    transform: translateY(70%) scale(0.85);
+  }
+
+  :global(:root[data-theme="dark"]) .sky-body--moon {
+    opacity: 1;
+    transform: none;
+  }
+
+  :global(:root[data-theme="dark"]) .scene__stars {
+    opacity: 1;
+  }
+
+  /* --- Variants --- */
+
+  .scene--card {
+    --scene-forest: 3.75rem;
+    --scene-body: 2.75rem;
+    --scene-body-top: var(--space-2);
+    --scene-body-end: var(--space-5);
+    background: var(--color-sky);
+  }
+
+  .scene--band {
+    inset: auto 0 100%;
+    block-size: var(--scene-forest, 3.5rem);
+    --scene-forest: clamp(2.25rem, 5vw, 3.5rem);
+  }
+</style>

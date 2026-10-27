@@ -60,6 +60,13 @@ export interface TeamMember {
    * wrote. Leave it undefined until the person has supplied one.
    */
   bio?: LocalizedText;
+  /**
+   * A few short facts beyond the job: service, certifications, causes. Each one
+   * must be something the person has published about themselves (their own profile,
+   * their own words) — never inferred from what they like or repost. Optional, and
+   * shown under "Beyond the code" on the card.
+   */
+  highlights?: LocalizedText[];
   /** Which services in `SERVICES` this person takes on. Ids, checked at build time. */
   services: string[];
   /** Short technology labels. Not translated: these are proper nouns. */
@@ -93,13 +100,31 @@ export const TEAM: TeamMember[] = [
       de: "Nimmt das erste Gespräch an und baut die Websites. Frontend-Entwickler, IT-Fachmann und Veteran, mit dem Anspruch, Technik zu bauen, die hält — also eher langweilige, haltbare Werkzeuge als das, was letzte Woche erschienen ist. Damit Sie in zwei Jahren nicht neu bauen müssen.",
       es: "Atiende la primera llamada y construye los sitios. Ingeniero de front-end, profesional de TI y veterano, orientado a la ingeniería que dura — lo que en la práctica significa elegir tecnología aburrida y duradera antes que lo que se lanzó la semana pasada, para que usted no tenga que rehacerlo en dos años.",
     },
+    // From Mike's own LinkedIn profile (2026-10-28), at his request.
+    highlights: [
+      {
+        en: "U.S. Army veteran",
+        de: "Veteran der U.S. Army",
+        es: "Veterano del Ejército de EE. UU.",
+      },
+      {
+        en: "CompTIA Security+ certified",
+        de: "Zertifiziert nach CompTIA Security+",
+        es: "Certificado CompTIA Security+",
+      },
+      {
+        en: "Volunteered at the Animal Rescue League of El Paso",
+        de: "Ehrenamtlich bei der Animal Rescue League in El Paso",
+        es: "Voluntario en la Animal Rescue League de El Paso",
+      },
+    ],
     services: ["website", "shop", "care", "audit"],
     focus: ["TypeScript", "React", "Astro", "C#", "Accessibility"],
     speaks: ["en", "es", "de"],
     photo: "mike.webp",
     links: {
       github: "https://github.com/devmiker",
-      linkedin: "https://www.linkedin.com/in/mike-l-rodriguez/",
+      linkedin: "https://www.linkedin.com/in/dev-mike-r/",
       site: "https://master.d2uq24fdi4cg7.amplifyapp.com/",
     },
   },
@@ -133,8 +158,8 @@ export const TEAM: TeamMember[] = [
     published: true,
     name: "Luis Inzunza",
     role: {
-      // TODO: Luis's actual title. His LinkedIn sits behind a sign-in wall, so this
-      // is the generic form rather than a guess dressed up as a fact. Ask him.
+      // His own public LinkedIn summary opens "Software Engineer!" (checked
+      // 2026-10-28). Still worth confirming the exact title with him.
       en: "Software engineer",
       de: "Softwareentwickler",
       es: "Ingeniero de software",
@@ -142,7 +167,9 @@ export const TEAM: TeamMember[] = [
     // No bio: nobody has asked Luis for one yet, so there is nothing honest to put
     // here. The card renders without it. TODO: two sentences from Luis.
     services: ["website", "care"],
-    focus: ["JavaScript"],
+    // The skills his public profile names: "HTML, CSS, Javascript, and React".
+    focus: ["HTML", "CSS", "JavaScript", "React"],
+    speaks: ["en", "es"],
     photo: "luis.webp",
     links: {
       linkedin: "https://www.linkedin.com/in/luis-inzu/",
