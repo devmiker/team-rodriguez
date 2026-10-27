@@ -11,7 +11,7 @@
  * be LABELLED. A prospect judges a studio by the weakest thing presented as
  * representative, not by the average — so a to-do app under "practice, learning DOM
  * manipulation" reads as charming, while the same app in a row headed "our work"
- * quietly undercuts every price on the services page.
+ * quietly undercuts every quote we send.
  *
  * So: never move something into `client` to pad that column. The column being short
  * is a fact about the business today, not a problem to be styled around.

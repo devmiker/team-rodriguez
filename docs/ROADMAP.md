@@ -34,7 +34,7 @@ These are in rough dependency order. Nothing below can be skipped.
    Write terms against your actual client contract; then set `TERMS_SUPPLIED`.
 6. **Team entries.** Get Francisco's and Luis's own words, their real titles, and their
    agreement to appear. Then `published: true`.
-7. **Real prices.** Confirm or replace the figures in `src/data/services.ts`.
+7. ~~**Real prices.**~~ Dropped 2026-10-28: the site publishes no prices; every service asks for a quote instead.
 8. **Manual accessibility pass.** Keyboard only, then a screen reader. The automated
    audit catches about a third of real problems. Include a pass with reduced motion
    turned on at the OS level — the tests assert the contract, but seeing it is

@@ -17,7 +17,7 @@ export const es: UiStrings = {
   "site.name": "Team Rodriguez",
   "site.tagline": "Webs que se pagan solas",
   "site.description":
-    "Un pequeño estudio de software que crea sitios web rápidos, accesibles y con precios honestos para pequeñas empresas.",
+    "Un pequeño estudio de software que crea sitios web rápidos y accesibles para pequeñas empresas.",
 
   // --- Accessibility and chrome ----------------------------------------
   "a11y.skipToContent": "Saltar al contenido",
@@ -48,7 +48,7 @@ export const es: UiStrings = {
   // --- Home -------------------------------------------------------------
   "home.title": "Team Rodriguez — sitios web para pequeñas empresas",
   "home.description":
-    "Un pequeño estudio de software que crea sitios web rápidos y accesibles para pequeñas empresas. Precios claros, ingeniería de verdad, sin ataduras.",
+    "Un pequeño estudio de software que crea sitios web rápidos y accesibles para pequeñas empresas. Presupuestos gratuitos, ingeniería de verdad, sin ataduras.",
   "home.hero.eyebrow": "Estudio de software",
   "home.hero.heading": "Webs que se pagan solas",
   "home.hero.body":
@@ -107,12 +107,12 @@ export const es: UiStrings = {
     "Diseño y desarrollo de sitios web, tiendas en línea, mantenimiento continuo y auditorías de velocidad, accesibilidad y buscadores.",
   "services.heading": "Lo que hacemos",
   "services.lead":
-    "Pocos servicios, con el precio por delante. Todo lo de abajo se presupuesta en firme tras una conversación gratuita de media hora.",
+    "Pocos servicios, cada uno presupuestado para su proyecto. Cuéntenos lo que necesita y reciba un presupuesto cerrado tras una conversación gratuita de media hora.",
   "services.includes": "Qué incluye",
   "services.who": "Quién lo hace",
-  "services.from": "Desde",
-  "services.priceNote":
-    "Precios de partida orientativos. Su presupuesto queda cerrado por escrito antes de empezar.",
+  "services.quote": "Pida su presupuesto hoy",
+  "services.quoteNote":
+    "Cada proyecto se presupuesta por separado. Su presupuesto es gratuito y queda cerrado por escrito antes de empezar.",
   "services.cta.heading": "¿No sabe cuál de estos necesita?",
   "services.cta.body":
     "Describa el problema en lugar de la solución y le diremos qué lo arreglaría de verdad — incluso cuando la respuesta sea que no nos necesita.",

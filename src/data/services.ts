@@ -4,13 +4,8 @@
  * Deliberately a short list. Four things described concretely sell better than twelve
  * described vaguely, and a small team that claims twelve is not believed.
  *
- * Prices are numbers rather than pre-formatted strings so they can be rendered with
- * `Intl.NumberFormat` in the visitor's language and the currency stays consistent.
- * They are starting points, and the copy says so — see `services.priceNote`.
- *
- * TODO: the figures below are placeholders chosen to be plausible for a small studio.
- * Replace them with real numbers before launch, or set `priceFrom` to undefined on a
- * service to show no figure at all rather than a made-up one.
+ * No prices. Every project is quoted individually, and each service card links to the
+ * contact page with "Get a quote today" instead — see AGENTS.md, "Quotes, not prices".
  */
 
 import type { LocalizedText } from "../i18n/locales";
@@ -23,16 +18,12 @@ export interface Service {
   summary: LocalizedText;
   /** Three to five concrete deliverables. Vague bullets are worse than none. */
   includes: LocalizedText[];
-  priceFrom?: number;
-  currency: "USD" | "EUR";
 }
 
 export const SERVICES: Service[] = [
   {
     id: "website",
     icon: "layout",
-    currency: "USD",
-    priceFrom: 875,
     name: {
       en: "Website design and build",
       de: "Website gestalten und bauen",
@@ -74,8 +65,6 @@ export const SERVICES: Service[] = [
   {
     id: "shop",
     icon: "cart",
-    currency: "USD",
-    priceFrom: 1625,
     name: {
       en: "Online shop",
       de: "Online-Shop",
@@ -112,8 +101,6 @@ export const SERVICES: Service[] = [
   {
     id: "care",
     icon: "shield",
-    currency: "USD",
-    priceFrom: 24,
     name: {
       en: "Care and hosting",
       de: "Betreuung und Hosting",
@@ -155,8 +142,6 @@ export const SERVICES: Service[] = [
   {
     id: "audit",
     icon: "gauge",
-    currency: "USD",
-    priceFrom: 225,
     name: {
       en: "Audit: speed, accessibility, search",
       de: "Audit: Tempo, Barrierefreiheit, Auffindbarkeit",

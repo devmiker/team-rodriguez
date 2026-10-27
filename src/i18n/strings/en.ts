@@ -15,7 +15,7 @@ export const en = {
   "site.name": "Team Rodriguez",
   "site.tagline": "Websites that earn their keep",
   "site.description":
-    "A small software studio building fast, accessible, honestly-priced websites for small businesses.",
+    "A small software studio building fast, accessible websites for small businesses.",
 
   // --- Accessibility and chrome ----------------------------------------
   "a11y.skipToContent": "Skip to content",
@@ -46,7 +46,7 @@ export const en = {
   // --- Home -------------------------------------------------------------
   "home.title": "Team Rodriguez — websites for small businesses",
   "home.description":
-    "A small software studio building fast, accessible websites for small businesses. Clear pricing, real engineering, no lock-in.",
+    "A small software studio building fast, accessible websites for small businesses. Free quotes, real engineering, no lock-in.",
   "home.hero.eyebrow": "Software studio",
   "home.hero.heading": "Websites that earn their keep",
   "home.hero.body":
@@ -105,12 +105,12 @@ export const en = {
     "Website design and build, online shops, ongoing care, and audits for speed, accessibility and search.",
   "services.heading": "What we do",
   "services.lead":
-    "A narrow set of services, priced up front. Everything below is a fixed quote after a free half-hour conversation.",
+    "A narrow set of services, each quoted for your project. Tell us what you need and get a fixed quote after a free half-hour conversation.",
   "services.includes": "What is included",
   "services.who": "Who does this",
-  "services.from": "From",
-  "services.priceNote":
-    "Indicative starting prices. Your quote is fixed in writing before any work begins.",
+  "services.quote": "Get a quote today",
+  "services.quoteNote":
+    "Every project is quoted individually. Your quote is free, and fixed in writing before any work begins.",
   "services.cta.heading": "Not sure which of these you need?",
   "services.cta.body":
     "Describe the problem rather than the solution and we will tell you what would actually fix it — including when the answer is that you do not need us.",

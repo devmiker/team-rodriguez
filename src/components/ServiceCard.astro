@@ -1,6 +1,6 @@
 ---
 /**
- * One service: icon, name, summary, starting price, what is included, and — because
+ * One service: icon, name, summary, what is included, a link to ask for a quote, and — because
  * the team page and the services page describe the same work from two directions —
  * who on the team actually takes it on.
  *
@@ -10,6 +10,7 @@
  */
 import type { Locale } from "../i18n/locales";
 import { localized } from "../i18n/locales";
+import { pathFor } from "../i18n/routes";
 import { useTranslations } from "../i18n/ui";
 import type { Service } from "../data/services";
 import { teamForService } from "../data/team";
@@ -27,29 +28,12 @@ interface Props {
 const { service, locale, detailed = false, as: Heading = "h3" } = Astro.props;
 const t = useTranslations(locale);
 const people = detailed ? teamForService(service.id) : [];
-
-/** Prices are formatted in the visitor's language: "$3,500" / "3.500 $". */
-const price =
-  service.priceFrom === undefined
-    ? undefined
-    : new Intl.NumberFormat(locale, {
-        style: "currency",
-        currency: service.currency,
-        maximumFractionDigits: 0,
-      }).format(service.priceFrom);
 ---
 
 <article class="service card">
   <Icon name={service.icon as IconName} size="1.75rem" class="service__icon" />
 
   <Heading class="service__name">{localized(service.name, locale)}</Heading>
-
-  {price && (
-    <p class="service__price">
-      <span class="service__price-label">{t("services.from")}</span>
-      <span class="service__price-value">{price}</span>
-    </p>
-  )}
 
   <p class="service__summary">{localized(service.summary, locale)}</p>
 
@@ -75,6 +59,13 @@ const price =
       </>
     )
   }
+
+  <p class="service__quote">
+    <a href={pathFor({ route: "contact" }, locale)} class="more-link">
+      {t("services.quote")}
+      <Icon name="arrowRight" size="1em" />
+    </a>
+  </p>
 </article>
 
 <style>
@@ -90,27 +81,6 @@ const price =
 
   .service__name {
     font-size: var(--step-h3);
-  }
-
-  .service__price {
-    display: flex;
-    align-items: baseline;
-    gap: var(--space-2);
-    margin: 0;
-  }
-
-  .service__price-label {
-    font-family: var(--font-mono);
-    font-size: var(--step-label);
-    letter-spacing: var(--tracking-label);
-    text-transform: uppercase;
-    color: var(--color-text-dim);
-  }
-
-  .service__price-value {
-    font-family: var(--font-display);
-    font-size: var(--step-h3);
-    font-weight: var(--weight-bold);
   }
 
   .service__summary {
@@ -153,5 +123,19 @@ const price =
     gap: var(--space-1);
     margin: 0;
     font-size: var(--step-small);
+  }
+
+  /* Pushed to the bottom so the links line up across a row of cards of uneven length. */
+  .service__quote {
+    margin: auto 0 0;
+    padding-block-start: var(--space-2);
+  }
+
+  .more-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-block-size: var(--target-min);
+    font-weight: var(--weight-semibold);
   }
 </style>

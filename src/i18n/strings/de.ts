@@ -17,7 +17,7 @@ export const de: UiStrings = {
   "site.name": "Team Rodriguez",
   "site.tagline": "Websites, die sich rechnen",
   "site.description":
-    "Ein kleines Software-Studio, das schnelle, barrierefreie und fair kalkulierte Websites für kleine Unternehmen baut.",
+    "Ein kleines Software-Studio, das schnelle, barrierefreie Websites für kleine Unternehmen baut.",
 
   // --- Accessibility and chrome ----------------------------------------
   "a11y.skipToContent": "Zum Inhalt springen",
@@ -48,7 +48,7 @@ export const de: UiStrings = {
   // --- Home -------------------------------------------------------------
   "home.title": "Team Rodriguez — Websites für kleine Unternehmen",
   "home.description":
-    "Ein kleines Software-Studio für schnelle, barrierefreie Websites für kleine Unternehmen. Klare Preise, echte Technik, keine Abhängigkeit.",
+    "Ein kleines Software-Studio für schnelle, barrierefreie Websites für kleine Unternehmen. Kostenlose Angebote, echte Technik, keine Abhängigkeit.",
   "home.hero.eyebrow": "Software-Studio",
   "home.hero.heading": "Websites, die sich rechnen",
   "home.hero.body":
@@ -107,12 +107,12 @@ export const de: UiStrings = {
     "Websites gestalten und bauen, Online-Shops, laufende Betreuung sowie Audits zu Tempo, Barrierefreiheit und Auffindbarkeit.",
   "services.heading": "Was wir machen",
   "services.lead":
-    "Wenige Leistungen, Preise im Voraus. Alles unten wird nach einem kostenlosen halbstündigen Gespräch fest angeboten.",
+    "Wenige Leistungen, jeweils für Ihr Projekt kalkuliert. Sagen Sie uns, was Sie brauchen, und Sie erhalten nach einem kostenlosen halbstündigen Gespräch ein festes Angebot.",
   "services.includes": "Enthalten ist",
   "services.who": "Wer das macht",
-  "services.from": "Ab",
-  "services.priceNote":
-    "Richtwerte für den Einstieg. Ihr Preis wird vor Arbeitsbeginn schriftlich fixiert.",
+  "services.quote": "Jetzt Angebot anfordern",
+  "services.quoteNote":
+    "Jedes Projekt wird einzeln kalkuliert. Ihr Angebot ist kostenlos und wird vor Arbeitsbeginn schriftlich fixiert.",
   "services.cta.heading": "Nicht sicher, was davon Sie brauchen?",
   "services.cta.body":
     "Beschreiben Sie das Problem statt der Lösung, und wir sagen Ihnen, was es tatsächlich behebt — auch dann, wenn die Antwort lautet, dass Sie uns nicht brauchen.",

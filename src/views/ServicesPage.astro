@@ -1,13 +1,10 @@
 ---
 /**
- * The services page: every service in full, with what is included, an indicative
- * starting price, and who on the team takes it on.
+ * The services page: every service in full, with what is included and who on the team
+ * takes it on.
  *
- * Prices are shown as "from" figures with a note saying they are indicative and that
- * the real number is fixed in writing first. That is the honest way to publish a price
- * for work that genuinely varies, and it is far better than the alternative — no
- * prices at all, which makes a small business owner assume they cannot afford you and
- * close the tab.
+ * No prices. Each card asks for a quote instead, and the note below says what a quote
+ * is: free, in writing, and fixed before work starts. See AGENTS.md, "Quotes, not prices".
  */
 import BaseLayout from "../layouts/BaseLayout.astro";
 import PageHero from "../components/PageHero.astro";
@@ -39,7 +36,7 @@ const t = useTranslations(locale);
         {SERVICES.map((service) => <ServiceCard service={service} locale={locale} detailed as="h2" />)}
       </div>
 
-      <p class="price-note" data-reveal="text">{t("services.priceNote")}</p>
+      <p class="quote-note" data-reveal="text">{t("services.quoteNote")}</p>
     </div>
   </section>
 
@@ -56,7 +53,7 @@ const t = useTranslations(locale);
 </BaseLayout>
 
 <style>
-  .price-note {
+  .quote-note {
     margin-block-start: var(--space-8);
     max-width: var(--measure);
     font-size: var(--step-small);

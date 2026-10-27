@@ -122,13 +122,15 @@ projects into `client` and `practice`, and the page labels both. Showing practic
 is good — it is more work and it shows a trajectory — but only while it is labelled: a
 prospect judges a studio by the weakest thing presented as representative, so a to-do
 app under "our own projects" reads as charming and the same app under "our work"
-quietly undercuts every price on the services page. Never move something into `client`
+quietly undercuts every quote we send. Never move something into `client`
 to make that column look longer.
 
-**Prices are published.** "Contact us for pricing" makes a small business owner assume
-they cannot afford you and close the tab. Indicative "from" figures with a note that
-the real number is fixed in writing first is the honest version. The numbers in
-`src/data/services.ts` are placeholders until you say otherwise.
+**Quotes, not prices.** Decided by Mike on 2026-10-28, reversing an earlier "publish
+indicative prices" decision. The site shows no figures anywhere: every service card ends
+in a "Get a quote today" link to the contact page, and the services page says a quote is
+free and fixed in writing before work starts. `Service` has no price field, so adding a
+figure back is a deliberate change to the type and not a one-line data edit. Do not
+reintroduce prices, "from" figures or price-range copy without asking him.
 
 **The form works without JavaScript.** It server-renders as a real
 `<form method="post">` that posts to the API and redirects to a thank-you page; React
