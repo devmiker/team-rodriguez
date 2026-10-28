@@ -10,6 +10,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import PageHero from "../components/PageHero.astro";
 import ServiceCard from "../components/ServiceCard.astro";
 import Icon from "../components/Icon.astro";
+import Scenery from "../components/Scenery.astro";
 import { toLocale } from "../i18n/locales";
 import { pathFor } from "../i18n/routes";
 import { useTranslations } from "../i18n/ui";
@@ -32,15 +33,20 @@ const t = useTranslations(locale);
 
   <section class="section">
     <div class="page">
+      {/* Above the cards, so "free, and fixed in writing" is read before the first
+          "Get a quote today" rather than after the last. */}
+      <p class="quote-note" data-reveal="text">{t("services.quoteNote")}</p>
+
       <div class="grid grid--2" data-reveal-group>
         {SERVICES.map((service) => <ServiceCard service={service} locale={locale} detailed as="h2" />)}
       </div>
-
-      <p class="quote-note" data-reveal="text">{t("services.quoteNote")}</p>
     </div>
   </section>
 
-  <section class="section band on-band" aria-labelledby="services-cta">
+  <section class="section band on-band ridge-edge" aria-labelledby="services-cta">
+    {/* The bear lives here: a tree line that always shows, unlike the footer's,
+        which disappears when a band sits directly above it. */}
+    <Scenery seed="services-cta" variant="band" critter="bear" />
     <div class="page cta" data-reveal>
       <h2 id="services-cta">{t("services.cta.heading")}</h2>
       <p class="lead">{t("services.cta.body")}</p>
@@ -54,7 +60,7 @@ const t = useTranslations(locale);
 
 <style>
   .quote-note {
-    margin-block-start: var(--space-8);
+    margin-block-end: var(--space-8);
     max-width: var(--measure);
     font-size: var(--step-small);
     color: var(--color-text-dim);

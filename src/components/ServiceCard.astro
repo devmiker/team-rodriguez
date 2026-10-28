@@ -12,7 +12,7 @@ import type { Locale } from "../i18n/locales";
 import { localized } from "../i18n/locales";
 import { pathFor } from "../i18n/routes";
 import { useTranslations } from "../i18n/ui";
-import type { Service } from "../data/services";
+import { SERVICES, type Service } from "../data/services";
 import { teamForService } from "../data/team";
 import type { IconName } from "./iconPaths";
 import Icon from "./Icon.astro";
@@ -28,10 +28,19 @@ interface Props {
 const { service, locale, detailed = false, as: Heading = "h3" } = Astro.props;
 const t = useTranslations(locale);
 const people = detailed ? teamForService(service.id) : [];
+
+/* "01".."04": the card's place in the list, so the four read as a set. A number
+   rather than a word, so it needs no translation. */
+const position = String(SERVICES.findIndex((s) => s.id === service.id) + 1).padStart(2, "0");
 ---
 
-<article class="service card">
-  <Icon name={service.icon as IconName} size="1.75rem" class="service__icon" />
+<article class:list={["service", "card", `service--${service.id}`]}>
+  <div class="service__head">
+    <span class="service__tile">
+      <Icon name={service.icon as IconName} size="1.75rem" />
+    </span>
+    <span class="service__index" aria-hidden="true">{position}</span>
+  </div>
 
   <Heading class="service__name">{localized(service.name, locale)}</Heading>
 
@@ -60,12 +69,15 @@ const people = detailed ? teamForService(service.id) : [];
     )
   }
 
-  <p class="service__quote">
-    <a href={pathFor({ route: "contact" }, locale)} class="more-link">
-      {t("services.quote")}
-      <Icon name="arrowRight" size="1em" />
-    </a>
-  </p>
+  {/*
+    The card's one action: a full-width row, quiet at rest, filling with the accent
+    tint on hover. It is the main action on the card without being a filled button,
+    which on a grid of four would read as four shouts.
+  */}
+  <a href={pathFor({ route: "contact" }, locale)} class="quote-row">
+    <span>{t("services.quote")}</span>
+    <span class="quote-row__arrow"><Icon name="arrowRight" size="1rem" /></span>
+  </a>
 </article>
 
 <style>
@@ -75,8 +87,49 @@ const people = detailed ? teamForService(service.id) : [];
     gap: var(--space-3);
   }
 
-  .service__icon {
-    color: var(--color-accent);
+  /* Each service sets two properties; nothing else about the card changes. */
+  .service--website {
+    --service-tint: var(--color-service-website-tint);
+    --service-ink: var(--color-service-website-ink);
+  }
+
+  .service--shop {
+    --service-tint: var(--color-service-shop-tint);
+    --service-ink: var(--color-service-shop-ink);
+  }
+
+  .service--care {
+    --service-tint: var(--color-service-care-tint);
+    --service-ink: var(--color-service-care-ink);
+  }
+
+  .service--audit {
+    --service-tint: var(--color-service-audit-tint);
+    --service-ink: var(--color-service-audit-ink);
+  }
+
+  .service__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+  }
+
+  .service__tile {
+    display: grid;
+    place-items: center;
+    inline-size: 3rem;
+    block-size: 3rem;
+    border-radius: var(--radius);
+    background: var(--service-tint, var(--color-accent-subtle));
+    color: var(--service-ink, var(--color-accent));
+  }
+
+  .service__index {
+    font-family: var(--font-mono);
+    font-size: var(--step-label);
+    letter-spacing: var(--tracking-label);
+    color: var(--service-ink, var(--color-text-dim));
   }
 
   .service__name {
@@ -112,9 +165,9 @@ const people = detailed ? teamForService(service.id) : [];
     font-size: var(--step-small);
   }
 
-  .service__check {
+  .service__list :global(.service__check) {
     margin-block-start: 0.28em;
-    color: var(--color-accent);
+    color: var(--service-ink, var(--color-accent));
   }
 
   .service__people {
@@ -125,17 +178,51 @@ const people = detailed ? teamForService(service.id) : [];
     font-size: var(--step-small);
   }
 
-  /* Pushed to the bottom so the links line up across a row of cards of uneven length. */
-  .service__quote {
-    margin: auto 0 0;
-    padding-block-start: var(--space-2);
+  /* Pushed to the bottom so the rows line up across a grid of uneven cards, and
+     bled to the card's edges by cancelling its padding. */
+  .quote-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    min-block-size: var(--target-min);
+    margin: auto calc(-1 * var(--card-pad, var(--space-6))) calc(-1 * var(--card-pad, var(--space-6)));
+    padding: var(--space-3) var(--card-pad, var(--space-6));
+    border-block-start: 1px solid var(--color-line);
+    border-end-start-radius: var(--radius-lg);
+    border-end-end-radius: var(--radius-lg);
+    font-weight: var(--weight-semibold);
+    color: var(--color-link);
+    text-decoration: none;
+    transition: background-color var(--duration-fast) var(--ease);
   }
 
-  .more-link {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-2);
-    min-block-size: var(--target-min);
-    font-weight: var(--weight-semibold);
+  .quote-row:hover {
+    background: var(--color-accent-subtle);
+  }
+
+  .quote-row:hover span:first-child {
+    text-decoration: underline;
+    text-decoration-thickness: 0.08em;
+    text-underline-offset: 0.18em;
+  }
+
+  .quote-row__arrow {
+    display: grid;
+    place-items: center;
+    flex: none;
+    inline-size: 2rem;
+    block-size: 2rem;
+    border-radius: var(--radius-pill);
+    background: var(--color-accent-subtle);
+    color: var(--color-link);
+    transition:
+      background-color var(--duration-fast) var(--ease),
+      color var(--duration-fast) var(--ease);
+  }
+
+  .quote-row:hover .quote-row__arrow {
+    background: var(--color-accent);
+    color: var(--color-on-accent);
   }
 </style>

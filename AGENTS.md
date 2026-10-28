@@ -161,6 +161,36 @@ Switching theme grows the new theme out of the toggle as a circle (a same-docume
 transition) while the sun sets and the moon rises. Under reduced motion, or without
 View Transitions, it just switches.
 
+**The design system is the reference for visual changes.** Tokens, component specs,
+the contrast audit and the illustration rules live in the "Team Rodriguez" design
+system artifact (synced from this repo on 2026-10-28). Every new colour pair goes in
+`tokens.test.ts`; the service identities (`--color-service-*`) and
+`--color-accent-subtle` were added from it and are tested like the rest.
+
+**Section rhythm: page, band, mist.** Three grounds — `--color-bg`, `.band`, and
+`.section--mist` (the raised surface as a ground; its children see
+`--color-bg-raised` re-pointed to `--color-bg`, so cards stay distinct). Never two of
+the same ground in a row. A band may enter through a tree line
+(`.ridge-edge` + `<Scenery variant="band">`), at most twice per page.
+
+**The night-owl coders.** An owl (home hero), a bear (services closing band) and a
+wolf (team hero) are hidden in the scenery via `<Scenery critter="…">`. By day they
+are the colour of the trees; at night their eyes and laptop screens catch the
+moonlight. About one page load in twenty, at night, with motion on, one peeks out
+once (`data-critter-peek`, set in `MotionScript.astro`, animated in `motion.css`).
+They are the only joke on the site: one of each per page at most, never near text,
+never on contact, legal or error pages, never looping. A person's own animal on
+their team cover is fine only with their agreement.
+
+**How we talk about ourselves.** The values on the team page ("What you can count
+on") are Mike's, in his words: small businesses' growth, only what they need with a
+fixed quote, good neighbours, calm and professional, a good first contact. Copy stays
+respectful (never what a business lacks, no digs at anyone), modest (no "best",
+"#1", "guaranteed"), and backs any community claim with something real and named.
+"Affordable" means fit and a fixed written quote — never "cheap", discounts or a
+price. "No drama" is how we say it to each other; on the site it is "calm and
+professional".
+
 **CSP is generated, not written.** `astro.config.mjs` hashes every inline script and
 style the build produced. A hand-maintained policy drifts the first time someone edits
 an inline script, and the usual fix — `'unsafe-inline'` — throws away most of the value.

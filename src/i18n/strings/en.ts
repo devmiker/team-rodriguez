@@ -36,12 +36,12 @@ export const en = {
 
   // --- Footer -----------------------------------------------------------
   "footer.blurb":
-    "We build and look after websites for small businesses. Based remotely, working with clients wherever they are.",
+    "We build and look after websites for small businesses, and we want yours to grow. Based remotely, working with clients wherever they are.",
   "footer.navHeading": "Site",
   "footer.legalHeading": "Legal",
   "footer.contactHeading": "Get in touch",
   "footer.rights": "All rights reserved.",
-  "footer.builtWith": "Built with Astro. No trackers, no cookie banner, no nonsense.",
+  "footer.builtWith": "Built with Astro. No trackers, no cookie banner, no nonsense. Some of us work nights.",
 
   // --- Home -------------------------------------------------------------
   "home.title": "Team Rodriguez — websites for small businesses",
@@ -57,6 +57,7 @@ export const en = {
   "home.proof.speed": "Pages that load in under a second",
   "home.proof.a11y": "Accessible to screen readers and keyboards, tested",
   "home.proof.own": "You own the code and the domain, always",
+  "home.proof.heading": "Every site",
 
   "home.services.eyebrow": "What we do",
   "home.services.heading": "Four things, done properly",
@@ -146,6 +147,34 @@ export const en = {
   "team.speaks": "Works in",
   "team.highlights": "Beyond the code",
   "team.profile": "Profile",
+
+  // --- Values (team page) ---------------------------------------------
+  "values.eyebrow":
+    "How we work",
+  "values.heading":
+    "What you can count on",
+  "values.lead":
+    "We build websites for small businesses, and we want yours to grow.",
+  "values.1.title":
+    "Your growth is the point",
+  "values.1.body":
+    "A website earns its place by bringing you the right customers. That is what we build for, and how we judge our own work.",
+  "values.2.title":
+    "Only what you need",
+  "values.2.body":
+    "We scope to what the business actually needs, choose the simplest thing that works, and give you a fixed quote in writing before we start.",
+  "values.3.title":
+    "Good neighbours",
+  "values.3.body":
+    "Small businesses hold communities together. We want the ones we work with to do well, and we treat their customers the way we would want to be treated.",
+  "values.4.title":
+    "Calm and professional",
+  "values.4.body":
+    "Clear answers, work delivered when we said it would be, and a steady hand when something goes wrong. Easy to work with, from the first message to long after launch.",
+  "values.5.title":
+    "Off on the right foot",
+  "values.5.body":
+    "Every message gets a real reply from a person within two working days, with an honest view of whether we are the right fit.",
 
   // --- Partners ---------------------------------------------------------
   "partners.title": "Partners",

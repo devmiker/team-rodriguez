@@ -43,10 +43,15 @@ const profileLinks = [
   member.links?.github ? { href: member.links.github, label: "GitHub" } : undefined,
   member.links?.site ? { href: member.links.site, label: t("team.profile") } : undefined,
 ].filter((l): l is { href: string; label: string } => l !== undefined);
+
+/* A card with no bio and no highlights is short. In a row of taller cards it would
+   end in an empty gap, so its sky takes the spare height instead — nothing is
+   invented to fill the space. */
+const compact = !member.bio && !(member.highlights && member.highlights.length > 0);
 ---
 
-<article class="member card">
-  <div class="member__cover">
+<article class:list={["member", "card", { "member--compact": compact }]}>
+  <div class:list={["member__cover", member.cover && `member__cover--${member.cover}`]}>
     <Scenery seed={member.id} variant="card" />
   </div>
 
@@ -162,8 +167,39 @@ const profileLinks = [
     position: relative;
     isolation: isolate;
     block-size: 5.5rem;
-    margin: calc(-1 * var(--space-6)) calc(-1 * var(--space-6)) 0;
+    margin: calc(-1 * var(--card-pad)) calc(-1 * var(--card-pad)) 0;
     border-block-end: 1px solid var(--color-line);
+  }
+
+  /* Cover framings (`cover` in team.ts). Same scenery, different framing. */
+  .member__cover--tall {
+    block-size: 7rem;
+  }
+
+  .member__cover--sun-left {
+    --cover-body-end: 58%;
+  }
+
+  .member__cover--sun-centre {
+    --cover-body-end: calc(50% - 1.375rem);
+  }
+
+  .member--compact .member__cover {
+    block-size: auto;
+    flex: 1 0 5.5rem;
+    max-block-size: 10rem;
+  }
+
+  .member--compact .member__links {
+    margin-block-start: 0;
+  }
+
+  @media (max-width: 40rem) {
+    .member__cover,
+    .member--compact .member__cover {
+      block-size: 4.5rem;
+      flex: none;
+    }
   }
 
   /* The avatar sits on the tree line, half over the cover; the name stays below it.

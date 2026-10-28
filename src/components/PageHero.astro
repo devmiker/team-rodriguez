@@ -12,14 +12,16 @@ interface Props {
   eyebrow?: string;
   heading: string;
   lead?: string;
+  /** A night-owl coder hidden in this page's forest. See Scenery.astro. */
+  critter?: "owl" | "bear" | "wolf";
 }
 
-const { eyebrow, heading, lead } = Astro.props;
+const { eyebrow, heading, lead, critter } = Astro.props;
 ---
 
 <div class="hero">
   {/* Seeded by the heading, so each inner page has its own stretch of forest. */}
-  <Scenery seed={heading} />
+  <Scenery seed={heading} critter={critter} />
   <div class="page" data-enter>
     {eyebrow && <p class="eyebrow">{eyebrow}</p>}
     <h1>{heading}</h1>

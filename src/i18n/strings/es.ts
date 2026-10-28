@@ -38,12 +38,12 @@ export const es: UiStrings = {
 
   // --- Footer -----------------------------------------------------------
   "footer.blurb":
-    "Creamos y cuidamos sitios web para pequeñas empresas. Trabajamos en remoto, con clientes estén donde estén.",
+    "Creamos y cuidamos sitios web para pequeñas empresas, y queremos que la suya crezca. Trabajamos en remoto, con clientes estén donde estén.",
   "footer.navHeading": "Sitio",
   "footer.legalHeading": "Legal",
   "footer.contactHeading": "Contacto",
   "footer.rights": "Todos los derechos reservados.",
-  "footer.builtWith": "Hecho con Astro. Sin rastreadores, sin aviso de cookies, sin tonterías.",
+  "footer.builtWith": "Hecho con Astro. Sin rastreadores, sin aviso de cookies, sin tonterías. Algunos trabajamos de noche.",
 
   // --- Home -------------------------------------------------------------
   "home.title": "Team Rodriguez — sitios web para pequeñas empresas",
@@ -59,6 +59,7 @@ export const es: UiStrings = {
   "home.proof.speed": "Páginas que cargan en menos de un segundo",
   "home.proof.a11y": "Probadas con lector de pantalla y teclado",
   "home.proof.own": "El código y el dominio son suyos, siempre",
+  "home.proof.heading": "Cada sitio",
 
   "home.services.eyebrow": "Lo que hacemos",
   "home.services.heading": "Cuatro cosas, bien hechas",
@@ -148,6 +149,34 @@ export const es: UiStrings = {
   "team.highlights": "Más allá del código",
   "team.speaks": "Trabaja en",
   "team.profile": "Perfil",
+
+  // --- Values (team page) ---------------------------------------------
+  "values.eyebrow":
+    "Cómo trabajamos",
+  "values.heading":
+    "Con qué puede contar",
+  "values.lead":
+    "Creamos sitios web para pequeños negocios, y queremos que el suyo crezca.",
+  "values.1.title":
+    "Su crecimiento es lo que importa",
+  "values.1.body":
+    "Un sitio web se gana su lugar cuando le trae los clientes adecuados. Para eso lo construimos, y así medimos nuestro propio trabajo.",
+  "values.2.title":
+    "Solo lo que necesita",
+  "values.2.body":
+    "Planificamos según lo que su negocio necesita de verdad, elegimos lo más sencillo que funcione y le damos un presupuesto fijo por escrito antes de empezar.",
+  "values.3.title":
+    "Buenos vecinos",
+  "values.3.body":
+    "Los pequeños negocios mantienen unidas a las comunidades. Queremos que a quienes trabajan con nosotros les vaya bien, y tratamos a sus clientes como nos gustaría que nos trataran.",
+  "values.4.title":
+    "Tranquilos y profesionales",
+  "values.4.body":
+    "Respuestas claras, el trabajo entregado cuando lo prometimos y calma cuando algo sale mal. Es fácil trabajar con nosotros, desde el primer mensaje hasta mucho después del lanzamiento.",
+  "values.5.title":
+    "Empezar con buen pie",
+  "values.5.body":
+    "Cada mensaje recibe una respuesta real de una persona en un plazo de dos días hábiles, con una opinión honesta sobre si somos los adecuados.",
 
   // --- Partners ---------------------------------------------------------
   "partners.title": "Aliados",

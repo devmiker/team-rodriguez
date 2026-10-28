@@ -75,6 +75,12 @@ export interface TeamMember {
   speaks?: string[];
   /** Filename under `public/team/`, e.g. "mike.webp". Undefined renders initials. */
   photo?: string;
+  /**
+   * How the card's cover frames its scenery. Gives each person a little character
+   * without new colours: "tall" for a card with a lot in it, "sun-left" and
+   * "sun-centre" to move the sun or moon. Undefined is the standard strip.
+   */
+  cover?: "tall" | "sun-left" | "sun-centre";
   links?: {
     github?: string;
     linkedin?: string;
@@ -122,6 +128,7 @@ export const TEAM: TeamMember[] = [
     focus: ["TypeScript", "React", "Astro", "C#", "Accessibility"],
     speaks: ["en", "es", "de"],
     photo: "mike.webp",
+    cover: "tall",
     links: {
       github: "https://github.com/devmiker",
       linkedin: "https://www.linkedin.com/in/dev-mike-r/",
@@ -149,6 +156,7 @@ export const TEAM: TeamMember[] = [
     focus: ["JavaScript", "React", "HTML", "CSS"],
     speaks: ["en", "es"],
     photo: "francisco.webp",
+    cover: "sun-left",
     links: {
       linkedin: "https://www.linkedin.com/in/francisco-martinez-me/",
     },
@@ -171,6 +179,7 @@ export const TEAM: TeamMember[] = [
     focus: ["HTML", "CSS", "JavaScript", "React"],
     speaks: ["en", "es"],
     photo: "luis.webp",
+    cover: "sun-centre",
     links: {
       linkedin: "https://www.linkedin.com/in/luis-inzu/",
     },

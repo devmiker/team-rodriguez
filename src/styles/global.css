@@ -204,6 +204,25 @@ a:hover {
   --color-focus: var(--color-focus-on-band);
 }
 
+/* A mist section: the raised surface as a ground, for people and work (team,
+   partners). Its children see --color-bg-raised re-pointed to --color-bg, so cards
+   inside stay distinct from the section without a special case. Set on the
+   children, not the section, or the section would lose its own ground. */
+.section--mist {
+  background: var(--color-bg-raised);
+}
+
+.section--mist > * {
+  --color-bg-raised: var(--color-bg);
+}
+
+/* A band entered through a tree line: `<Scenery variant="band">` as its first child
+   grows out of the top edge into the section above. At most twice per page. */
+.ridge-edge {
+  position: relative;
+  isolation: isolate;
+}
+
 .stack > * + * {
   margin-block-start: var(--flow, var(--space-4));
 }
@@ -236,6 +255,12 @@ a:hover {
 .grid {
   display: grid;
   gap: var(--space-6);
+}
+
+/* For cards whose content varies a lot (team): each card is as tall as it needs,
+   rather than a short one stretched into an empty box. */
+.grid--top {
+  align-items: start;
 }
 
 @media (min-width: 40rem) {
@@ -278,10 +303,21 @@ a:hover {
 }
 
 .card {
+  /* A property, so parts that bleed to the card's edge (team covers, the quote
+     row) cancel exactly the padding the card has at this width. */
+  --card-pad: var(--space-6);
   background: var(--color-bg-raised);
   border: 1px solid var(--color-line);
   border-radius: var(--radius-lg);
-  padding: var(--space-6);
+  padding: var(--card-pad);
+}
+
+/* Stacked on a phone, a quarter-rem less padding gives the text back a little
+   width without making the cards feel cramped. */
+@media (max-width: 40rem) {
+  .card {
+    --card-pad: var(--space-5);
+  }
 }
 
 /* Buttons are a shared atom rather than a component because they appear as both <a>

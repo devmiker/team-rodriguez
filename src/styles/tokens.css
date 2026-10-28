@@ -113,6 +113,26 @@
   --color-danger: #b3261e;
   --color-success: #046b52;
 
+  /* A quiet accent field: the quote row on service cards and its arrow disc. Links
+     and body text both clear AA on it (link 5.66:1, text 12.84:1). */
+  --color-accent-subtle: #e3f3ec;
+
+  /* Service identities. Each service has a tint (its icon tile) and an ink (the icon
+     and its index label). Hues come from the existing palette — emerald, the sun's
+     blue, the forest's pine, the structural navy — so the four cards differ without
+     the site gaining a fifth colour family. Every ink clears 4.5:1 on its own tint
+     and on --color-bg-raised, in both themes (tokens.test.ts).
+     Care's ink is a step darker than --brand-pine-deep on purpose: pine-deep on its
+     tint is only 4.14:1. */
+  --color-service-website-tint: #dcf3e9;
+  --color-service-website-ink: #046b52;
+  --color-service-shop-tint: #e2edfd;
+  --color-service-shop-ink: #1f5fbf;
+  --color-service-care-tint: #dfeee8;
+  --color-service-care-ink: #286e56;
+  --color-service-audit-tint: #e5eaf1;
+  --color-service-audit-ink: #17293f;
+
   --shadow-card: 0 18px 40px -28px rgb(23 41 63 / 0.4);
   --shadow-raised: 0 1px 2px rgb(23 41 63 / 0.06), 0 8px 24px -16px rgb(23 41 63 / 0.25);
   --overlay: rgb(23 41 63 / 0.66);
@@ -168,6 +188,17 @@
     --color-danger: #ff9d94;
     --color-success: #34d8a0;
 
+    --color-accent-subtle: #173f3a;
+
+    --color-service-website-tint: #133a33;
+    --color-service-website-ink: #34d8a0;
+    --color-service-shop-tint: #172f4f;
+    --color-service-shop-ink: #8cbcff;
+    --color-service-care-tint: #163b3b;
+    --color-service-care-ink: #a9d3c2;
+    --color-service-audit-tint: #24395a;
+    --color-service-audit-ink: #c9d6e5;
+
     --shadow-card: 0 18px 40px -24px rgb(0 0 0 / 0.7);
     --shadow-raised: 0 1px 2px rgb(0 0 0 / 0.5), 0 8px 24px -16px rgb(0 0 0 / 0.6);
     --overlay: rgb(14 30 48 / 0.78);
@@ -207,6 +238,17 @@
 
   --color-danger: #ff9d94;
   --color-success: #34d8a0;
+
+  --color-accent-subtle: #173f3a;
+
+  --color-service-website-tint: #133a33;
+  --color-service-website-ink: #34d8a0;
+  --color-service-shop-tint: #172f4f;
+  --color-service-shop-ink: #8cbcff;
+  --color-service-care-tint: #163b3b;
+  --color-service-care-ink: #a9d3c2;
+  --color-service-audit-tint: #24395a;
+  --color-service-audit-ink: #c9d6e5;
 
   --shadow-card: 0 18px 40px -24px rgb(0 0 0 / 0.7);
   --shadow-raised: 0 1px 2px rgb(0 0 0 / 0.5), 0 8px 24px -16px rgb(0 0 0 / 0.6);

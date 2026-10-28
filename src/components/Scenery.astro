@@ -33,9 +33,17 @@ interface Props {
   /** "hero" is the full scene; "card" is a short cover strip; "band" is a single
    *  silhouette in the band colour, for the top edge of the footer. */
   variant?: "hero" | "card" | "band";
+  /**
+   * One of the night-owl coders, hidden in this scene: an owl on a branch with a
+   * laptop, a bear against a tree with a laptop, a wolf howling at the moon. By day
+   * they are the colour of the trees; at night their eyes and screens catch the
+   * moonlight. Very rarely, at night, one peeks out (motion.css, MotionScript.astro).
+   * One of each per page at most, and never near text.
+   */
+  critter?: "owl" | "bear" | "wolf";
 }
 
-const { seed, variant = "hero" } = Astro.props;
+const { seed, variant = "hero", critter } = Astro.props;
 
 /** A small, fast, deterministic PRNG (mulberry32) seeded from a string hash. */
 function random(seedText: string): () => number {
@@ -197,6 +205,59 @@ const craters = [
     </defs>
     {layers.map((layer) => <rect width={W} height={H} fill={`url(#${layer.id})`} />)}
   </svg>
+
+  {/*
+    The critters. Each carries its own tree, branch or knoll, so where it stands never
+    depends on where the seeded ridge happens to put a trunk. Drawn like the firs:
+    flat closed shapes, no outlines. The body is a group so the peek can move it out
+    from behind its tree while the tree stays put.
+  */}
+  {
+    critter === "owl" && (
+      <svg class="critter critter--owl" viewBox="0 0 80 102">
+        <g class="critter__body">
+          <path class="critter__fill" d="M46 58v-14q0-8 8-8t8 8v14zM47 38l1-6 4 4zM61 38l-1-6-4 4z" />
+          <ellipse class="critter__glow" cx="54" cy="46" rx="7" ry="5" />
+          <circle class="critter__eye" cx="51" cy="43" r="2" />
+          <circle class="critter__eye" cx="57" cy="43" r="2" />
+          <rect class="critter__laptop" x="47" y="50" width="14" height="8" rx="1" />
+        </g>
+        <path class="critter__fill" d="M26 5l9 29-4 0 10 29-7 0 14 28-19 0 0 10-6 0 0-10-19 0 14-28-7 0 10-29-4 0z" />
+        <rect class="critter__fill" x="30" y="58" width="36" height="3" rx="1.5" />
+      </svg>
+    )
+  }
+  {
+    critter === "bear" && (
+      <svg class="critter critter--bear" viewBox="0 0 90 72">
+        <g class="critter__body">
+          <path class="critter__fill" d="M48 72q0-30 14-30t14 30z" />
+          <circle class="critter__fill" cx="62" cy="34" r="9" />
+          <circle class="critter__fill" cx="56" cy="26" r="3.5" />
+          <circle class="critter__fill" cx="68" cy="26" r="3.5" />
+          <ellipse class="critter__glow" cx="62" cy="42" rx="8" ry="6" />
+          <circle class="critter__eye" cx="59" cy="33" r="1.6" />
+          <circle class="critter__eye" cx="65" cy="33" r="1.6" />
+          <rect class="critter__laptop" x="55" y="52" width="14" height="10" rx="1" />
+        </g>
+        <path class="critter__fill" d="M24 1l6 21-2 0 7 21-5 0 10 21-14 0 0 7-4 0 0-7-14 0 10-21-5 0 7-21-2 0z" />
+      </svg>
+    )
+  }
+  {
+    critter === "wolf" && (
+      <svg class="critter critter--wolf" viewBox="0 0 60 60">
+        <g class="critter__body">
+          <path
+            class="critter__fill"
+            d="M14 60C14 48 20 38 28 33L33 22 32 14 35 6 39 12 52 3 50 8 46 11 50 10 43 18 45 30 47 40 48 58 43 58 42 46 36 50 35 60ZM15 56C8 56 5 52 4 48 8 52 12 52 16 52Z"
+          />
+          <circle class="critter__eye" cx="40" cy="12" r="1.2" />
+        </g>
+        <path class="critter__fill" d="M0 60Q30 36 60 60Z" />
+      </svg>
+    )
+  }
 </div>
 
 <style>
@@ -330,13 +391,90 @@ const craters = [
     opacity: 1;
   }
 
+  /* --- Critters ---
+     Sized from the forest and placed with custom properties, never inline styles
+     (the CSP allows none). Each rests half tucked behind its tree or knoll; the
+     `--critter-rest` transform is also what motion.css animates back to after a
+     peek. Eyes and screen glow are night-only, with the same selector pattern as the
+     sky bodies above, so they need no script. */
+
+  .critter {
+    inset-block-end: 0;
+    inset-inline-start: var(--critter-x, 70%);
+    block-size: var(--critter-size, var(--scene-forest, 9rem));
+    inline-size: auto;
+    overflow: visible;
+    --critter-ink: var(--color-forest-near);
+    --critter-detail: var(--color-forest-mid);
+  }
+
+  .critter--owl {
+    --critter-x: 74%;
+    --critter-rest: translateX(-12px);
+  }
+
+  .critter--bear {
+    --critter-x: 62%;
+    --critter-rest: translateX(-10px);
+  }
+
+  .critter--wolf {
+    --critter-x: 24%;
+    --critter-size: calc(var(--scene-forest, 9rem) * 0.55);
+    --critter-rest: translateY(10px);
+  }
+
+  .scene--band .critter {
+    --critter-ink: var(--color-bg-band);
+    --critter-detail: var(--color-line-on-band);
+  }
+
+  .critter__fill {
+    fill: var(--critter-ink);
+  }
+
+  .critter__laptop {
+    fill: var(--critter-detail);
+  }
+
+  .critter__body {
+    transform-box: view-box;
+    transform: var(--critter-rest);
+  }
+
+  .critter__eye,
+  .critter__glow {
+    fill: var(--color-moon);
+    opacity: 0;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :global(:root:not([data-theme="light"])) .critter__eye {
+      opacity: 1;
+    }
+
+    :global(:root:not([data-theme="light"])) .critter__glow {
+      opacity: 0.45;
+    }
+  }
+
+  :global(:root[data-theme="dark"]) .critter__eye {
+    opacity: 1;
+  }
+
+  :global(:root[data-theme="dark"]) .critter__glow {
+    opacity: 0.45;
+  }
+
   /* --- Variants --- */
 
   .scene--card {
     --scene-forest: 3.75rem;
     --scene-body: 2.75rem;
     --scene-body-top: var(--space-2);
-    --scene-body-end: var(--space-5);
+    /* Overridable from outside: a team card's cover framing moves the sun or
+       moon by setting --cover-body-end (TeamCard.astro). */
+    --scene-body-end: var(--cover-body-end, var(--space-5));
     background: var(--color-sky);
   }
 

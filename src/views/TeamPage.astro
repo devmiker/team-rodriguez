@@ -10,6 +10,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import PageHero from "../components/PageHero.astro";
 import PendingNotice from "../components/PendingNotice.astro";
 import TeamCard from "../components/TeamCard.astro";
+import Icon from "../components/Icon.astro";
 import { toLocale } from "../i18n/locales";
 import { pathFor } from "../i18n/routes";
 import { useTranslations } from "../i18n/ui";
@@ -18,6 +19,7 @@ import { publishedTeam } from "../data/team";
 const locale = toLocale(Astro.currentLocale);
 const t = useTranslations(locale);
 const team = publishedTeam();
+const values = [1, 2, 3, 4, 5] as const;
 ---
 
 <BaseLayout
@@ -30,13 +32,14 @@ const team = publishedTeam();
     eyebrow={t("home.team.eyebrow")}
     heading={t("team.heading")}
     lead={t("team.lead")}
+    critter="wolf"
   />
 
   <section class="section">
     <div class="page">
       {
         team.length > 0 ? (
-          <div class="grid grid--3" data-reveal-group>
+          <div class="grid grid--3 grid--top" data-reveal-group>
             {team.map((member) => (
               <TeamCard member={member} locale={locale} />
             ))}
@@ -51,4 +54,76 @@ const team = publishedTeam();
       }
     </div>
   </section>
+
+  {/*
+    How we work. Statements about how the studio behaves, in its own words — no
+    claims about clients or results, which this page has no right to make yet.
+    A mist section, so it reads as its own part of the page after the cards.
+  */}
+  <section class="section section--mist" aria-labelledby="team-values">
+    <div class="page">
+      <div data-reveal="text">
+        <p class="eyebrow">{t("values.eyebrow")}</p>
+        <h2 id="team-values">{t("values.heading")}</h2>
+        <p class="lead values__lead">{t("values.lead")}</p>
+      </div>
+
+      <ul class="values" data-reveal-group>
+        {
+          values.map((n) => (
+            <li class="value">
+              <Icon name="tree" size="1.25rem" class="value__icon" />
+              <h3 class="value__title">{t(`values.${n}.title` as Parameters<typeof t>[0])}</h3>
+              <p class="value__body">{t(`values.${n}.body` as Parameters<typeof t>[0])}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
 </BaseLayout>
+
+<style>
+  .values__lead {
+    margin-block-start: var(--space-4);
+  }
+
+  .values {
+    display: grid;
+    gap: var(--space-8) var(--space-6);
+    margin: var(--space-10) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  @media (min-width: 40rem) {
+    .values {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .values {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .value {
+    padding-block-start: var(--space-4);
+    border-block-start: 2px solid var(--color-accent);
+  }
+
+  .values :global(.value__icon) {
+    color: var(--color-accent);
+  }
+
+  .value__title {
+    margin-block-start: var(--space-3);
+    font-size: var(--step-h3);
+  }
+
+  .value__body {
+    margin-block-start: var(--space-2);
+    color: var(--color-text-dim);
+  }
+</style>

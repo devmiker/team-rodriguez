@@ -93,12 +93,24 @@ const TEXT_PAIRS: [fg: string, bg: string][] = [
   ["--color-link", "--color-bg"],
   ["--color-link", "--color-bg-raised"],
   ["--color-on-accent", "--color-accent"],
+  ["--color-on-accent", "--color-accent-hover"],
   ["--color-text-on-band", "--color-bg-band"],
   ["--color-text-dim-on-band", "--color-bg-band"],
   ["--color-link-on-band", "--color-bg-band"],
   ["--color-danger", "--color-bg"],
   ["--color-danger", "--color-bg-raised"],
   ["--color-success", "--color-bg"],
+  ["--color-link", "--color-accent-subtle"],
+  ["--color-text", "--color-accent-subtle"],
+  ["--color-text-dim", "--color-accent-subtle"],
+  // Service identities: each ink is used as text (the index label) on its own tint
+  // and on the raised card surface.
+  ...(["website", "shop", "care", "audit"] as const).flatMap(
+    (id): [string, string][] => [
+      [`--color-service-${id}-ink`, `--color-service-${id}-tint`],
+      [`--color-service-${id}-ink`, "--color-bg-raised"],
+    ],
+  ),
 ];
 
 /**

@@ -21,6 +21,7 @@
  */
 
 import { useCallback, useEffect, useId, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 import "./MobileNav.css";
 
@@ -44,6 +45,8 @@ export interface MobileNavProps {
   closeLabel: string;
   navLabel: string;
   languageLabel: string;
+  /** The panel's closing call to action: the contact page. */
+  cta: { href: string; label: string };
 }
 
 /** Everything focusable inside `root`, in document order. */
@@ -62,11 +65,23 @@ export default function MobileNav({
   closeLabel,
   navLabel,
   languageLabel,
+  cta,
 }: MobileNavProps) {
   const [open, setOpen] = useState(false);
   const panelId = useId();
   const buttonRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
+
+  /*
+    The panel is portalled to <body> once the island has hydrated. Rendered inside
+    the header it inherited the header's `.band` tokens — light text meant for navy —
+    on its own light background, so in the light theme the links were nearly
+    invisible. Outside the header it gets the page's tokens like everything else.
+    The server render (before hydration) keeps it inline and hidden, which is fine:
+    it cannot open until the script has run.
+  */
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   const close = useCallback(() => {
     setOpen(false);
@@ -124,6 +139,92 @@ export default function MobileNav({
     };
   }, [open]);
 
+  const overlay = (
+    <>
+      {open && (
+        <div className="mobile-nav__scrim" onClick={close} aria-hidden="true">
+          {/* The scrim is decorative and click-to-close. Escape and the button are the
+              accessible routes out, so it is hidden from assistive technology rather
+              than exposed as an unlabelled clickable div. */}
+        </div>
+      )}
+
+      <div
+        ref={panelRef}
+        id={panelId}
+        className="mobile-nav__panel"
+        role="dialog"
+        aria-modal="true"
+        aria-label={navLabel}
+        hidden={!open}
+      >
+        {/* The header's button sits under the scrim while the panel is open, so the
+            panel carries its own way out. Escape works too. */}
+        <button type="button" className="mobile-nav__button mobile-nav__close" onClick={close}>
+          <svg
+            width="1.5em"
+            height="1.5em"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.75"
+            strokeLinecap="round"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <path d="M6 6l12 12M18 6L6 18" />
+          </svg>
+          <span className="visually-hidden">{closeLabel}</span>
+        </button>
+
+        {/*
+          Languages first, as a three-way row: switching language is the thing a
+          visitor on the wrong one needs most, so it is the first thing in the panel
+          rather than the last. Still three plain links with hreflang, never a
+          dropdown.
+        */}
+        <nav aria-label={languageLabel} className="mobile-nav__langs">
+          <ul>
+            {languages.map((language) => (
+              <li key={language.code}>
+                <a
+                  href={language.href}
+                  hrefLang={language.code}
+                  lang={language.code}
+                  aria-current={language.current ? "true" : undefined}
+                >
+                  {language.name}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        <nav aria-label={navLabel}>
+          <ul className="mobile-nav__links">
+            {links.map((link) => (
+              <li key={link.href}>
+                <a
+                  href={link.href}
+                  aria-current={link.current ? "page" : undefined}
+                  onClick={close}
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        <p className="mobile-nav__cta">
+          <a className="button button--primary" href={cta.href} onClick={close}>
+            {cta.label}
+          </a>
+        </p>
+      </div>
+    </>
+  );
+
   return (
     <>
       <button
@@ -150,57 +251,7 @@ export default function MobileNav({
         <span className="visually-hidden">{open ? closeLabel : openLabel}</span>
       </button>
 
-      {open && (
-        <div className="mobile-nav__scrim" onClick={close} aria-hidden="true">
-          {/* The scrim is decorative and click-to-close. Escape and the button are the
-              accessible routes out, so it is hidden from assistive technology rather
-              than exposed as an unlabelled clickable div. */}
-        </div>
-      )}
-
-      <div
-        ref={panelRef}
-        id={panelId}
-        className="mobile-nav__panel"
-        role="dialog"
-        aria-modal="true"
-        aria-label={navLabel}
-        hidden={!open}
-      >
-        <nav aria-label={navLabel}>
-          <ul className="mobile-nav__links">
-            {links.map((link) => (
-              <li key={link.href}>
-                <a
-                  href={link.href}
-                  aria-current={link.current ? "page" : undefined}
-                  onClick={close}
-                >
-                  {link.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
-
-        <nav aria-label={languageLabel} className="mobile-nav__langs">
-          <p className="mobile-nav__langs-heading">{languageLabel}</p>
-          <ul>
-            {languages.map((language) => (
-              <li key={language.code}>
-                <a
-                  href={language.href}
-                  hrefLang={language.code}
-                  lang={language.code}
-                  aria-current={language.current ? "true" : undefined}
-                >
-                  {language.name}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
-      </div>
+      {mounted ? createPortal(overlay, document.body) : overlay}
     </>
   );
 }

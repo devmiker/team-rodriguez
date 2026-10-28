@@ -54,6 +54,15 @@
 
       if (!supported) return;
 
+      // The night-owl coders' peek: about one page load in twenty, at night only,
+      // and only once motion is confirmed on. Purely decorative; see motion.css.
+      const night =
+        root.getAttribute("data-theme") === "dark" ||
+        (!root.hasAttribute("data-theme") && matchMedia("(prefers-color-scheme: dark)").matches);
+      if (root.hasAttribute("data-motion") && night && Math.random() < 0.05) {
+        root.setAttribute("data-critter-peek", "");
+      }
+
       addEventListener("DOMContentLoaded", () => {
         const seen = new IntersectionObserver(
           (entries) => {

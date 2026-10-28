@@ -36,38 +36,49 @@ const steps = [1, 2, 3, 4] as const;
 ---
 
 <BaseLayout page={{ route: "home" }} title={t("home.title")} description={t("home.description")}>
-  {/* --- Hero --- */}
+  {/* --- Hero ---
+      Two columns on a wide screen: the pitch on the left, and on the right the three
+      things every site ships with, as a card standing in the landscape. The card is
+      the existing proof points, not a mock-up — nothing on it is invented. */}
   <section class="hero">
-    <Scenery seed="home" />
+    <Scenery seed="home" critter="owl" />
     <div class="page hero__inner" data-enter>
-      <p class="eyebrow">
-        <span aria-hidden="true">&lt;</span>{t("home.hero.eyebrow")}<span aria-hidden="true"
-          >&nbsp;/&gt;</span
-        >
-      </p>
-      <h1>{t("home.hero.heading")}</h1>
-      <p class="lead hero__body">{t("home.hero.body")}</p>
-
-      <div class="hero__actions">
-        <a class="button button--primary" href={pathFor({ route: "contact" }, locale)}>
-          {t("home.hero.cta")}
-          <Icon name="arrowRight" size="1.05em" />
-        </a>
-        <a class="button button--secondary" href={pathFor({ route: "services" }, locale)}>
-          {t("home.hero.ctaSecondary")}
-        </a>
+      <div class="hero__copy">
+        <p class="eyebrow">
+          <span aria-hidden="true">&lt;</span>{t("home.hero.eyebrow")}<span aria-hidden="true"
+            >&nbsp;/&gt;</span
+          >
+        </p>
+        <h1>{t("home.hero.heading")}</h1>
+        <p class="lead hero__body">{t("home.hero.body")}</p>
+        <div class="hero__actions">
+          <a class="button button--primary" href={pathFor({ route: "contact" }, locale)}>
+            {t("home.hero.cta")}
+            <Icon name="arrowRight" size="1.05em" />
+          </a>
+          <a class="button button--secondary" href={pathFor({ route: "services" }, locale)}>
+            {t("home.hero.ctaSecondary")}
+          </a>
+        </div>
       </div>
 
-      <ul class="proof" data-reveal-group>
-        {
-          proofPoints.map((point) => (
-            <li>
-              <Icon name={point.icon} size="1.15em" class="proof__icon" />
-              <span>{point.text}</span>
-            </li>
-          ))
-        }
-      </ul>
+      <aside class="spec" aria-labelledby="home-spec">
+        <p class="eyebrow" id="home-spec">
+          <span aria-hidden="true">&lt;</span>{t("home.proof.heading")}<span aria-hidden="true"
+            >&nbsp;/&gt;</span
+          >
+        </p>
+        <ul class="proof">
+          {
+            proofPoints.map((point) => (
+              <li>
+                <Icon name={point.icon} size="1.5rem" class="proof__icon" />
+                <span>{point.text}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </aside>
     </div>
   </section>
 
@@ -94,7 +105,8 @@ const steps = [1, 2, 3, 4] as const;
   </section>
 
   {/* --- Process --- */}
-  <section class="section band on-band" aria-labelledby="home-process">
+  <section class="section band on-band ridge-edge" aria-labelledby="home-process">
+    <Scenery seed="home-process" variant="band" />
     <div class="page">
       <div data-reveal="text">
         <p class="eyebrow">{t("home.process.eyebrow")}</p>
@@ -125,7 +137,7 @@ const steps = [1, 2, 3, 4] as const;
   {/* --- Team. Absent entirely while nobody is published. --- */}
   {
     team.length > 0 && (
-      <section class="section" aria-labelledby="home-team">
+      <section class="section section--mist" aria-labelledby="home-team">
         <div class="page">
           <div data-reveal="text">
             <p class="eyebrow">{t("home.team.eyebrow")}</p>
@@ -133,7 +145,7 @@ const steps = [1, 2, 3, 4] as const;
             <p class="lead section__lead">{t("home.team.body")}</p>
           </div>
 
-          <div class="grid grid--3 section__body" data-reveal-group>
+          <div class="grid grid--3 grid--top section__body" data-reveal-group>
             {team.slice(0, 3).map((member) => (
               <TeamCard member={member} locale={locale} />
             ))}
@@ -179,7 +191,8 @@ const steps = [1, 2, 3, 4] as const;
   }
 
   {/* --- Closing call to action --- */}
-  <section class="section cta" aria-labelledby="home-cta">
+  <section class="section section--loose band on-band ridge-edge cta" aria-labelledby="home-cta">
+    <Scenery seed="home-cta" variant="band" />
     <div class="page cta__inner" data-reveal>
       <h2 id="home-cta">{t("home.cta.heading")}</h2>
       <p class="lead">{t("home.cta.body")}</p>
@@ -194,16 +207,27 @@ const steps = [1, 2, 3, 4] as const;
 <style>
   .hero {
     --scene-forest: clamp(5.5rem, 15vw, 11rem);
+    --scene-body: clamp(3.5rem, 9vw, 7rem);
+    /* The sun or moon stands behind the spec card's top corner, so the card reads
+       as standing in the landscape. On a phone it moves to the top-right corner. */
+    --scene-body-end: calc(38% - var(--scene-body));
+    --scene-body-top: var(--space-6);
     position: relative;
     isolation: isolate;
     padding-block: var(--rhythm) calc(var(--rhythm-tight) + var(--scene-forest));
-    background:
-      radial-gradient(
-        70rem 28rem at 10% -20%,
-        color-mix(in oklab, var(--brand-emerald) 16%, transparent),
-        transparent 65%
-      ),
-      var(--color-bg);
+    background: var(--color-sky);
+  }
+
+  .hero__inner {
+    display: grid;
+    gap: var(--space-10);
+    align-items: start;
+  }
+
+  @media (min-width: 60rem) {
+    .hero__inner {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    }
   }
 
   .hero__inner h1 {
@@ -230,34 +254,48 @@ const steps = [1, 2, 3, 4] as const;
     margin-block-start: var(--space-8);
   }
 
-  .proof {
-    display: grid;
-    gap: var(--space-3);
-    margin-block-start: var(--rhythm-tight);
-    padding-block-start: var(--space-6);
-    border-block-start: 1px solid var(--color-line);
-    list-style: none;
-    padding-inline: 0;
+  /* --- The spec card --- */
+
+  .spec {
+    position: relative;
+    padding: var(--space-6);
+    background: var(--color-bg-raised);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
   }
 
-  @media (min-width: 52rem) {
-    .proof {
-      grid-template-columns: repeat(3, 1fr);
-      gap: var(--space-6);
+  @media (min-width: 60rem) {
+    .spec {
+      margin-block-start: var(--space-16);
     }
+  }
+
+  .proof {
+    display: grid;
+    gap: var(--space-4);
+    margin: var(--space-4) 0 0;
+    padding: 0;
+    list-style: none;
   }
 
   .proof li {
     display: flex;
     align-items: flex-start;
     gap: var(--space-3);
-    font-size: var(--step-small);
-    color: var(--color-text-dim);
+    color: var(--color-text);
   }
 
-  .proof__icon {
-    margin-block-start: 0.2em;
+  .proof :global(.proof__icon) {
     color: var(--color-accent);
+  }
+
+  @media (max-width: 40rem) {
+    .hero {
+      --scene-body: 3rem;
+      --scene-body-end: var(--page-gutter);
+      --scene-body-top: var(--space-3);
+    }
   }
 
   .section__lead {
@@ -325,10 +363,6 @@ const steps = [1, 2, 3, 4] as const;
   }
 
   /* --- Closing CTA --- */
-
-  .cta {
-    border-block-start: 1px solid var(--color-line);
-  }
 
   .cta__inner {
     display: grid;

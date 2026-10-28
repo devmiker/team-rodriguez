@@ -79,6 +79,7 @@ const languages = LOCALES.map((l) => ({
           closeLabel={t("nav.closeMenu")}
           navLabel={t("nav.label")}
           languageLabel={t("lang.label")}
+          cta={{ href: pathFor({ route: "contact" }, locale), label: t("home.cta.button") }}
         />
       </div>
     </div>
@@ -93,12 +94,20 @@ const languages = LOCALES.map((l) => ({
     border-block-end: 1px solid var(--color-line-on-band);
   }
 
+  /* 3.5rem on a phone, 4rem from the desktop breakpoint: on a small screen every
+     row the header does not take is a row of the page. */
   .header__inner {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: var(--space-4);
-    min-block-size: var(--space-16);
+    min-block-size: 3.5rem;
+  }
+
+  @media (min-width: 52.0625rem) {
+    .header__inner {
+      min-block-size: var(--space-16);
+    }
   }
 
   .wordmark {
@@ -162,13 +171,17 @@ const languages = LOCALES.map((l) => ({
     gap: var(--space-2);
   }
 
-  .header__langs {
+  /* `:global` and anchored on .header__tools: the language switcher is rendered by
+     another component, so a plain scoped `.header__langs` rule matches nothing —
+     which is exactly how the three codes used to stay in the phone header and push
+     the menu button off the edge. On a phone the languages live in the menu panel. */
+  .header__tools :global(.header__langs) {
     display: none;
   }
 
   @media (min-width: 52.0625rem) {
     .nav,
-    .header__langs {
+    .header__tools :global(.header__langs) {
       display: block;
     }
 

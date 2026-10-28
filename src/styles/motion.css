@@ -180,6 +180,32 @@
   view-transition-name: site-header;
 }
 
+/* --- Critters: the rare peek ----------------------------------------------
+ *
+ * One of the night-owl coders in the scenery (Scenery.astro) slides out from
+ * behind its tree, holds for about a second, and slides back. Once. MotionScript
+ * sets `data-critter-peek` on roughly one page load in twenty, at night, and only
+ * when it has also set `data-motion="on"` — so reduced motion or no JavaScript means
+ * no peek, never a missing animal: at rest they are simply half tucked away.
+ * Transform only; it never loops.
+ */
+
+@keyframes critter-peek {
+  0%,
+  100% {
+    transform: var(--critter-rest);
+  }
+
+  22%,
+  78% {
+    transform: none;
+  }
+}
+
+:root[data-motion="on"][data-critter-peek] .critter__body {
+  animation: critter-peek calc(var(--duration-slow) * 4) var(--ease-out) 1.5s 1 both;
+}
+
 /* --- Hover ----------------------------------------------------------------
  *
  * Pointer-only. `@media (hover: hover)` keeps these off touch screens, where a
@@ -205,13 +231,15 @@
      register, not enough to look like it is trying to escape. */
   .button svg,
   .more-link svg,
-  .study__link svg {
+  .study__link svg,
+  .quote-row__arrow svg {
     transition: transform var(--duration) var(--ease-spring);
   }
 
   .button:hover svg,
   .more-link:hover svg,
-  .study__link:hover svg {
+  .study__link:hover svg,
+  .quote-row:hover .quote-row__arrow svg {
     transform: translateX(2px);
   }
 }
