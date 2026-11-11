@@ -201,7 +201,7 @@ export const es: UiStrings = {
   "contact.response.body":
     "Leemos cada mensaje nosotros mismos. En dos días laborables recibirá una respuesta real de una persona — normalmente con una o dos preguntas y una opinión honesta sobre si somos los adecuados.",
   "contact.privacy":
-    "Lo que envíe llega a nuestro correo y a ningún sitio más. No lo guardamos en ninguna base de datos, no le añadimos a ninguna lista y no se lo pasamos a nadie.",
+    "Lo que envíe llega a nuestro correo y se guarda seis meses en nuestro registro de consultas, para que no se pierda. Nunca le añadimos a ninguna lista ni se lo pasamos a nadie.",
 
   "form.name.label": "Su nombre",
   "form.name.error": "Díganos cómo dirigirnos a usted.",

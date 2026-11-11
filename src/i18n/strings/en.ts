@@ -198,7 +198,7 @@ export const en = {
   "contact.response.body":
     "We read every message ourselves. You will get a real reply from a person within two working days — usually with a question or two, and an honest view of whether we are the right people for it.",
   "contact.privacy":
-    "What you send is emailed to us and nothing else. We do not store it in a database, add you to a mailing list, or pass it to anyone.",
+    "What you send is emailed to us and kept in our enquiry records for six months, so it cannot get lost. We never add you to a mailing list or pass it to anyone.",
 
   "form.name.label": "Your name",
   "form.name.error": "Please tell us what to call you.",

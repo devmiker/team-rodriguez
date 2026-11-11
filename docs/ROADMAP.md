@@ -27,21 +27,24 @@ These are in rough dependency order. Nothing below can be skipped.
 2. **Buy the domain.** Set `COMPANY.origin` and the `SITE_URL` repository variable.
 3. **Business email.** Replace `COMPANY.email`, and set `CONTACT_TO` in the Static Web
    App's application settings.
-4. **Mail provider.** Create the account, verify the sending domain, set
+4. **Enquiry store.** Create the Turso database in the EU and set
+   `TURSO_DATABASE_URL` and `TURSO_AUTH_TOKEN` in the Static Web App and as GitHub
+   secrets (`docs/DEPLOY.md` §4.5). The code ships ready and skips the store until then.
+5. **Mail provider.** Create the account, verify the sending domain, set
    `RESEND_API_KEY` and `CONTACT_FROM`. Then send a real test message through the live
    form and confirm it arrives — including the no-JavaScript path.
-5. **Legal review.** A lawyer reads `src/data/legal.ts`; then set `PRIVACY_REVIEWED`.
+6. **Legal review.** A lawyer reads `src/data/legal.ts`; then set `PRIVACY_REVIEWED`.
    Write terms against your actual client contract; then set `TERMS_SUPPLIED`.
-6. **Team entries.** Get Francisco's and Luis's own words, their real titles, and their
+7. **Team entries.** Get Francisco's and Luis's own words, their real titles, and their
    agreement to appear. Then `published: true`.
-7. ~~**Real prices.**~~ Dropped 2026-10-28: the site publishes no prices; every service asks for a quote instead.
-8. **Manual accessibility pass.** Keyboard only, then a screen reader. The automated
+8. ~~**Real prices.**~~ Dropped 2026-10-28: the site publishes no prices; every service asks for a quote instead.
+9. **Manual accessibility pass.** Keyboard only, then a screen reader. The automated
    audit catches about a third of real problems. Include a pass with reduced motion
    turned on at the OS level — the tests assert the contract, but seeing it is
    cheaper than trusting it.
-9. **Flip `LAUNCHED` to `true`.** This turns on indexing, the sitemap and structured
+10. **Flip `LAUNCHED` to `true`.** This turns on indexing, the sitemap and structured
    data all at once.
-10. **Set `CSP_MODE=enforce`** — after watching the report-only policy in a real browser
+11. **Set `CSP_MODE=enforce`** — after watching the report-only policy in a real browser
     for a while and seeing no violations.
 
 ## Before launch — should do

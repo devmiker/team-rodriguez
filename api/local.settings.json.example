@@ -10,6 +10,8 @@
     "CONTACT_TO": "you@example.com",
     "CONTACT_FROM": "Team Rodriguez <website@your-verified-domain.com>",
     "RESEND_API_KEY": "re_xxxxxxxxxxxxxxxxxxxx",
+    "TURSO_DATABASE_URL": "libsql://team-rodriguez-your-org.turso.io",
+    "TURSO_AUTH_TOKEN": "",
     "ALLOWED_ORIGIN": "http://localhost:4321"
   }
 }

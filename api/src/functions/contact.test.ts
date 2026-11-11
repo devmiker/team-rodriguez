@@ -1,14 +1,13 @@
 /**
- * The endpoint's own logic that is worth testing in isolation: the open-redirect
- * guard.
- *
- * Everything else in the handler is either the shared validator (tested in
- * src/lib/contact.test.ts) or a call to the mail provider, which is not worth mocking
- * an HTTP client to assert.
+ * The endpoint's own logic: the open-redirect guard, and the store-then-email
+ * decision — which outcome the visitor sees when the database or the mail provider
+ * is down. The validator itself is tested in src/lib/contact.test.ts, and the store's
+ * request format in ../lib/enquiries.test.ts.
  */
 
-import { describe, expect, it } from "vitest";
-import { safeRedirect } from "./contact.js";
+import { HttpRequest, InvocationContext } from "@azure/functions";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { contact, safeRedirect } from "./contact.js";
 
 describe("safeRedirect", () => {
   it.each(["/en/thanks/", "/de/danke/", "/es/gracias/", "/en/", "/de/kontakt/"])(
@@ -37,5 +36,114 @@ describe("safeRedirect", () => {
     for (const value of [undefined, null, 1, {}, ["/en/thanks/"]]) {
       expect(safeRedirect(value)).toBe("/en/thanks/");
     }
+  });
+});
+
+/* -------------------------------------------------------------------------- */
+/* Store first, then email                                                    */
+/* -------------------------------------------------------------------------- */
+
+describe("contact handler: store and email", () => {
+  const body = {
+    name: "Ada Lovelace",
+    email: "ada@example.com",
+    company: "Analytical Engines",
+    projectType: "new",
+    budget: "1kto2k5",
+    timeline: "month",
+    message: "We need a site for a small engineering firm. Five pages, nothing fancy.",
+  };
+
+  const env = {
+    RESEND_API_KEY: "re_test",
+    CONTACT_TO: "us@example.com",
+    CONTACT_FROM: "Site <site@example.com>",
+    TURSO_DATABASE_URL: "libsql://db-org.turso.io",
+    TURSO_AUTH_TOKEN: "t",
+  };
+
+  /** Route fetch by host: the database and the mail provider each succeed or fail. */
+  function stubNetwork({ db, mail }: { db: boolean; mail: boolean }) {
+    const calls: string[] = [];
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (input: string | URL | Request) => {
+        const url = String(input);
+        calls.push(url);
+        const ok = url.includes("turso.io") ? db : mail;
+        return ok
+          ? new Response(JSON.stringify({ results: [{ type: "ok" }], id: "m1" }), { status: 200 })
+          : new Response("down", { status: 503 });
+      }),
+    );
+    return calls;
+  }
+
+  async function submit() {
+    const request = new HttpRequest({
+      method: "POST",
+      url: "http://localhost/api/contact",
+      headers: { "content-type": "application/json", "x-forwarded-for": `203.0.113.${Math.floor(Math.random() * 250)}` },
+      body: { string: JSON.stringify(body) },
+    });
+    const context = new InvocationContext();
+    vi.spyOn(context, "error").mockImplementation(() => {});
+    vi.spyOn(context, "warn").mockImplementation(() => {});
+    vi.spyOn(context, "info").mockImplementation(() => {});
+    return { response: await contact(request, context), context };
+  }
+
+  beforeEach(() => {
+    for (const [k, v] of Object.entries(env)) vi.stubEnv(k, v);
+  });
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.unstubAllEnvs();
+    vi.restoreAllMocks();
+  });
+
+  it("stores, emails, then marks the enquiry as emailed", async () => {
+    const calls = stubNetwork({ db: true, mail: true });
+    const { response } = await submit();
+    expect(response.status).toBe(200);
+    expect(calls.map((u) => new URL(u).host)).toEqual(["db-org.turso.io", "api.resend.com", "db-org.turso.io"]);
+  });
+
+  it("still succeeds when the email fails but the enquiry was stored — the lead is not lost", async () => {
+    stubNetwork({ db: true, mail: false });
+    const { response, context } = await submit();
+    expect(response.status).toBe(200);
+    expect(vi.mocked(context.error).mock.calls.some(([m]) => String(m).includes("NOT emailed"))).toBe(true);
+  });
+
+  it("still succeeds when the store fails but the email went out", async () => {
+    stubNetwork({ db: false, mail: true });
+    const { response } = await submit();
+    expect(response.status).toBe(200);
+  });
+
+  it("reports an error only when both the store and the email fail", async () => {
+    stubNetwork({ db: false, mail: false });
+    const { response } = await submit();
+    expect(response.status).toBe(500);
+  });
+
+  it("works exactly as before when the store is not configured", async () => {
+    vi.stubEnv("TURSO_DATABASE_URL", "");
+    const calls = stubNetwork({ db: true, mail: true });
+    const { response } = await submit();
+    expect(response.status).toBe(200);
+    expect(calls.map((u) => new URL(u).host)).toEqual(["api.resend.com"]);
+  });
+
+  it("never writes submitted content to the log", async () => {
+    stubNetwork({ db: true, mail: false });
+    const { context } = await submit();
+    const logged = [context.error, context.warn, context.info]
+      .flatMap((fn) => vi.mocked(fn).mock.calls.flat())
+      .map(String)
+      .join("\n");
+    expect(logged).not.toContain(body.email);
+    expect(logged).not.toContain(body.message);
   });
 });

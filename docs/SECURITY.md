@@ -4,9 +4,10 @@ What this site does to reduce its attack surface, and — just as usefully — w
 deliberately does not do.
 
 The short version: the site is static HTML with one small POST endpoint. Almost every
-class of web vulnerability needs something this site does not have — a database, a
-session, a login, a template rendered from user input, a third-party script. The
-remaining surface is the contact endpoint, and most of this document is about that.
+class of web vulnerability needs something this site does not have — a session, a
+login, a template rendered from user input, a third-party script. The remaining surface
+is the contact endpoint and the one table it writes to, and most of this document is
+about those.
 
 ---
 
@@ -14,11 +15,31 @@ remaining surface is the contact endpoint, and most of this document is about th
 
 ```
 Browser ──GET──> Azure Static Web Apps ──> static files, nothing else runs
-Browser ──POST─> /api/contact (one Azure Function) ──HTTPS──> mail provider ──> inbox
+Browser ──POST─> /api/contact (one Azure Function) ──HTTPS──> enquiry store (Turso)
+                                                    └─HTTPS──> mail provider ──> inbox
 ```
 
-No database. No sessions, cookies or authentication. No user accounts. No admin panel.
-No content management system. Nothing is stored anywhere as a result of a visit.
+One table, written only by the contact endpoint, never read by the site. No sessions,
+cookies or authentication. No user accounts. No admin panel. No content management
+system. Nothing is stored anywhere as a result of a visit — only as a result of
+sending the form.
+
+### The enquiry store
+
+Added 2026-11-11 so that a mail outage cannot lose a lead. What keeps it small:
+
+- **Write-only from the web.** The function inserts a row and flips `emailed`; no
+  code path reads enquiries back out, so there is no query an attacker can steer
+  toward other people's messages.
+- **Parameters, never string-built SQL.** Submitted text only travels in the request's
+  `args`. `api/src/lib/enquiries.test.ts` asserts that no submitted value ever appears
+  in a SQL string.
+- **Six-month retention, enforced twice.** Every insert deletes rows older than
+  `RETENTION_DAYS`, and `.github/workflows/retention.yml` does the same weekly.
+- **The token lives in two places only:** the Static Web App's application settings
+  and the repository secrets used by the retention job. Rotate it with
+  `turso db tokens invalidate <db>` and update both.
+- **EU region.** The privacy page says so; create the database there (DEPLOY.md).
 
 That is the single largest security decision in the project, and it was made by
 choosing the architecture rather than by adding controls.

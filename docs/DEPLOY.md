@@ -130,9 +130,10 @@ real. Azure gives you a URL like `https://<random-name>.azurestaticapps.net`.
 
 ## 4. Configure mail
 
-The function reads three values. Without them it logs an error and the submission is
-**not delivered** — the visitor still sees a success message, so this failure is silent
-by design and you will not notice it from the outside.
+The function reads three values. Without them it logs an error and the email is **not
+sent**. If the enquiry store (section 4.5) is set up, the enquiry is still saved and the
+visitor still sees a success message — so this failure is silent from the outside, and
+only the log or the `emailed = 0` query below will tell you.
 
 In the portal: **your Static Web App → Settings → Environment variables** (older portals
 call it Configuration → Application settings).
@@ -154,12 +155,85 @@ Save, then restart the app so the function picks them up.
 
 ---
 
+## 4.5 Enquiry store (Turso)
+
+Every enquiry is saved to a Turso database before it is emailed, so a mail problem
+cannot lose a lead. It is optional: with the two settings below unset, the function
+skips the store and logs a warning. The table creates itself on the first enquiry, so
+there is no schema step.
+
+**Create the database in the EU.** The privacy page says enquiries are stored in the
+European Union. Check where your group lives first:
+
+```
+turso group list
+```
+
+If the group's location is in Europe, create the database in it. If not, create an EU
+group (the location IDs come from `turso db locations`):
+
+```
+turso group create eu --location <an EU location id>
+turso db create team-rodriguez --group eu
+```
+
+Creating a second group needs a paid Turso plan. If you stay on the free plan with a
+US group, the database can go there instead, but then change "in the European Union"
+in `src/data/legal.ts` (all three languages) to say where it actually is. The page
+must say where the data really lives.
+
+**Get the two values:**
+
+```
+turso db show team-rodriguez --url
+turso db tokens create team-rodriguez
+```
+
+Turso's web dashboard shows the same: the database page has the URL and a button to
+create a token. The CLI on Windows runs under WSL.
+
+**Set them in two places:**
+
+| Where | Name | Value |
+|---|---|---|
+| Static Web App → Environment variables | `TURSO_DATABASE_URL` | `libsql://team-rodriguez-<org>.turso.io` |
+| Static Web App → Environment variables | `TURSO_AUTH_TOKEN` | the token |
+| GitHub → Settings → Secrets → Actions | `TURSO_DATABASE_URL` | same URL |
+| GitHub → Settings → Secrets → Actions | `TURSO_AUTH_TOKEN` | same token |
+
+The GitHub pair is for `.github/workflows/retention.yml`. It runs weekly and deletes
+enquiries older than six months, so the privacy promise holds even in a month when
+nobody writes in. Without the secrets, it skips with a warning.
+
+**Reading enquiries:**
+
+```
+turso db shell team-rodriguez "SELECT created_at, name, email, budget, emailed FROM enquiries ORDER BY created_at DESC LIMIT 20"
+```
+
+**Saved but never emailed** — check this after any change to the mail settings:
+
+```
+turso db shell team-rodriguez "SELECT * FROM enquiries WHERE emailed = 0"
+```
+
+**Deleting someone's enquiry on request:**
+
+```
+turso db shell team-rodriguez "DELETE FROM enquiries WHERE email = 'them@example.com'"
+```
+
+**If the token leaks:** `turso db tokens invalidate team-rodriguez`, create a new one,
+and update it in both places.
+
+---
+
 ## 5. Test the form properly
 
 Both paths, because they fail independently:
 
 1. **With JavaScript on** — submit and confirm the inline success state, then confirm
-   the mail arrives.
+   the mail arrives and the enquiry appears in the store with `emailed = 1`.
 2. **With JavaScript disabled** — submit again. The form should POST, the browser
    should land on `/en/thanks/`, and the mail should arrive. This is the path that
    proves the progressive-enhancement fallback actually works in production, and it is
@@ -264,10 +338,12 @@ checks it agrees with `package.json`'s `engines.node` — when you bump one, the
 tells you about the other.
 
 **A silent mail failure looks like success.** If `RESEND_API_KEY`, `CONTACT_TO` or
-`CONTACT_FROM` is missing, the function logs an error and returns the normal success
-response. That is deliberate — a submitter should never see your infrastructure — but it
-means the only way to know mail is broken is to look. Check the function logs after any
-configuration change, and send yourself a test message.
+`CONTACT_FROM` is missing or wrong, the function logs an error, saves the enquiry, and
+returns the normal success response. That is deliberate — the enquiry did reach us, and
+a submitter should never see your infrastructure — but it means the only way to know
+mail is broken is to look. After any configuration change, send yourself a test message
+and run the `emailed = 0` query in section 4.5. The visitor only sees an error when the
+store AND the email both fail.
 
 **Caught spam also looks like success.** The honeypot, the minimum fill time and the
 rate limiter all return the same response a real submission gets, because telling a bot

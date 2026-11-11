@@ -201,7 +201,7 @@ export const de: UiStrings = {
   "contact.response.body":
     "Wir lesen jede Nachricht selbst. Innerhalb von zwei Werktagen bekommen Sie eine echte Antwort von einem Menschen — meist mit ein, zwei Rückfragen und einer ehrlichen Einschätzung, ob wir die Richtigen dafür sind.",
   "contact.privacy":
-    "Was Sie senden, wird uns per E-Mail zugestellt und sonst nichts. Wir speichern es in keiner Datenbank, nehmen Sie in keinen Verteiler auf und geben es an niemanden weiter.",
+    "Was Sie senden, wird uns per E-Mail zugestellt und sechs Monate lang in unseren Anfragen aufbewahrt, damit nichts verloren geht. Wir nehmen Sie in keinen Verteiler auf und geben es an niemanden weiter.",
 
   "form.name.label": "Ihr Name",
   "form.name.error": "Bitte sagen Sie uns, wie wir Sie ansprechen sollen.",

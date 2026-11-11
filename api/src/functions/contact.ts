@@ -27,10 +27,20 @@
  *    CONTACT_TO       where enquiries are delivered
  *    CONTACT_FROM     the From address, on a domain verified with the mail provider
  *    RESEND_API_KEY   the mail provider's key
+ *    TURSO_DATABASE_URL, TURSO_AUTH_TOKEN
+ *                     the enquiry store (see ../lib/enquiries.ts); optional
  *  None of these are in the repository, and the destination address can be changed
  *  without a deploy.
+ *
+ * ── Store first, then email ───────────────────────────────────────────────────
+ *  A valid enquiry is written to the enquiry store, then emailed. The visitor is
+ *  told "sent" if EITHER succeeded, because either way the enquiry has reached us;
+ *  only when both fail do they see an error and get asked to try again. An enquiry
+ *  that was stored but not emailed is logged by id (never by content) and stays
+ *  findable with `emailed = 0`.
  */
 
+import { randomUUID } from "node:crypto";
 import { app, type HttpRequest, type HttpResponseInit, type InvocationContext } from "@azure/functions";
 
 /*
@@ -45,6 +55,7 @@ import {
   validate,
   type ContactSubmission,
 } from "../../../src/lib/contact.js";
+import { markEmailed, saveEnquiry, storeConfig } from "../lib/enquiries.js";
 
 /* -------------------------------------------------------------------------- */
 /* Rate limiting                                                              */
@@ -310,14 +321,51 @@ export async function contact(
       : { status: 400, headers: baseHeaders, jsonBody: { ok: false, errors: result.errors } };
   }
 
+  const id = randomUUID();
+  const stored = await store(id, result.value, context);
   const sent = await sendEmail(result.value, context);
-  if (!sent) {
+
+  if (!sent && !stored) {
     return isForm
       ? done(false, 500)
       : { status: 500, headers: baseHeaders, jsonBody: { ok: false } };
   }
 
+  if (!sent) {
+    context.error(`Enquiry ${id} was saved but NOT emailed. Find it with: SELECT * FROM enquiries WHERE emailed = 0`);
+  } else if (stored) {
+    try {
+      await markEmailed(storeConfig()!, id);
+    } catch (error) {
+      // Harmless: the enquiry was delivered, it just still reads as un-emailed.
+      context.warn(`Enquiry ${id} was emailed but could not be marked as such`, error);
+    }
+  }
+
   return done(true, 200);
+}
+
+/** Write the enquiry to the store. Returns false — never throws — on any failure. */
+async function store(
+  id: string,
+  submission: ContactSubmission,
+  context: InvocationContext,
+): Promise<boolean> {
+  const config = storeConfig();
+  if (!config) {
+    context.warn(
+      "Enquiry store is not configured (TURSO_DATABASE_URL, TURSO_AUTH_TOKEN): " +
+        "this enquiry exists only as an email.",
+    );
+    return false;
+  }
+  try {
+    await saveEnquiry(config, id, submission);
+    return true;
+  } catch (error) {
+    context.error(`Could not save enquiry ${id}`, error);
+    return false;
+  }
 }
 
 app.http("contact", {
