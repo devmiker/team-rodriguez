@@ -143,6 +143,7 @@ export const es: UiStrings = {
   "team.highlights": "Más allá del código",
   "team.speaks": "Trabaja en",
   "team.profile": "Perfil",
+  "team.linkOn": "en",
 
   // --- Values (team page) ---------------------------------------------
   "values.eyebrow":

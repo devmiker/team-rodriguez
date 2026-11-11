@@ -143,6 +143,8 @@ export const en = {
   "team.speaks": "Works in",
   "team.highlights": "Beyond the code",
   "team.profile": "Profile",
+  /** Screen-reader text joining a name to a profile site: "Mike Rodriguez on LinkedIn". */
+  "team.linkOn": "on",
 
   // --- Values (team page) ---------------------------------------------
   "values.eyebrow":

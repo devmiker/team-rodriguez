@@ -43,11 +43,20 @@ const languages = (member.speaks ?? []).map(
   (code) => LOCALE_META[code as Locale]?.name ?? code.toUpperCase(),
 );
 
+/* Each link's accessible name says whose profile it is ("Mike Rodriguez on LinkedIn"),
+   because three cards of bare "LinkedIn" links are indistinguishable in a links list.
+   The name is visually hidden; the visible label stays inside the accessible name, so
+   speech-input users can still say what they see. A personal site has no "on", so its
+   name reads "Mike Rodriguez: Profile". */
+type ProfileLink = { href: string; label: string; context: string };
+const onSite = `${member.name} ${t("team.linkOn")} `;
 const profileLinks = [
-  member.links?.linkedin ? { href: member.links.linkedin, label: "LinkedIn" } : undefined,
-  member.links?.github ? { href: member.links.github, label: "GitHub" } : undefined,
-  member.links?.site ? { href: member.links.site, label: t("team.profile") } : undefined,
-].filter((l): l is { href: string; label: string } => l !== undefined);
+  member.links?.linkedin ? { href: member.links.linkedin, label: "LinkedIn", context: onSite } : undefined,
+  member.links?.github ? { href: member.links.github, label: "GitHub", context: onSite } : undefined,
+  member.links?.site
+    ? { href: member.links.site, label: t("team.profile"), context: `${member.name}: ` }
+    : undefined,
+].filter((l): l is ProfileLink => l !== undefined);
 
 /* A card with no bio and no highlights is short. In a row of taller cards it would
    end in an empty gap, so its sky takes the spare height instead — nothing is
@@ -149,8 +158,12 @@ const compact = !member.bio && !(member.highlights && member.highlights.length >
         {profileLinks.map((link) => (
           <li>
             <a href={link.href} rel="noopener" target="_blank">
-              <span>{link.label}</span>
+              <span>
+                <span class="visually-hidden">{link.context}</span>
+                {link.label}
+              </span>
               <Icon name="external" size="0.85em" />
+              <span class="visually-hidden">{t("work.opensNewTab")}</span>
             </a>
           </li>
         ))}
@@ -350,7 +363,9 @@ const compact = !member.bio && !(member.highlights && member.highlights.length >
     gap: var(--space-4);
     list-style: none;
     margin: auto 0 0;
-    padding-block-start: var(--space-2);
+    /* Cancels the browser's list indent, which pushed the links ~40px in from the
+       card's text edge. */
+    padding: var(--space-2) 0 0;
   }
 
   .member__links a {
