@@ -348,7 +348,10 @@ recycles and is not shared across instances. It is a speed bump, not a control. 
 uploaded already built. `api/tsconfig.json` has `rootDir: ".."` so it can compile the
 shared validator from `src/lib/contact.ts` into the same output tree — a detail the
 platform's own build would not reproduce. If you ever remove that flag, the API build
-will fail on the server in a way that is hard to read.
+will fail on the server in a way that is hard to read. Because the platform builds nothing, the
+upload must also carry the API's production `node_modules` (`@azure/functions`): the
+verify job reinstalls them with `--omit=dev` right before the upload. Leave them out and
+the function cannot load, so `/api/contact` answers 404 while every check is green.
 
 **`.github/` cannot be written from a Claude session.** It is blocked. Workflow changes
 arrive as chat attachments and land in `Claude outputs\`, which is gitignored. Move

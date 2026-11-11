@@ -53,10 +53,18 @@ jobs:
           SITE_URL: ${{ vars.SITE_URL }}
           CSP_MODE: ${{ vars.CSP_MODE }}
 
-      - name: Build and audit the API
+      # The upload below sets skip_api_build, so Azure runs exactly what is uploaded and
+      # installs nothing. The function therefore has to ship its runtime dependencies:
+      # without node_modules, `import "@azure/functions"` fails, the function never
+      # registers, and /api/contact answers 404. (It did, until 2026-11-11.) Production
+      # dependencies only, installed fresh after the build has used the dev ones.
+      - name: Build and audit the API, then keep only its runtime dependencies
         run: |
           npm --prefix api audit --audit-level=moderate
           npm --prefix api run build
+          rm -rf api/node_modules
+          npm --prefix api ci --omit=dev
+          test -f api/node_modules/@azure/functions/package.json
 
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
@@ -64,7 +72,6 @@ jobs:
           path: |
             dist
             api
-            !api/node_modules
           retention-days: 7
 
   deploy:
