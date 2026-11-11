@@ -56,6 +56,7 @@ import {
   type ContactSubmission,
 } from "../../../src/lib/contact.js";
 import { markEmailed, saveEnquiry, storeConfig } from "../lib/enquiries.js";
+import { flushErrors, reportError } from "../lib/monitoring.js";
 
 /* -------------------------------------------------------------------------- */
 /* Rate limiting                                                              */
@@ -198,6 +199,7 @@ async function sendEmail(
       "Mail is not configured: set RESEND_API_KEY, CONTACT_TO and CONTACT_FROM in the " +
         "Static Web App's application settings. The submission was NOT delivered.",
     );
+    reportError(new Error("Mail is not configured: RESEND_API_KEY, CONTACT_TO or CONTACT_FROM is missing"), { stage: "email" });
     return false;
   }
 
@@ -257,11 +259,14 @@ async function sendEmail(
     if (!response.ok) {
       // The provider's message goes to the log, never to the caller.
       context.error(`Mail provider returned ${response.status}: ${await response.text()}`);
+      // Status only: the provider's body can echo addresses back, and reports carry no personal data.
+      reportError(new Error(`Mail provider returned HTTP ${response.status}`), { stage: "email" });
       return false;
     }
     return true;
   } catch (error) {
     context.error("Mail provider request failed", error);
+    reportError(error, { stage: "email" });
     return false;
   }
 }
@@ -326,6 +331,7 @@ export async function contact(
   const sent = await sendEmail(result.value, context);
 
   if (!sent && !stored) {
+    reportError(new Error("Enquiry lost: it could not be saved or emailed"), { stage: "both", enquiry: id });
     return isForm
       ? done(false, 500)
       : { status: 500, headers: baseHeaders, jsonBody: { ok: false } };
@@ -357,6 +363,7 @@ async function store(
       "Enquiry store is not configured (TURSO_DATABASE_URL, TURSO_AUTH_TOKEN): " +
         "this enquiry exists only as an email.",
     );
+    reportError(new Error("Enquiry store is not configured: TURSO_DATABASE_URL or TURSO_AUTH_TOKEN is missing"), { stage: "store" });
     return false;
   }
   try {
@@ -364,6 +371,7 @@ async function store(
     return true;
   } catch (error) {
     context.error(`Could not save enquiry ${id}`, error);
+    reportError(error, { stage: "store", enquiry: id });
     return false;
   }
 }
@@ -374,5 +382,15 @@ app.http("contact", {
   methods: ["POST"],
   authLevel: "anonymous",
   route: "contact",
-  handler: contact,
+  handler: async (request, context) => {
+    try {
+      return await contact(request, context);
+    } catch (error) {
+      reportError(error, { stage: "unexpected" });
+      throw error;
+    } finally {
+      // Azure may freeze the function the moment it answers, so send reports first.
+      await flushErrors();
+    }
+  },
 });
