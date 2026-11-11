@@ -27,9 +27,8 @@ These are in rough dependency order. Nothing below can be skipped.
 2. **Buy the domain.** Set `COMPANY.origin` and the `SITE_URL` repository variable.
 3. **Business email.** Replace `COMPANY.email`, and set `CONTACT_TO` in the Static Web
    App's application settings.
-4. **Enquiry store.** Create the Turso database in the EU and set
-   `TURSO_DATABASE_URL` and `TURSO_AUTH_TOKEN` in the Static Web App and as GitHub
-   secrets (`docs/DEPLOY.md` §4.5). The code ships ready and skips the store until then.
+4. ~~**Enquiry store.**~~ Done 2026-11-11: Turso database and both settings in Azure
+   and GitHub; the retention job ran clean.
 5. **Mail provider.** Create the account, verify the sending domain, set
    `RESEND_API_KEY` and `CONTACT_FROM`. Then send a real test message through the live
    form and confirm it arrives — including the no-JavaScript path.
