@@ -196,6 +196,9 @@ const builders = project.builtBy
     margin-inline-start: var(--space-2);
     padding: var(--space-1) var(--space-3);
     flex: 1;
+    /* Lets the address shrink below its text width and end in an ellipsis inside the
+       bar, whatever the domain's length. */
+    min-inline-size: 0;
     border-radius: var(--radius-pill);
     background: var(--color-bg-raised);
     font-family: var(--font-mono);
@@ -238,6 +241,9 @@ const builders = project.builtBy
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-2);
+    /* A generated hostname (master.d2uq24fdi4cg7.amplifyapp.com) is one unbreakable
+       word wider than a phone-width card; let it break rather than spill out. */
+    overflow-wrap: anywhere;
   }
 
   .project__name {
