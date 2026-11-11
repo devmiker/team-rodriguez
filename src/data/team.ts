@@ -172,6 +172,7 @@ export const TEAM: TeamMember[] = [
     photo: "francisco.webp",
     cover: "sun-left",
     links: {
+      github: "https://github.com/franny7",
       linkedin: "https://www.linkedin.com/in/francisco-martinez-me/",
     },
   },
