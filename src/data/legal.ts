@@ -67,9 +67,9 @@ export const PRIVACY_SECTIONS: LegalSection[] = [
         es: "Cuando envía el formulario de contacto, el nombre, el correo electrónico, el nombre del negocio, el tipo de proyecto, el rango de presupuesto, los plazos y su mensaje se guardan en nuestra base de datos de consultas y se nos envían por correo electrónico. No se añaden a ninguna lista ni se pasan a nadie.",
       },
       {
-        en: "The database copy exists so that your enquiry cannot be lost if the email fails to arrive. It is hosted by Turso in the European Union, and each enquiry is deleted from it automatically six months after you send it. Ask us to delete it sooner and we will.",
-        de: "Die Kopie in der Datenbank gibt es, damit Ihre Anfrage nicht verloren geht, falls die E-Mail nicht ankommt. Sie wird bei Turso in der Europäischen Union gespeichert, und jede Anfrage wird sechs Monate nach dem Absenden automatisch daraus gelöscht. Auf Wunsch löschen wir sie früher.",
-        es: "La copia en la base de datos existe para que su consulta no se pierda si el correo no llega. Está alojada por Turso en la Unión Europea, y cada consulta se borra automáticamente seis meses después de enviarla. Si nos pide que la borremos antes, lo haremos.",
+        en: "The database copy exists so that your enquiry cannot be lost if the email fails to arrive. It is hosted by Turso in the United States, and each enquiry is deleted from it automatically six months after you send it. Ask us to delete it sooner and we will.",
+        de: "Die Kopie in der Datenbank gibt es, damit Ihre Anfrage nicht verloren geht, falls die E-Mail nicht ankommt. Sie wird bei Turso in den Vereinigten Staaten gespeichert, und jede Anfrage wird sechs Monate nach dem Absenden automatisch daraus gelöscht. Auf Wunsch löschen wir sie früher.",
+        es: "La copia en la base de datos existe para que su consulta no se pierda si el correo no llega. Está alojada por Turso en Estados Unidos, y cada consulta se borra automáticamente seis meses después de enviarla. Si nos pide que la borremos antes, lo haremos.",
       },
       {
         en: "We reply to the address you give, and we keep the correspondence for as long as we are talking to you about the project plus a reasonable period afterwards for our own records. Ask us to delete it and we will.",

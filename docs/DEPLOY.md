@@ -162,25 +162,15 @@ cannot lose a lead. It is optional: with the two settings below unset, the funct
 skips the store and logs a warning. The table creates itself on the first enquiry, so
 there is no schema step.
 
-**Create the database in the EU.** The privacy page says enquiries are stored in the
-European Union. Check where your group lives first:
+**Where it lives.** The database is in Turso's US West Coast region, and the privacy
+page says enquiries are stored in the United States. If you ever move it (the location
+IDs come from `turso db locations`), change that sentence in `src/data/legal.ts`, in
+all three languages, in the same commit. The page must say where the data really
+lives.
 
 ```
-turso group list
+turso db create team-rodriguez
 ```
-
-If the group's location is in Europe, create the database in it. If not, create an EU
-group (the location IDs come from `turso db locations`):
-
-```
-turso group create eu --location <an EU location id>
-turso db create team-rodriguez --group eu
-```
-
-Creating a second group needs a paid Turso plan. If you stay on the free plan with a
-US group, the database can go there instead, but then change "in the European Union"
-in `src/data/legal.ts` (all three languages) to say where it actually is. The page
-must say where the data really lives.
 
 **Get the two values:**
 
