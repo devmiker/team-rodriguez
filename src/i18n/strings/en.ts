@@ -40,6 +40,7 @@ export const en = {
   "footer.contactHeading": "Get in touch",
   "footer.rights": "All rights reserved.",
   "footer.builtWith": "Built with Astro. No trackers, no cookie banner, no nonsense. Some of us work nights.",
+  "footer.flags": "Flags of Mexico and the United States",
 
   // --- Home -------------------------------------------------------------
   "home.title": "Team Rodriguez — websites for small businesses",

@@ -40,6 +40,7 @@ export const de: UiStrings = {
   "footer.contactHeading": "Kontakt",
   "footer.rights": "Alle Rechte vorbehalten.",
   "footer.builtWith": "Gebaut mit Astro. Keine Tracker, kein Cookie-Banner, kein Unsinn. Manche von uns arbeiten nachts.",
+  "footer.flags": "Flaggen von Mexiko und den Vereinigten Staaten",
 
   // --- Home -------------------------------------------------------------
   "home.title": "Team Rodriguez — Websites für kleine Unternehmen",

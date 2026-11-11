@@ -1,0 +1,72 @@
+---
+/**
+ * Two small flags for the footer: Mexico and the United States.
+ *
+ * Drawn as inline SVG rather than emoji, because Windows has no flag emoji and shows
+ * the letters "MX" and "US" instead. Colours come from the --flag-* tokens in
+ * tokens.css; SVG presentation attributes cannot read CSS variables, so each shape
+ * takes a class and the fill is set in the style block below.
+ *
+ * The pair is one image with one label, announced once, rather than two images a
+ * screen reader reads out one after another.
+ */
+interface Props {
+  label: string;
+}
+const { label } = Astro.props;
+
+/* US: 13 stripes and a blue canton covering seven of them, at 19:10. */
+const stripe = 10 / 13;
+const stripes = Array.from({ length: 13 }, (_, i) => i);
+/* A light dot pattern suggests the stars without pretending to draw 50 at 14 px. */
+const stars = [
+  [1.1, 0.9], [2.6, 0.9], [4.1, 0.9], [5.6, 0.9],
+  [1.85, 1.85], [3.35, 1.85], [4.85, 1.85],
+  [1.1, 2.8], [2.6, 2.8], [4.1, 2.8], [5.6, 2.8],
+  [1.85, 3.75], [3.35, 3.75], [4.85, 3.75],
+  [1.1, 4.7], [2.6, 4.7], [4.1, 4.7], [5.6, 4.7],
+];
+---
+
+<span class="flags" role="img" aria-label={label}>
+  <svg class="flag" viewBox="0 0 21 12" aria-hidden="true" focusable="false">
+    <rect class="mx-green" x="0" y="0" width="7" height="12" />
+    <rect class="white" x="7" y="0" width="7" height="12" />
+    <rect class="mx-red" x="14" y="0" width="7" height="12" />
+    <circle class="mx-emblem" cx="10.5" cy="6" r="1.7" />
+    <path class="mx-green" d="M8.9 6.9 Q10.5 8.6 12.1 6.9 L12.1 7.4 Q10.5 9.1 8.9 7.4 Z" />
+  </svg>
+  <svg class="flag" viewBox="0 0 19 10" aria-hidden="true" focusable="false">
+    {stripes.map((i) => (
+      <rect class={i % 2 === 0 ? "us-red" : "white"} x="0" y={i * stripe} width="19" height={stripe + 0.02} />
+    ))}
+    <rect class="us-blue" x="0" y="0" width="7.6" height={stripe * 7} />
+    {stars.map(([cx, cy]) => <circle class="white" cx={cx} cy={cy} r="0.28" />)}
+  </svg>
+</span>
+
+<style>
+  .flags {
+    display: inline-flex;
+    gap: var(--space-2);
+    align-items: center;
+    vertical-align: middle;
+  }
+
+  .flag {
+    display: block;
+    height: 0.875rem;
+    width: auto;
+    border-radius: 2px;
+    /* A hairline so the white stripes keep an edge on any ground. */
+    outline: 1px solid color-mix(in srgb, currentColor 25%, transparent);
+    outline-offset: 0;
+  }
+
+  .white { fill: var(--flag-white); }
+  .us-red { fill: var(--flag-us-red); }
+  .us-blue { fill: var(--flag-us-blue); }
+  .mx-green { fill: var(--flag-mx-green); }
+  .mx-red { fill: var(--flag-mx-red); }
+  .mx-emblem { fill: var(--flag-mx-emblem); }
+</style>
