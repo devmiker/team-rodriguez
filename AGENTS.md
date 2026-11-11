@@ -150,6 +150,13 @@ The store is write-only from the web: nothing on the site reads enquiries back. 
 not move site content (services, team, work) into the database; it is build-time data
 on purpose.
 
+**Errors go to Sentry from the server only.** Decided 2026-11-11. The contact function
+reports its failures to `devmiker/team-rodriguez-api` (`api/src/lib/monitoring.ts`, no
+SDK). There is deliberately no browser-side Sentry: it would be the site's first
+third-party request, break rule 6 and the privacy page, and the site ships almost no
+JavaScript to fail. A report never contains submitted text. An uptime monitor watches
+the home page.
+
 **Budget bands are in US dollars and sized to real projects.** Under $1,000,
 $1,000–$2,500, $2,500–$5,000, over $5,000 (2026-11-11). The old bands started at
 "Under 2,000", which nearly every enquiry fell into once prices were set. This is the

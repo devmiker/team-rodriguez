@@ -110,6 +110,11 @@ export const PRIVACY_SECTIONS: LegalSection[] = [
         es: "El sitio se aloja en Microsoft Azure Static Web Apps. Como cualquier servidor web, registra peticiones ordinarias — dirección IP, hora, página solicitada, navegador — que existen para operar y proteger el servicio. No usamos esos registros para crear un perfil suyo ni los combinamos con nada más.",
       },
       {
+        en: "If something goes wrong on our side while the contact form is being sent, our server sends a short technical error report to our error-monitoring service, Sentry, in the United States. It describes the error only: it never contains anything you typed into the form, and your browser never contacts Sentry.",
+        de: "Geht beim Absenden des Kontaktformulars auf unserer Seite etwas schief, schickt unser Server einen kurzen technischen Fehlerbericht an unseren Fehlerüberwachungsdienst Sentry in den Vereinigten Staaten. Er beschreibt nur den Fehler: Er enthält nie etwas, das Sie ins Formular eingegeben haben, und Ihr Browser nimmt nie Kontakt zu Sentry auf.",
+        es: "Si algo falla de nuestro lado al enviar el formulario de contacto, nuestro servidor envía un breve informe técnico del error a nuestro servicio de monitorización de errores, Sentry, en Estados Unidos. Solo describe el error: nunca contiene nada de lo que usted escribió en el formulario, y su navegador nunca se comunica con Sentry.",
+      },
+      {
         en: "Fonts are served from this same site rather than from a font provider, so viewing a page does not send a request to anyone else at all.",
         de: "Schriften werden von dieser Website selbst ausgeliefert und nicht von einem Schriftanbieter — der Aufruf einer Seite sendet also an niemanden sonst eine Anfrage.",
         es: "Las tipografías se sirven desde este mismo sitio y no desde un proveedor de fuentes, así que ver una página no envía ninguna petición a nadie más.",

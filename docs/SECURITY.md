@@ -41,6 +41,17 @@ Added 2026-11-11 so that a mail outage cannot lose a lead. What keeps it small:
   `turso db tokens invalidate <db>` and update both.
 - **EU region.** The privacy page says so; create the database there (DEPLOY.md).
 
+### Error reporting (Sentry)
+
+Added 2026-11-11. The contact function reports its own failures (mail, store, both, or
+anything unexpected) to Sentry project `devmiker/team-rodriguez-api` through a small
+direct client, `api/src/lib/monitoring.ts`. Server-to-server only: the browser never
+contacts Sentry, so the CSP and rule 6 are unchanged. A report carries the error, its
+stack and the enquiry id — never submitted text, and never a provider's response body,
+which can echo submitted values back. `contact.test.ts` asserts that. Reporting is off
+in tests and under a local `func start`. Sentry also runs an uptime check on the home
+page every five minutes.
+
 That is the single largest security decision in the project, and it was made by
 choosing the architecture rather than by adding controls.
 

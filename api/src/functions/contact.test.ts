@@ -136,6 +136,35 @@ describe("contact handler: store and email", () => {
     expect(calls.map((u) => new URL(u).host)).toEqual(["api.resend.com"]);
   });
 
+  it("sends Sentry an error report with no submitted content, even when the mail provider echoes it", async () => {
+    vi.stubEnv("VITEST", "");
+    const sentry: string[] = [];
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (input: string | URL | Request, init?: RequestInit) => {
+        const url = String(input);
+        if (url.includes("sentry.io")) {
+          sentry.push(String(init?.body));
+          return new Response("{}", { status: 200 });
+        }
+        if (url.includes("turso.io")) return new Response("down", { status: 503 });
+        // Resend rejecting the message and quoting the address back in its error.
+        return new Response(`{"message":"Invalid reply_to: ${body.email}"}`, { status: 422 });
+      }),
+    );
+    const { response } = await submit();
+    expect(response.status).toBe(500);
+    // The handler's own wrapper is not used by `contact`, so flush here as it would.
+    const { flushErrors } = await import("../lib/monitoring.js");
+    await flushErrors();
+    expect(sentry.length).toBeGreaterThanOrEqual(2);
+    const all = sentry.join("\n");
+    expect(all).toContain("Enquiry lost");
+    expect(all).not.toContain(body.email);
+    expect(all).not.toContain(body.message);
+    expect(all).not.toContain(body.name);
+  });
+
   it("never writes submitted content to the log", async () => {
     stubNetwork({ db: true, mail: false });
     const { context } = await submit();
