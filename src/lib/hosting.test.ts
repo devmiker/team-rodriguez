@@ -123,3 +123,29 @@ describe("caching", () => {
     expect(route?.headers?.["Cache-Control"]).toBe("public, max-age=31536000, immutable");
   });
 });
+
+describe("the API deploy", () => {
+  /*
+   * The deploy sets skip_api_build, so Azure installs nothing: what is uploaded is what
+   * runs. Until 2026-11-11 the upload excluded api/node_modules, `@azure/functions`
+   * could not be imported, the function never registered, and /api/contact was a 404
+   * on the live site with every check here green.
+   */
+  const ci = read("../../.github/workflows/ci.yml");
+
+  it("uploads the API with its node_modules", () => {
+    expect(ci).toContain("skip_api_build: true");
+    expect(ci).not.toMatch(/!api\/node_modules/);
+  });
+
+  it("installs only the API's production dependencies before uploading", () => {
+    expect(ci).toMatch(/npm --prefix api ci --omit=dev/);
+  });
+
+  it("keeps @azure/functions a runtime dependency, not a dev one", () => {
+    const pkg = JSON.parse(read("../../api/package.json")) as {
+      dependencies?: Record<string, string>;
+    };
+    expect(pkg.dependencies?.["@azure/functions"]).toBeDefined();
+  });
+});
