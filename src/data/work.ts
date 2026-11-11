@@ -23,7 +23,7 @@
  *  `image` is a filename under `public/work/`. Without one, the card draws a
  *  browser frame with the site's domain in it — a deliberate design, not a
  *  broken-image gap, so the page is presentable before anyone has taken a
- *  screenshot. See public/work/README.md for sizes.
+ *  screenshot. See docs/work-screenshots.md for sizes.
  * ─────────────────────────────────────────────────────────────────────────────
  */
 
@@ -113,6 +113,7 @@ export const PROJECTS: Project[] = [
       es: "El sitio de una cafetería: quiénes son, la carta con precios y los horarios. Proyecto propio: hecho en equipo y publicado en un dominio que compramos nosotros.",
     },
     stack: ["React", "JavaScript", "HTML", "CSS"],
+    image: "pinche-cafe.webp",
   },
   {
     slug: "tic-tac-toe",
@@ -127,6 +128,7 @@ export const PROJECTS: Project[] = [
       es: "Un juego para dos en el navegador. Pequeño a propósito: estado del juego, turnos y detección de victoria, sin ninguna librería que piense por ti.",
     },
     stack: ["React", "JavaScript"],
+    image: "tic-tac-toe.webp",
   },
   {
     slug: "todo-app",
@@ -141,6 +143,7 @@ export const PROJECTS: Project[] = [
       es: "Añadir una tarea, completarla, verla moverse. Un ejercicio de manipulación del DOM sin framework: la base que hace que un framework valga la pena después.",
     },
     stack: ["JavaScript", "HTML", "CSS"],
+    image: "todo-app.webp",
   },
 ];
 
