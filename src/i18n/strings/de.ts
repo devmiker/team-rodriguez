@@ -18,6 +18,8 @@ export const de: UiStrings = {
   "site.tagline": "Websites, die sich rechnen",
   "site.description":
     "Ein kleines Software-Studio, das schnelle, barrierefreie Websites für kleine Unternehmen baut.",
+  "site.ogImageAlt":
+    "Team Rodriguez – „Websites that earn their keep“: ein Software-Studio für kleine Unternehmen, über einer Reihe Nadelbäume unter einer blauen Sonne.",
 
   // --- Accessibility and chrome ----------------------------------------
   "a11y.skipToContent": "Zum Inhalt springen",

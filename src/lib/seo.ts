@@ -11,6 +11,16 @@ import { COMPANY, COMPANY_DESCRIPTION, absoluteUrl, LAUNCHED } from "../data/com
 import { LOCALE_META, type Locale } from "../i18n/locales";
 import { alternates, pathFor, ROUTE_DEFS, type PageRef } from "../i18n/routes";
 
+/**
+ * The link-preview image in `public/`. Its declared size is checked against the file
+ * itself by `seo.test.ts`, so re-rendering it at another size fails a test instead of
+ * quietly announcing the wrong dimensions to every crawler.
+ */
+export const OG_IMAGE = { path: "/og.png", width: 1200, height: 630 } as const;
+
+/** The iOS home-screen icon in `public/`, 180×180 and opaque (iOS fills transparency with black). */
+export const APPLE_TOUCH_ICON = { path: "/apple-touch-icon.png", size: 180 } as const;
+
 export interface SeoData {
   canonical: string;
   alternates: { hreflang: string; href: string }[];

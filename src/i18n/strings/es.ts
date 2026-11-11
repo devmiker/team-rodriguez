@@ -18,6 +18,8 @@ export const es: UiStrings = {
   "site.tagline": "Webs que se pagan solas",
   "site.description":
     "Un pequeño estudio de software que crea sitios web rápidos y accesibles para pequeñas empresas.",
+  "site.ogImageAlt":
+    "Team Rodriguez — «Websites that earn their keep»: un estudio de software para pequeñas empresas, sobre una hilera de abetos bajo un sol azul.",
 
   // --- Accessibility and chrome ----------------------------------------
   "a11y.skipToContent": "Saltar al contenido",

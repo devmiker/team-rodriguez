@@ -6,11 +6,11 @@
  * the same `pathFor()` the navigation uses — so the URL announced here is by
  * construction a URL that exists.
  */
-import { COMPANY, absoluteUrl } from "../data/company";
+import { absoluteUrl } from "../data/company";
 import type { Locale } from "../i18n/locales";
 import type { PageRef } from "../i18n/routes";
 import { useTranslations } from "../i18n/ui";
-import { seoFor, organizationJsonLd, webPageJsonLd } from "../lib/seo";
+import { OG_IMAGE, seoFor, organizationJsonLd, webPageJsonLd } from "../lib/seo";
 import JsonLd from "./JsonLd.astro";
 
 interface Props {
@@ -58,10 +58,21 @@ const webPage = webPageJsonLd(page, locale, documentTitle, description);
 <meta property="og:locale" content={seo.ogLocale} />
 {seo.ogLocaleAlternates.map((og) => <meta property="og:locale:alternate" content={og} />)}
 {Astro.site && <meta property="og:url" content={seo.canonical} />}
-{Astro.site && <meta property="og:image" content={absoluteUrl("/og.png")} />}
 {
-  /* Alt text on the preview image, for the screen readers that read link previews. */
-  Astro.site && <meta property="og:image:alt" content={COMPANY.name} />
+  /* public/og.png. Gated on Astro.site like og:url: crawlers need an absolute URL,
+     and one on a placeholder domain would fetch nothing. Width and height let a
+     preview lay out before the image arrives; the alt is for the screen readers that
+     read link previews. The image's own text is English in every language. */
+  Astro.site && (
+    <>
+      <meta property="og:image" content={absoluteUrl(OG_IMAGE.path)} />
+      <meta property="og:image:type" content="image/png" />
+      <meta property="og:image:width" content={String(OG_IMAGE.width)} />
+      <meta property="og:image:height" content={String(OG_IMAGE.height)} />
+      <meta property="og:image:alt" content={t("site.ogImageAlt")} />
+      <meta name="twitter:image:alt" content={t("site.ogImageAlt")} />
+    </>
+  )
 }
 
 <meta name="twitter:card" content="summary_large_image" />

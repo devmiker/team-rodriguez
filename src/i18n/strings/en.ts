@@ -16,6 +16,10 @@ export const en = {
   "site.tagline": "Websites that earn their keep",
   "site.description":
     "A small software studio building fast, accessible websites for small businesses.",
+  /** Alt text for public/og.png, the link-preview image. Its text is in English in every
+   *  language, so the alt quotes it and describes the rest of the picture. */
+  "site.ogImageAlt":
+    "Team Rodriguez — \"Websites that earn their keep\": a software studio for small businesses, above a line of evergreens under a blue sun.",
 
   // --- Accessibility and chrome ----------------------------------------
   "a11y.skipToContent": "Skip to content",
