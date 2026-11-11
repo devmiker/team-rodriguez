@@ -13,6 +13,11 @@
  * `hreflang` tells assistive technology and the browser what it is about to load, and
  * each label is wrapped in `lang` so a screen reader pronounces "Deutsch" with German
  * phonemes rather than reading it as English.
+ *
+ * The visible label is the two-letter code; the accessible name is the language's own
+ * name, from `aria-label`. An `<abbr title>` looked like it did this, but most screen
+ * readers ignore the title and spell out "D E". The `title` stays as a tooltip for
+ * mouse users; it matches the name, so it is not announced a second time.
  */
 import { LOCALE_META, LOCALES, type Locale } from "../i18n/locales";
 import { pathFor, type PageRef } from "../i18n/routes";
@@ -39,8 +44,10 @@ const t = useTranslations(locale);
             lang={l}
             class="lang"
             aria-current={l === locale ? "true" : undefined}
+            aria-label={LOCALE_META[l].name}
+            title={LOCALE_META[l].name}
           >
-            <abbr title={LOCALE_META[l].name}>{l.toUpperCase()}</abbr>
+            {l.toUpperCase()}
           </a>
         </li>
       ))
@@ -84,12 +91,5 @@ const t = useTranslations(locale);
   .lang[aria-current="true"] {
     color: var(--color-on-accent);
     background: var(--color-accent);
-  }
-
-  /* An <abbr> with a title gets a dotted underline and a help cursor in most browsers.
-     The title is here for the tooltip and the accessible name, not the decoration. */
-  abbr {
-    text-decoration: none;
-    cursor: inherit;
   }
 </style>
