@@ -54,6 +54,40 @@ export interface Project {
 
 export const PROJECTS: Project[] = [
   {
+    /** Mike's client, 2026. The owners run jobs, quotes and deposits from /admin. */
+    slug: "prolift-junk-haulers",
+    published: true,
+    category: "client",
+    name: "Pro Lift Junk Haulers",
+    url: "https://www.proliftjunkhauler.com/",
+    year: 2026,
+    builtBy: ["mike-rodriguez"],
+    summary: {
+      en: "Website and booking system for a junk-removal company in Riverside, California. Customers request a pickup online in English or Spanish; the owners review jobs, send quotes and take deposits from their own dashboard.",
+      de: "Website und Buchungssystem für ein Entrümpelungsunternehmen in Riverside, Kalifornien. Kundinnen und Kunden fragen Abholungen online auf Englisch oder Spanisch an; die Inhaber prüfen Aufträge, verschicken Angebote und nehmen Anzahlungen über ihr eigenes Dashboard entgegen.",
+      es: "Sitio web y sistema de reservas para una empresa de retiro de basura en Riverside, California. Los clientes piden una recogida en línea en inglés o en español, y los dueños revisan los trabajos, envían presupuestos y cobran anticipos desde su propio panel.",
+    },
+    stack: ["Astro", "React", "TypeScript", "Supabase", "Azure"],
+    image: "prolift-junk-haulers.webp",
+  },
+  {
+    /** Built pro bono for a 501(c)(3). Say so on the card — it is part of what we do. */
+    slug: "ejs-inspiring-hands",
+    published: true,
+    category: "client",
+    name: "E&J's Inspiring Hands Foundation",
+    url: "https://www.ejsinspiringhands.org/",
+    year: 2026,
+    builtBy: ["mike-rodriguez"],
+    summary: {
+      en: "Website and member portal for a nonprofit in Perris, California that helps people into jobs, training and education, and runs a yearly turkey giveaway. People sign up online and staff follow up from an admin area. Built pro bono.",
+      de: "Website und Mitgliederportal für eine gemeinnützige Organisation in Perris, Kalifornien, die Menschen zu Arbeit, Ausbildung und Bildung verhilft und jedes Jahr Truthähne an Familien verteilt. Menschen melden sich online an, das Team kümmert sich im Verwaltungsbereich darum. Unentgeltlich gebaut.",
+      es: "Sitio web y portal de miembros para una organización sin fines de lucro en Perris, California, que ayuda a la gente a encontrar empleo, formación y estudios, y organiza cada año un reparto de pavos. La gente se inscribe en línea y el equipo hace el seguimiento desde un área de administración. Hecho pro bono.",
+    },
+    stack: ["Astro", "React", "TypeScript", "Supabase", "Azure"],
+    image: "ejs-inspiring-hands.webp",
+  },
+  {
     /**
      * Confirmed by Mike, 2026-09-20: this is the team's own project, built together
      * and published on a domain they bought. Not client work.
