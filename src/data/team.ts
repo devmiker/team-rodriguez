@@ -144,16 +144,30 @@ export const TEAM: TeamMember[] = [
       de: "Softwareentwickler, Frontend",
       es: "Ingeniero de software, front-end",
     },
-    location: "Los Angeles, California",
-    // TODO: Francisco's own words. This is drafted from his public profile and the
-    // Pinché Café project, and should be replaced rather than approved as-is.
+    location: "United States · Remote",
+    // From his own LinkedIn "About" and skills, pasted by Mike on 2026-11-11.
+    // Condensed into the card's voice; TODO: Francisco to read and approve.
     bio: {
-      en: "Front-end engineer. Works in English and Spanish, which is why the Spanish side of a project is built rather than translated at the end.",
-      de: "Frontend-Entwickler. Arbeitet auf Englisch und Spanisch — weshalb die spanische Seite eines Projekts gebaut und nicht erst am Ende übersetzt wird.",
-      es: "Ingeniero de front-end. Trabaja en inglés y español, por eso la parte en español de un proyecto se construye en vez de traducirse al final.",
+      en: "Front-end engineer with more than four years of building interfaces in React, JavaScript and TypeScript. Cares about solidly built front ends, fast pages, and an experience that is friendly and fun to use.",
+      de: "Frontend-Entwickler mit über vier Jahren Erfahrung mit React, JavaScript und TypeScript. Legt Wert auf solide gebaute Oberflächen, schnelle Seiten und eine Bedienung, die freundlich ist und Spaß macht.",
+      es: "Ingeniero de front-end con más de cuatro años creando interfaces con React, JavaScript y TypeScript. Le importan un front-end bien construido, las páginas rápidas y una experiencia amable y entretenida de usar.",
     },
+    // Both from his own LinkedIn profile.
+    highlights: [
+      {
+        en: "Front-end contract work for local businesses since 2020",
+        de: "Seit 2020 Frontend-Aufträge für lokale Unternehmen",
+        es: "Proyectos de front-end para negocios locales desde 2020",
+      },
+      {
+        en: "Associate's degree, Mt. San Jacinto College",
+        de: "Associate's Degree, Mt. San Jacinto College",
+        es: "Título de asociado, Mt. San Jacinto College",
+      },
+    ],
     services: ["website", "shop"],
-    focus: ["JavaScript", "React", "HTML", "CSS"],
+    // From the key skills on his LinkedIn.
+    focus: ["React", "JavaScript", "TypeScript", "HTML", "CSS", "Express"],
     speaks: ["en", "es"],
     photo: "francisco.webp",
     cover: "sun-left",
@@ -172,14 +186,22 @@ export const TEAM: TeamMember[] = [
       es: "Ingeniero de software",
     },
     location: "United States · Remote",
-    // Drafted from his own portfolio ("a Software Engineer, skilled in solving
-    // problems with HTML, CSS, Javascript, and React"; services: web design and web
-    // development), 2026-11-11. TODO: Luis to read it and approve or rewrite.
+    // From his own portfolio and LinkedIn "About" (pasted by Mike, 2026-11-11):
+    // problem-solving in HTML/CSS/JS/React, and "the team rising together".
+    // TODO: Luis to read it and approve or rewrite.
     bio: {
-      en: "Designs and builds websites, and likes the problem-solving part best. Works in HTML, CSS, JavaScript and React, with Node.js and AWS behind them.",
-      de: "Gestaltet und baut Websites — am liebsten den Teil, in dem es Probleme zu lösen gibt. Arbeitet mit HTML, CSS, JavaScript und React, dahinter Node.js und AWS.",
-      es: "Diseña y construye sitios web, y lo que más le gusta es resolver problemas. Trabaja con HTML, CSS, JavaScript y React, con Node.js y AWS detrás.",
+      en: "Designs and builds websites, and likes the problem-solving part best. Believes in the team rising together: if one part of a project needs a hand, he jumps in. Works in HTML, CSS, JavaScript and React, with Node.js and AWS behind them.",
+      de: "Gestaltet und baut Websites — am liebsten den Teil, in dem es Probleme zu lösen gibt. Glaubt daran, dass ein Team gemeinsam wächst: Braucht ein Teil des Projekts Hilfe, packt er mit an. Arbeitet mit HTML, CSS, JavaScript und React, dahinter Node.js und AWS.",
+      es: "Diseña y construye sitios web, y lo que más le gusta es resolver problemas. Cree en que el equipo crece unido: si una parte del proyecto necesita ayuda, se suma. Trabaja con HTML, CSS, JavaScript y React, con Node.js y AWS detrás.",
     },
+    // From his own LinkedIn.
+    highlights: [
+      {
+        en: "Freelance web developer for a local tire shop since 2018",
+        de: "Seit 2018 freiberuflicher Webentwickler für eine örtliche Reifenwerkstatt",
+        es: "Desarrollador web freelance para un taller de llantas local desde 2018",
+      },
+    ],
     services: ["website", "care"],
     // From the skills on his portfolio.
     focus: ["React", "JavaScript", "HTML", "CSS", "Node.js", "AWS"],
