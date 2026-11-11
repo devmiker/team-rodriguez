@@ -27,9 +27,14 @@ import Scenery from "./Scenery.astro";
 interface Props {
   member: TeamMember;
   locale: Locale;
+  /** Heading level for the name: h2 where the cards sit directly under the page's h1
+   *  (the team page), h3 inside a section that has its own h2 (the home page). */
+  as?: "h2" | "h3";
 }
 
-const { member, locale } = Astro.props;
+const { member, locale, as: Heading = "h3" } = Astro.props;
+/* The card's own subheadings sit one level below the name, so the outline never skips. */
+const SubHeading = Heading === "h2" ? "h3" : "h4";
 const t = useTranslations(locale);
 
 const services = member.services.map((id) => localized(serviceById(id).name, locale));
@@ -80,7 +85,7 @@ const compact = !member.bio && !(member.highlights && member.highlights.length >
     }
 
     <div>
-      <h3 class="member__name">{member.name}</h3>
+      <Heading class="member__name">{member.name}</Heading>
       <p class="member__role">{localized(member.role, locale)}</p>
       {member.location && <p class="member__location">{member.location}</p>}
     </div>
@@ -91,7 +96,7 @@ const compact = !member.bio && !(member.highlights && member.highlights.length >
   {
     member.highlights && member.highlights.length > 0 && (
       <div class="member__block">
-        <h4 class="member__sub">{t("team.highlights")}</h4>
+        <SubHeading class="member__sub">{t("team.highlights")}</SubHeading>
         <ul class="member__highlights">
           {member.highlights.map((item) => (
             <li>
@@ -107,7 +112,7 @@ const compact = !member.bio && !(member.highlights && member.highlights.length >
   {
     services.length > 0 && (
       <div class="member__block">
-        <h4 class="member__sub">{t("team.offers")}</h4>
+        <SubHeading class="member__sub">{t("team.offers")}</SubHeading>
         <ul class="member__tags">
           {services.map((name) => (
             <li class="tag tag--accent">{name}</li>
@@ -120,7 +125,7 @@ const compact = !member.bio && !(member.highlights && member.highlights.length >
   {
     member.focus.length > 0 && (
       <div class="member__block">
-        <h4 class="member__sub">{t("team.focus")}</h4>
+        <SubHeading class="member__sub">{t("team.focus")}</SubHeading>
         <ul class="member__tags">
           {member.focus.map((item) => (
             <li class="tag">{item}</li>
