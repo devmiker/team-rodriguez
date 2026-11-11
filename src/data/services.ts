@@ -51,9 +51,9 @@ export const SERVICES: Service[] = [
         es: "Formularios de contacto, mapas, horarios y lo que el negocio necesite",
       },
       {
-        en: "Accessibility tested with a screen reader and a keyboard",
-        de: "Barrierefreiheit mit Screenreader und Tastatur getestet",
-        es: "Accesibilidad probada con lector de pantalla y teclado",
+        en: "Built to work with screen readers and keyboards",
+        de: "Gebaut für Screenreader und Tastatur",
+        es: "Pensada para lector de pantalla y teclado",
       },
       {
         en: "Everything handed over in your name: code, domain, hosting",

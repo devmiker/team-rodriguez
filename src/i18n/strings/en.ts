@@ -13,9 +13,6 @@
 export const en = {
   // --- Site identity ----------------------------------------------------
   "site.name": "Team Rodriguez",
-  "site.tagline": "Websites that earn their keep",
-  "site.description":
-    "A small software studio building fast, accessible websites for small businesses.",
   /** Alt text for public/og.png, the link-preview image. Its text is in English in every
    *  language, so the alt quotes it and describes the rest of the picture. */
   "site.ogImageAlt":
@@ -23,16 +20,12 @@ export const en = {
 
   // --- Accessibility and chrome ----------------------------------------
   "a11y.skipToContent": "Skip to content",
-  "a11y.breadcrumb": "Breadcrumb",
   "nav.label": "Main",
   "nav.openMenu": "Open menu",
   "nav.closeMenu": "Close menu",
-  "nav.home": "Home",
-  "theme.label": "Theme",
   "theme.toLight": "Switch to light theme",
   "theme.toDark": "Switch to dark theme",
   "lang.label": "Language",
-  "lang.current": "Current language",
 
   "translation.machine":
     "This page was translated automatically and has not yet been checked by a native speaker.",
@@ -54,30 +47,30 @@ export const en = {
   "home.hero.eyebrow": "Software studio",
   "home.hero.heading": "Websites that earn their keep",
   "home.hero.body":
-    "Most small-business websites are slow, fragile, and cost more to run than they return. We build the other kind: fast, accessible, easy to change, and yours to keep.",
+    "Fast, accessible websites for small businesses: easy to change, quoted in writing before we start, and yours to keep.",
   "home.hero.cta": "Start a project",
   "home.hero.ctaSecondary": "See what we do",
 
   "home.proof.speed": "Pages that load in under a second",
-  "home.proof.a11y": "Accessible to screen readers and keyboards, tested",
+  "home.proof.a11y": "Built for screen readers and keyboards",
   "home.proof.own": "You own the code and the domain, always",
   "home.proof.heading": "Every site",
 
   "home.services.eyebrow": "What we do",
   "home.services.heading": "Four things, done properly",
   "home.services.body":
-    "We deliberately do a narrow set of work. It means we are genuinely good at it rather than passably familiar with everything.",
+    "We focus on a small set of services, so we can do each of them really well.",
   "home.services.cta": "All services",
 
   "home.process.eyebrow": "How it goes",
   "home.process.heading": "No surprises, at any point",
   "home.process.body":
-    "You get a fixed price before we start, a link to watch it being built, and a site you can actually maintain when we hand it over.",
+    "You get a fixed quote before we start, a link to watch it being built, and a site you can actually maintain when we hand it over.",
 
   "home.process.1.title": "We talk",
   "home.process.1.body":
     "Half an hour, free. What the business does, who needs to find it, what is not working now. If we are not the right fit we will say so.",
-  "home.process.2.title": "You get a fixed price",
+  "home.process.2.title": "You get a fixed quote",
   "home.process.2.body":
     "A written scope and one number. Not an hourly estimate that grows. If the scope changes, we re-quote before doing the work.",
   "home.process.3.title": "We build in the open",
@@ -90,7 +83,7 @@ export const en = {
   "home.team.eyebrow": "Who you work with",
   "home.team.heading": "A small team, on purpose",
   "home.team.body":
-    "You talk to the people writing the code. Nothing is passed to an account manager and nothing is quietly offshored.",
+    "You talk to the people writing the code, from the first call to the handover.",
   "home.team.cta": "Meet the team",
 
   "home.partners.eyebrow": "Good company",
@@ -110,7 +103,7 @@ export const en = {
     "Website design and build, online shops, ongoing care, and audits for speed, accessibility and search.",
   "services.heading": "What we do",
   "services.lead":
-    "A narrow set of services, each quoted for your project. Tell us what you need and get a fixed quote after a free half-hour conversation.",
+    "A small set of services, each shaped to your project. Tell us what you need, and we start with a free half-hour conversation.",
   "services.includes": "What is included",
   "services.who": "Who does this",
   "services.quote": "Get a quote today",
@@ -123,12 +116,11 @@ export const en = {
   // --- Work -------------------------------------------------------------
   "work.title": "Work",
   "work.description": "Selected projects and what they were built to do.",
-  "work.heading": "Selected work",
+  "work.heading": "Our work",
   "work.lead":
     "Everything we have built, in two groups: work for businesses, and the projects we built to learn. Both are labelled, because they are not the same thing.",
   "work.pending":
     "Case studies are being written up. In the meantime, we are happy to walk you through recent work on a call — including the parts that did not go to plan.",
-  "work.visit": "Visit the site",
   "work.stack": "Built with",
   "work.builtBy": "Built by",
   "work.opensNewTab": "(opens in a new tab)",
@@ -144,7 +136,7 @@ export const en = {
   "team.description": "The people who will actually do the work.",
   "team.heading": "The team",
   "team.lead":
-    "Small, senior, and the same people from first call to handover. You will never be introduced to someone new halfway through.",
+    "A small team, and the same people from first call to handover. You will never be introduced to someone new halfway through.",
   "team.pending": "Team profiles are being written up.",
   "team.focus": "Focus",
   "team.offers": "What they take on",

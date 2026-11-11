@@ -51,7 +51,7 @@ These are in rough dependency order. Nothing below can be skipped.
 
 - ~~`public/og.png` (1200×630) for link previews, and `public/apple-touch-icon.png` (180×180)~~ Done 2026-11-11; the og tags appear once `SITE_URL` is set.
 - Team photographs, 640×640 or larger, into `public/team/`
-- Screenshots for the work gallery — see `public/work/README.md`
+- Screenshots for the work gallery — see `docs/work-screenshots.md`
 - A first genuine client project, which is the only thing that fills the "For clients"
   column. Until then the gallery is honest about what it is showing.
 - A first partner or two, with their agreement

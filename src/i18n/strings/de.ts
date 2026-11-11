@@ -15,24 +15,17 @@ import type { UiStrings } from "./en";
 export const de: UiStrings = {
   // --- Site identity ----------------------------------------------------
   "site.name": "Team Rodriguez",
-  "site.tagline": "Websites, die sich rechnen",
-  "site.description":
-    "Ein kleines Software-Studio, das schnelle, barrierefreie Websites für kleine Unternehmen baut.",
   "site.ogImageAlt":
     "Team Rodriguez – „Websites that earn their keep“: ein Software-Studio für kleine Unternehmen, über einer Reihe Nadelbäume unter einer blauen Sonne.",
 
   // --- Accessibility and chrome ----------------------------------------
   "a11y.skipToContent": "Zum Inhalt springen",
-  "a11y.breadcrumb": "Brotkrumennavigation",
   "nav.label": "Hauptnavigation",
   "nav.openMenu": "Menü öffnen",
   "nav.closeMenu": "Menü schließen",
-  "nav.home": "Startseite",
-  "theme.label": "Darstellung",
   "theme.toLight": "Zur hellen Darstellung wechseln",
   "theme.toDark": "Zur dunklen Darstellung wechseln",
   "lang.label": "Sprache",
-  "lang.current": "Aktuelle Sprache",
 
   "translation.machine":
     "Diese Seite wurde maschinell übersetzt und noch nicht von einer muttersprachlichen Person geprüft.",
@@ -54,30 +47,30 @@ export const de: UiStrings = {
   "home.hero.eyebrow": "Software-Studio",
   "home.hero.heading": "Websites, die sich rechnen",
   "home.hero.body":
-    "Die meisten Websites kleiner Unternehmen sind langsam, anfällig und kosten im Betrieb mehr, als sie einbringen. Wir bauen die andere Sorte: schnell, barrierefrei, leicht zu ändern — und sie gehört Ihnen.",
+    "Schnelle, barrierefreie Websites für kleine Unternehmen: leicht zu ändern, vor Beginn schriftlich angeboten — und sie gehören Ihnen.",
   "home.hero.cta": "Projekt anfragen",
   "home.hero.ctaSecondary": "Leistungen ansehen",
 
   "home.proof.speed": "Seiten, die in unter einer Sekunde laden",
-  "home.proof.a11y": "Getestet mit Screenreader und Tastatur",
+  "home.proof.a11y": "Gebaut für Screenreader und Tastatur",
   "home.proof.own": "Code und Domain gehören immer Ihnen",
   "home.proof.heading": "Jede Website",
 
   "home.services.eyebrow": "Was wir machen",
   "home.services.heading": "Vier Dinge, richtig gemacht",
   "home.services.body":
-    "Wir machen bewusst wenig. Deshalb können wir es wirklich, statt uns überall nur auszukennen.",
+    "Wir konzentrieren uns auf wenige Leistungen, damit wir jede davon wirklich gut machen.",
   "home.services.cta": "Alle Leistungen",
 
   "home.process.eyebrow": "So läuft es",
   "home.process.heading": "Keine Überraschungen, zu keinem Zeitpunkt",
   "home.process.body":
-    "Sie bekommen einen Festpreis vor Projektbeginn, einen Link zum Mitverfolgen und am Ende eine Website, die Sie selbst pflegen können.",
+    "Sie bekommen vor Projektbeginn ein festes Angebot, einen Link zum Mitverfolgen und am Ende eine Website, die Sie selbst pflegen können.",
 
   "home.process.1.title": "Wir sprechen",
   "home.process.1.body":
     "Eine halbe Stunde, kostenlos. Was das Unternehmen macht, wer es finden soll, was gerade nicht funktioniert. Wenn wir nicht die Richtigen sind, sagen wir das.",
-  "home.process.2.title": "Sie bekommen einen Festpreis",
+  "home.process.2.title": "Sie bekommen ein festes Angebot",
   "home.process.2.body":
     "Ein schriftlicher Umfang und eine Zahl. Keine Stundenschätzung, die wächst. Ändert sich der Umfang, kalkulieren wir neu, bevor wir weiterarbeiten.",
   "home.process.3.title": "Wir bauen sichtbar",
@@ -90,7 +83,7 @@ export const de: UiStrings = {
   "home.team.eyebrow": "Mit wem Sie arbeiten",
   "home.team.heading": "Bewusst ein kleines Team",
   "home.team.body":
-    "Sie sprechen mit den Menschen, die den Code schreiben. Nichts geht an eine Kundenbetreuung, nichts wird still ins Ausland vergeben.",
+    "Sie sprechen mit den Menschen, die den Code schreiben — vom ersten Gespräch bis zur Übergabe.",
   "home.team.cta": "Team kennenlernen",
 
   "home.partners.eyebrow": "Gute Gesellschaft",
@@ -110,7 +103,7 @@ export const de: UiStrings = {
     "Websites gestalten und bauen, Online-Shops, laufende Betreuung sowie Audits zu Tempo, Barrierefreiheit und Auffindbarkeit.",
   "services.heading": "Was wir machen",
   "services.lead":
-    "Wenige Leistungen, jeweils für Ihr Projekt kalkuliert. Sagen Sie uns, was Sie brauchen, und Sie erhalten nach einem kostenlosen halbstündigen Gespräch ein festes Angebot.",
+    "Wenige Leistungen, jeweils auf Ihr Projekt zugeschnitten. Sagen Sie uns, was Sie brauchen; wir beginnen mit einem kostenlosen halbstündigen Gespräch.",
   "services.includes": "Enthalten ist",
   "services.who": "Wer das macht",
   "services.quote": "Jetzt Angebot anfordern",
@@ -123,12 +116,11 @@ export const de: UiStrings = {
   // --- Work -------------------------------------------------------------
   "work.title": "Projekte",
   "work.description": "Ausgewählte Projekte und wozu sie gebaut wurden.",
-  "work.heading": "Ausgewählte Projekte",
+  "work.heading": "Unsere Arbeit",
   "work.lead":
     "Alles, was wir gebaut haben, in zwei Gruppen: Arbeiten für Unternehmen und Projekte, an denen wir gelernt haben. Beide sind als solche gekennzeichnet, denn sie sind nicht dasselbe.",
   "work.pending":
     "Die Projektberichte werden gerade geschrieben. Bis dahin führen wir Sie gern telefonisch durch aktuelle Arbeiten — auch durch die Teile, die nicht nach Plan liefen.",
-  "work.visit": "Zur Website",
   "work.stack": "Gebaut mit",
   "work.builtBy": "Gebaut von",
   "work.opensNewTab": "(öffnet in einem neuen Tab)",
@@ -144,7 +136,7 @@ export const de: UiStrings = {
   "team.description": "Die Menschen, die die Arbeit tatsächlich machen.",
   "team.heading": "Das Team",
   "team.lead":
-    "Klein, erfahren, und vom ersten Gespräch bis zur Übergabe dieselben Personen. Sie werden nie mittendrin jemand Neuem vorgestellt.",
+    "Ein kleines Team, und vom ersten Gespräch bis zur Übergabe dieselben Personen. Sie werden nie mittendrin jemand Neuem vorgestellt.",
   "team.pending": "Die Team-Profile werden gerade geschrieben.",
   "team.focus": "Schwerpunkt",
   "team.offers": "Was sie übernehmen",
