@@ -145,7 +145,8 @@ when both fail. It talks to Turso's SQL-over-HTTP endpoint with `fetch`, no SDK,
 the same reason the mail code has none. Retention is six months, enforced on every
 write and by the weekly `.github/workflows/retention.yml`. The window lives in three
 places that must move together: `RETENTION_DAYS`, that workflow's `cutoff`, and the
-privacy text in `src/data/legal.ts`, which also names the EU as the storage region.
+privacy text in `src/data/legal.ts`, which also names the United States as the storage
+region (Turso, US West Coast, Mike's choice 2026-11-11).
 The store is write-only from the web: nothing on the site reads enquiries back. Do
 not move site content (services, team, work) into the database; it is build-time data
 on purpose.
@@ -244,9 +245,6 @@ have to clean up.
 - **Domain.** Nothing is bought. `SITE_URL` and `COMPANY.origin` both wait on it.
 - **Business email.** `devmiker@gmail.com` is what exists. A published personal Gmail
   attracts scraped spam and cannot be handed to a colleague later.
-- **Enquiry store region.** The privacy page says the EU. If the Turso database ends
-  up elsewhere (a free plan allows one group), change that sentence in all three
-  languages. `docs/DEPLOY.md` §4.5 has the setup.
 - **Mail provider.** The API calls Resend's HTTP API. Any provider with an HTTP send
   endpoint is a twenty-line change; the account and a verified sending domain are not.
 - **Francisco's and Luis's entries.** Published at Mike's request. Both still need

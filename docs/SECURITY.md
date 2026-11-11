@@ -39,7 +39,8 @@ Added 2026-11-11 so that a mail outage cannot lose a lead. What keeps it small:
 - **The token lives in two places only:** the Static Web App's application settings
   and the repository secrets used by the retention job. Rotate it with
   `turso db tokens invalidate <db>` and update both.
-- **EU region.** The privacy page says so; create the database there (DEPLOY.md).
+- **US region (West Coast).** The privacy page names the United States as where
+  enquiries are stored. If the database ever moves, change that sentence with it.
 
 ### Error reporting (Sentry)
 
