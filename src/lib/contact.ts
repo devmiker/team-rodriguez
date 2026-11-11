@@ -52,7 +52,13 @@ export const MAX_FILL_MS = 1000 * 60 * 60 * 12;
 export const PROJECT_TYPES = ["new", "redesign", "shop", "care", "audit", "other"] as const;
 export type ProjectType = (typeof PROJECT_TYPES)[number];
 
-export const BUDGETS = ["unsure", "under2k", "2to5k", "5to10k", "over10k"] as const;
+/*
+ * US dollars, sized to the projects we actually quote: most builds land between
+ * $1,000 and $2,500, so that is where the bands are finest. A band that nearly every
+ * enquiry falls into tells us nothing. Values that are no longer listed (an old cached
+ * page) fall back to "unsure" in `validate`, so renaming a band never blocks anyone.
+ */
+export const BUDGETS = ["unsure", "under1k", "1kto2k5", "2k5to5k", "over5k"] as const;
 export type Budget = (typeof BUDGETS)[number];
 
 export const TIMELINES = ["flexible", "month", "quarter", "later"] as const;

@@ -53,6 +53,17 @@
   --brand-navy-deep: #0e1e30;
   --brand-navy-raised: #1e3351;
 
+  /* Flags in the footer (SiteFooter → Flags.astro). Fixed identity colours, the same
+     in both themes, used for nothing else. US: Old Glory red and blue. Mexico: the
+     official green and red, and a brown standing in for the coat of arms, which is
+     too detailed to draw at 14 px. */
+  --flag-white: #ffffff;
+  --flag-us-red: #b22234;
+  --flag-us-blue: #3c3b6e;
+  --flag-mx-green: #006847;
+  --flag-mx-red: #ce1126;
+  --flag-mx-emblem: #8c5a2b;
+
   --brand-mist: #f1f6f4; /* light raised surface, faintly green so it sits with emerald */
   --brand-white: #ffffff;
 

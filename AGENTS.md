@@ -74,7 +74,8 @@ src/
   styles/        tokens.css (the palette), global.css (shared), motion.css (anything
                  that moves — read its header before adding to it)
   middleware.ts  Data-model checks that run before any page renders
-api/             The Azure Function behind the contact form
+api/             The Azure Function behind the contact form, and the enquiry
+                 store it writes to (api/src/lib/enquiries.ts)
 docs/            DEPLOY.md (first-time hosting setup and the launch order),
                  SECURITY.md, ROADMAP.md
 scripts/a11y.mjs axe-core over the built site, both themes
@@ -136,6 +137,23 @@ reintroduce prices, "from" figures or price-range copy without asking him.
 `<form method="post">` that posts to the API and redirects to a thank-you page; React
 upgrades it to an inline submit. A contact form is the one page where a failure costs
 real money, and "the bundle failed to load" is a thing that happens.
+
+**Enquiries are stored, then emailed.** Decided by Mike on 2026-11-11. The contact
+function writes every valid enquiry to one Turso table (`api/src/lib/enquiries.ts`)
+before emailing it, so a mail outage cannot lose a lead; the visitor sees an error only
+when both fail. It talks to Turso's SQL-over-HTTP endpoint with `fetch`, no SDK, for
+the same reason the mail code has none. Retention is six months, enforced on every
+write and by the weekly `.github/workflows/retention.yml`. The window lives in three
+places that must move together: `RETENTION_DAYS`, that workflow's `cutoff`, and the
+privacy text in `src/data/legal.ts`, which also names the EU as the storage region.
+The store is write-only from the web: nothing on the site reads enquiries back. Do
+not move site content (services, team, work) into the database; it is build-time data
+on purpose.
+
+**Budget bands are in US dollars and sized to real projects.** Under $1,000,
+$1,000–$2,500, $2,500–$5,000, over $5,000 (2026-11-11). The old bands started at
+"Under 2,000", which nearly every enquiry fell into once prices were set. This is the
+visitor's budget, not our price, so it does not conflict with "quotes, not prices".
 
 **Spam defence is quiet.** Honeypot, a minimum fill time, length caps, an enum
 allowlist and per-instance rate limiting. A caught submission gets the same success
@@ -219,12 +237,16 @@ have to clean up.
 - **Domain.** Nothing is bought. `SITE_URL` and `COMPANY.origin` both wait on it.
 - **Business email.** `devmiker@gmail.com` is what exists. A published personal Gmail
   attracts scraped spam and cannot be handed to a colleague later.
+- **Enquiry store region.** The privacy page says the EU. If the Turso database ends
+  up elsewhere (a free plan allows one group), change that sentence in all three
+  languages. `docs/DEPLOY.md` §4.5 has the setup.
 - **Mail provider.** The API calls Resend's HTTP API. Any provider with an HTTP send
   endpoint is a twenty-line change; the account and a verified sending domain are not.
 - **Francisco's and Luis's entries.** Published at Mike's request. Both still need
-  their own words and their agreement to appear; Luis needs his real job title, and
+  their own words and their agreement to appear. Luis's title, bio, skills and links
+  were drafted from his own portfolio on 2026-11-11 and wait for him to approve them.
   Francisco's `location` still names a city (Mike's does not — his call whether to
-  change it). `bio` is optional, so Luis's card renders without inventing one.
+  change it).
 - **Legal review.** `PRIVACY_REVIEWED` and `TERMS_SUPPLIED` are both false and the
   pages say so. The privacy text is an accurate description of what the site does,
   which is the hard part; it still needs a lawyer.

@@ -1,0 +1,57 @@
+name: Enquiry retention
+
+# Deletes enquiries older than six months from the enquiry store, every week.
+#
+# The contact function already prunes on every write, but in a quiet month nothing is
+# written, and the privacy page promises six months regardless. This is the backstop.
+# The window must match RETENTION_DAYS in api/src/lib/enquiries.ts and the privacy
+# text in src/data/legal.ts; change all three together.
+
+on:
+  schedule:
+    - cron: "17 3 * * 1" # Mondays 03:17 UTC
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  prune:
+    name: Delete enquiries past retention
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL }}
+      TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
+    steps:
+      - name: Prune
+        run: |
+          set -euo pipefail
+          if [ -z "${TURSO_DATABASE_URL}" ] || [ -z "${TURSO_AUTH_TOKEN}" ]; then
+            echo "::warning::TURSO_DATABASE_URL / TURSO_AUTH_TOKEN are not set; nothing to prune."
+            exit 0
+          fi
+
+          url="${TURSO_DATABASE_URL/#libsql:\/\//https://}"
+          url="${url%/}"
+          cutoff="$(date -u -d '183 days ago' +%Y-%m-%dT%H:%M:%S.000Z)"
+
+          # The table may not exist yet if no enquiry has ever arrived, so check first
+          # rather than letting DELETE fail on a fresh database.
+          body=$(jq -n --arg cutoff "$cutoff" '{requests: [
+            {type: "execute", stmt: {sql: "CREATE TABLE IF NOT EXISTS enquiries (id TEXT PRIMARY KEY, created_at TEXT NOT NULL, name TEXT NOT NULL, email TEXT NOT NULL, company TEXT NOT NULL, project_type TEXT NOT NULL, budget TEXT NOT NULL, timeline TEXT NOT NULL, message TEXT NOT NULL, emailed INTEGER NOT NULL DEFAULT 0)"}},
+            {type: "execute", stmt: {sql: "DELETE FROM enquiries WHERE created_at < ?", args: [{type: "text", value: $cutoff}]}},
+            {type: "close"}
+          ]}')
+
+          response=$(curl -sS --fail-with-body --max-time 30 \
+            -H "Authorization: Bearer ${TURSO_AUTH_TOKEN}" \
+            -H "Content-Type: application/json" \
+            -d "$body" "${url}/v2/pipeline")
+
+          if echo "$response" | jq -e '[.results[] | select(.type == "error")] | length > 0' > /dev/null; then
+            echo "::error::The store rejected the prune: $(echo "$response" | jq -c '[.results[] | select(.type == "error") | .error.message]')"
+            exit 1
+          fi
+
+          deleted=$(echo "$response" | jq '.results[1].response.result.affected_row_count // 0')
+          echo "Deleted ${deleted} enquiries created before ${cutoff}."

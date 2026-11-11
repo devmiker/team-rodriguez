@@ -27,9 +27,14 @@ import Scenery from "./Scenery.astro";
 interface Props {
   member: TeamMember;
   locale: Locale;
+  /** Heading level for the name: h2 where the cards sit directly under the page's h1
+   *  (the team page), h3 inside a section that has its own h2 (the home page). */
+  as?: "h2" | "h3";
 }
 
-const { member, locale } = Astro.props;
+const { member, locale, as: Heading = "h3" } = Astro.props;
+/* The card's own subheadings sit one level below the name, so the outline never skips. */
+const SubHeading = Heading === "h2" ? "h3" : "h4";
 const t = useTranslations(locale);
 
 const services = member.services.map((id) => localized(serviceById(id).name, locale));
@@ -38,11 +43,20 @@ const languages = (member.speaks ?? []).map(
   (code) => LOCALE_META[code as Locale]?.name ?? code.toUpperCase(),
 );
 
+/* Each link's accessible name says whose profile it is ("Mike Rodriguez on LinkedIn"),
+   because three cards of bare "LinkedIn" links are indistinguishable in a links list.
+   The name is visually hidden; the visible label stays inside the accessible name, so
+   speech-input users can still say what they see. A personal site has no "on", so its
+   name reads "Mike Rodriguez: Profile". */
+type ProfileLink = { href: string; label: string; context: string };
+const onSite = `${member.name} ${t("team.linkOn")} `;
 const profileLinks = [
-  member.links?.linkedin ? { href: member.links.linkedin, label: "LinkedIn" } : undefined,
-  member.links?.github ? { href: member.links.github, label: "GitHub" } : undefined,
-  member.links?.site ? { href: member.links.site, label: t("team.profile") } : undefined,
-].filter((l): l is { href: string; label: string } => l !== undefined);
+  member.links?.linkedin ? { href: member.links.linkedin, label: "LinkedIn", context: onSite } : undefined,
+  member.links?.github ? { href: member.links.github, label: "GitHub", context: onSite } : undefined,
+  member.links?.site
+    ? { href: member.links.site, label: t("team.profile"), context: `${member.name}: ` }
+    : undefined,
+].filter((l): l is ProfileLink => l !== undefined);
 
 /* A card with no bio and no highlights is short. In a row of taller cards it would
    end in an empty gap, so its sky takes the spare height instead — nothing is
@@ -80,7 +94,7 @@ const compact = !member.bio && !(member.highlights && member.highlights.length >
     }
 
     <div>
-      <h3 class="member__name">{member.name}</h3>
+      <Heading class="member__name">{member.name}</Heading>
       <p class="member__role">{localized(member.role, locale)}</p>
       {member.location && <p class="member__location">{member.location}</p>}
     </div>
@@ -91,7 +105,7 @@ const compact = !member.bio && !(member.highlights && member.highlights.length >
   {
     member.highlights && member.highlights.length > 0 && (
       <div class="member__block">
-        <h4 class="member__sub">{t("team.highlights")}</h4>
+        <SubHeading class="member__sub">{t("team.highlights")}</SubHeading>
         <ul class="member__highlights">
           {member.highlights.map((item) => (
             <li>
@@ -107,7 +121,7 @@ const compact = !member.bio && !(member.highlights && member.highlights.length >
   {
     services.length > 0 && (
       <div class="member__block">
-        <h4 class="member__sub">{t("team.offers")}</h4>
+        <SubHeading class="member__sub">{t("team.offers")}</SubHeading>
         <ul class="member__tags">
           {services.map((name) => (
             <li class="tag tag--accent">{name}</li>
@@ -120,7 +134,7 @@ const compact = !member.bio && !(member.highlights && member.highlights.length >
   {
     member.focus.length > 0 && (
       <div class="member__block">
-        <h4 class="member__sub">{t("team.focus")}</h4>
+        <SubHeading class="member__sub">{t("team.focus")}</SubHeading>
         <ul class="member__tags">
           {member.focus.map((item) => (
             <li class="tag">{item}</li>
@@ -144,8 +158,12 @@ const compact = !member.bio && !(member.highlights && member.highlights.length >
         {profileLinks.map((link) => (
           <li>
             <a href={link.href} rel="noopener" target="_blank">
-              <span>{link.label}</span>
+              <span>
+                <span class="visually-hidden">{link.context}</span>
+                {link.label}
+              </span>
               <Icon name="external" size="0.85em" />
+              <span class="visually-hidden">{t("work.opensNewTab")}</span>
             </a>
           </li>
         ))}
@@ -345,7 +363,9 @@ const compact = !member.bio && !(member.highlights && member.highlights.length >
     gap: var(--space-4);
     list-style: none;
     margin: auto 0 0;
-    padding-block-start: var(--space-2);
+    /* Cancels the browser's list indent, which pushed the links ~40px in from the
+       card's text edge. */
+    padding: var(--space-2) 0 0;
   }
 
   .member__links a {

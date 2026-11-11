@@ -22,7 +22,7 @@ const good = {
   email: "ada@example.com",
   company: "Analytical Engines",
   projectType: "new",
-  budget: "2to5k",
+  budget: "1kto2k5",
   timeline: "month",
   message: "We need a site for a small engineering firm. Five pages, nothing fancy.",
 };

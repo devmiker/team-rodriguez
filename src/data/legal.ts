@@ -27,7 +27,7 @@ export const PRIVACY_REVIEWED = false;
 export const TERMS_SUPPLIED = false;
 
 /** ISO date the legal text last changed. Shown on the page. */
-export const LEGAL_UPDATED = "2026-09-19";
+export const LEGAL_UPDATED = "2026-11-11";
 
 export interface LegalSection {
   heading: LocalizedText;
@@ -62,9 +62,14 @@ export const PRIVACY_SECTIONS: LegalSection[] = [
     },
     body: [
       {
-        en: "When you submit the contact form, the name, email address, business name, project type, budget range, timeline and message you entered are sent to us as an email. They are not written to a database, added to a mailing list, or passed to anyone else.",
-        de: "Wenn Sie das Kontaktformular absenden, werden Name, E-Mail-Adresse, Firmenname, Projektart, Budgetrahmen, Zeitrahmen und Ihre Nachricht als E-Mail an uns geschickt. Sie werden nicht in einer Datenbank gespeichert, keinem Verteiler hinzugefügt und an niemanden weitergegeben.",
-        es: "Cuando envía el formulario de contacto, el nombre, el correo electrónico, el nombre del negocio, el tipo de proyecto, el rango de presupuesto, los plazos y su mensaje se nos envían por correo electrónico. No se guardan en ninguna base de datos, no se añaden a ninguna lista y no se pasan a nadie.",
+        en: "When you submit the contact form, the name, email address, business name, project type, budget range, timeline and message you entered are saved in our enquiry database and sent to us as an email. They are not added to a mailing list or passed to anyone else.",
+        de: "Wenn Sie das Kontaktformular absenden, werden Name, E-Mail-Adresse, Firmenname, Projektart, Budgetrahmen, Zeitrahmen und Ihre Nachricht in unserer Anfragen-Datenbank gespeichert und als E-Mail an uns geschickt. Sie werden keinem Verteiler hinzugefügt und an niemanden weitergegeben.",
+        es: "Cuando envía el formulario de contacto, el nombre, el correo electrónico, el nombre del negocio, el tipo de proyecto, el rango de presupuesto, los plazos y su mensaje se guardan en nuestra base de datos de consultas y se nos envían por correo electrónico. No se añaden a ninguna lista ni se pasan a nadie.",
+      },
+      {
+        en: "The database copy exists so that your enquiry cannot be lost if the email fails to arrive. It is hosted by Turso in the European Union, and each enquiry is deleted from it automatically six months after you send it. Ask us to delete it sooner and we will.",
+        de: "Die Kopie in der Datenbank gibt es, damit Ihre Anfrage nicht verloren geht, falls die E-Mail nicht ankommt. Sie wird bei Turso in der Europäischen Union gespeichert, und jede Anfrage wird sechs Monate nach dem Absenden automatisch daraus gelöscht. Auf Wunsch löschen wir sie früher.",
+        es: "La copia en la base de datos existe para que su consulta no se pierda si el correo no llega. Está alojada por Turso en la Unión Europea, y cada consulta se borra automáticamente seis meses después de enviarla. Si nos pide que la borremos antes, lo haremos.",
       },
       {
         en: "We reply to the address you give, and we keep the correspondence for as long as we are talking to you about the project plus a reasonable period afterwards for our own records. Ask us to delete it and we will.",

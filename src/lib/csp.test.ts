@@ -63,7 +63,7 @@ describe("collectInlineSources", () => {
 });
 
 describe("buildCspValue", () => {
-  const policy = buildCspValue({ scripts: ["a", "b", "a"], styles: ["s"] });
+  const policy = buildCspValue({ scripts: ["a", "b", "a"], styles: ["s"] }, "enforce");
   const directive = (name: string) =>
     policy.split("; ").find((d) => d.startsWith(`${name} `)) ?? "";
 
@@ -105,5 +105,20 @@ describe("buildCspValue", () => {
     expect(directive("img-src")).toBe("img-src 'self' data:");
     expect(directive("script-src")).not.toContain("data:");
     expect(directive("font-src")).toBe("font-src 'self'");
+  });
+
+  it("upgrades insecure requests only when enforcing", () => {
+    // A report-only policy cannot upgrade anything, so browsers ignore the directive
+    // there and log a console error about it on every page.
+    const sources = { scripts: [], styles: [] };
+    expect(buildCspValue(sources, "enforce").split("; ")).toContain("upgrade-insecure-requests");
+    expect(buildCspValue(sources, "report-only")).not.toContain("upgrade-insecure-requests");
+  });
+
+  it("is otherwise identical in both modes", () => {
+    const sources = { scripts: ["a"], styles: ["s"] };
+    expect(buildCspValue(sources, "report-only")).toBe(
+      buildCspValue(sources, "enforce").replace("; upgrade-insecure-requests", ""),
+    );
   });
 });

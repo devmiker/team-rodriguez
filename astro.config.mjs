@@ -130,7 +130,7 @@ const contentSecurityPolicy = () => ({
       const config = JSON.parse(await readFile(file, "utf8"));
       config.globalHeaders = {
         ...config.globalHeaders,
-        [cspHeaderName(mode)]: buildCspValue(sources),
+        [cspHeaderName(mode)]: buildCspValue(sources, mode),
       };
       await writeFile(file, `${JSON.stringify(config, null, 2)}\n`);
 

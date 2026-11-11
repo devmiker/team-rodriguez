@@ -26,6 +26,8 @@ interface Props {
 }
 
 const { service, locale, detailed = false, as: Heading = "h3" } = Astro.props;
+/* The card's own subheadings sit one level below its title, so the outline never skips. */
+const SubHeading = Heading === "h2" ? "h3" : "h4";
 const t = useTranslations(locale);
 const people = detailed ? teamForService(service.id) : [];
 
@@ -49,7 +51,7 @@ const position = String(SERVICES.findIndex((s) => s.id === service.id) + 1).padS
   {
     detailed && (
       <>
-        <h4 class="service__sub">{t("services.includes")}</h4>
+        <SubHeading class="service__sub">{t("services.includes")}</SubHeading>
         <ul class="service__list">
           {service.includes.map((item) => (
             <li>

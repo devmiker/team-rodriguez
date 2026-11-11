@@ -38,10 +38,10 @@ const labels: ContactFormLabels = {
   budgetHint: "Pick the nearest.",
   budgetOptions: {
     unsure: "Not sure yet",
-    under2k: "Under 2,000",
-    "2to5k": "2,000 – 5,000",
-    "5to10k": "5,000 – 10,000",
-    over10k: "Over 10,000",
+    under1k: "Under $1,000",
+    "1kto2k5": "$1,000 – $2,500",
+    "2k5to5k": "$2,500 – $5,000",
+    over5k: "Over $5,000",
   },
   timeline: "When do you need it?",
   timelineOptions: {

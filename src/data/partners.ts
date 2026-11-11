@@ -13,7 +13,7 @@
  * placement is ever paid for, that entry must set `sponsored: true`, which adds
  * `rel="sponsored"` and a visible label — both are required, not optional.
  *
- * TODO: every entry below is a placeholder. Replace them with real businesses.
+ * Entries are real businesses; each stays unpublished until its owner agrees.
  */
 
 import type { LocalizedText } from "../i18n/locales";
@@ -34,29 +34,34 @@ export interface Partner {
 }
 
 export const PARTNERS: Partner[] = [
+  /*
+   * Both are businesses we built sites for, added 2026-11-11 at Mike's request and
+   * left unpublished until each owner has agreed to appear (see the note at the top).
+   * Flip `published` only after they have seen this wording.
+   */
   {
-    id: "placeholder-one",
+    id: "prolift-junk-haulers",
     published: false,
-    name: "Placeholder Business",
+    name: "Pro Lift Junk Haulers",
     blurb: {
-      en: "Placeholder entry. Not rendered while `published` is false.",
-      de: "Platzhalter-Eintrag. Wird nicht gerendert, solange `published` false ist.",
-      es: "Entrada de marcador de posición. No se renderiza mientras `published` sea false.",
+      en: "Junk removal and trailer rentals across Riverside and the Inland Empire, in English and Spanish.",
+      de: "Entrümpelung und Anhängervermietung in Riverside und dem Inland Empire, auf Englisch und Spanisch.",
+      es: "Retiro de basura y alquiler de remolques en Riverside y el Inland Empire, en inglés y en español.",
     },
-    category: { en: "Trade", de: "Handwerk", es: "Oficio" },
-    url: "https://example.com",
+    category: { en: "Junk removal", de: "Entrümpelung", es: "Retiro de basura" },
+    url: "https://www.proliftjunkhauler.com/",
   },
   {
-    id: "placeholder-two",
+    id: "ejs-inspiring-hands",
     published: false,
-    name: "Another Placeholder",
+    name: "E&J's Inspiring Hands Foundation",
     blurb: {
-      en: "Placeholder entry. Not rendered while `published` is false.",
-      de: "Platzhalter-Eintrag. Wird nicht gerendert, solange `published` false ist.",
-      es: "Entrada de marcador de posición. No se renderiza mientras `published` sea false.",
+      en: "A nonprofit in Perris, California helping neighbours into jobs, training and education, and feeding the community while it does.",
+      de: "Eine gemeinnützige Organisation in Perris, Kalifornien, die Menschen in Arbeit, Ausbildung und Bildung hilft und dabei die Nachbarschaft mit Essen versorgt.",
+      es: "Una organización sin fines de lucro en Perris, California, que ayuda a sus vecinos a encontrar empleo, formación y estudios, y alimenta a la comunidad mientras lo hace.",
     },
-    category: { en: "Hospitality", de: "Gastronomie", es: "Hostelería" },
-    url: "https://example.com",
+    category: { en: "Nonprofit", de: "Gemeinnützig", es: "Sin fines de lucro" },
+    url: "https://www.ejsinspiringhands.org/",
   },
 ];
 

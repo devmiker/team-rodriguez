@@ -166,22 +166,30 @@ export const TEAM: TeamMember[] = [
     published: true,
     name: "Luis Inzunza",
     role: {
-      // His own public LinkedIn summary opens "Software Engineer!" (checked
-      // 2026-10-28). Still worth confirming the exact title with him.
+      // "Software Engineer" is how his own portfolio introduces him (2026-11-11).
       en: "Software engineer",
       de: "Softwareentwickler",
       es: "Ingeniero de software",
     },
-    // No bio: nobody has asked Luis for one yet, so there is nothing honest to put
-    // here. The card renders without it. TODO: two sentences from Luis.
+    location: "United States · Remote",
+    // Drafted from his own portfolio ("a Software Engineer, skilled in solving
+    // problems with HTML, CSS, Javascript, and React"; services: web design and web
+    // development), 2026-11-11. TODO: Luis to read it and approve or rewrite.
+    bio: {
+      en: "Designs and builds websites, and likes the problem-solving part best. Works in HTML, CSS, JavaScript and React, with Node.js and AWS behind them.",
+      de: "Gestaltet und baut Websites — am liebsten den Teil, in dem es Probleme zu lösen gibt. Arbeitet mit HTML, CSS, JavaScript und React, dahinter Node.js und AWS.",
+      es: "Diseña y construye sitios web, y lo que más le gusta es resolver problemas. Trabaja con HTML, CSS, JavaScript y React, con Node.js y AWS detrás.",
+    },
     services: ["website", "care"],
-    // The skills his public profile names: "HTML, CSS, Javascript, and React".
-    focus: ["HTML", "CSS", "JavaScript", "React"],
+    // From the skills on his portfolio.
+    focus: ["React", "JavaScript", "HTML", "CSS", "Node.js", "AWS"],
     speaks: ["en", "es"],
     photo: "luis.webp",
     cover: "sun-centre",
     links: {
+      github: "https://github.com/Luisinzu8",
       linkedin: "https://www.linkedin.com/in/luis-inzu/",
+      site: "https://luisinzu.s3-us-west-2.amazonaws.com/Portfolio/index.html",
     },
   },
 ];

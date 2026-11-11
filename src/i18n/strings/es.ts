@@ -15,22 +15,18 @@ import type { UiStrings } from "./en";
 export const es: UiStrings = {
   // --- Site identity ----------------------------------------------------
   "site.name": "Team Rodriguez",
-  "site.tagline": "Webs que se pagan solas",
-  "site.description":
-    "Un pequeño estudio de software que crea sitios web rápidos y accesibles para pequeñas empresas.",
+  "site.ogImageAlt":
+    "Team Rodriguez — «Websites that earn their keep»: un estudio de software para pequeñas empresas, sobre una hilera de abetos bajo un sol azul.",
 
   // --- Accessibility and chrome ----------------------------------------
   "a11y.skipToContent": "Saltar al contenido",
-  "a11y.breadcrumb": "Ruta de navegación",
   "nav.label": "Principal",
   "nav.openMenu": "Abrir menú",
   "nav.closeMenu": "Cerrar menú",
   "nav.home": "Inicio",
-  "theme.label": "Tema",
   "theme.toLight": "Cambiar al tema claro",
   "theme.toDark": "Cambiar al tema oscuro",
   "lang.label": "Idioma",
-  "lang.current": "Idioma actual",
 
   "translation.machine":
     "Esta página se tradujo automáticamente y todavía no la ha revisado una persona nativa.",
@@ -44,6 +40,7 @@ export const es: UiStrings = {
   "footer.contactHeading": "Contacto",
   "footer.rights": "Todos los derechos reservados.",
   "footer.builtWith": "Hecho con Astro. Sin rastreadores, sin aviso de cookies, sin tonterías. Algunos trabajamos de noche.",
+  "footer.flags": "Banderas de México y Estados Unidos",
 
   // --- Home -------------------------------------------------------------
   "home.title": "Team Rodriguez — sitios web para pequeñas empresas",
@@ -52,30 +49,30 @@ export const es: UiStrings = {
   "home.hero.eyebrow": "Estudio de software",
   "home.hero.heading": "Webs que se pagan solas",
   "home.hero.body":
-    "La mayoría de los sitios web de pequeñas empresas son lentos, frágiles y cuestan más mantenerlos de lo que aportan. Nosotros hacemos los otros: rápidos, accesibles, fáciles de cambiar y suyos para siempre.",
+    "Sitios web rápidos y accesibles para pequeñas empresas: fáciles de cambiar, presupuestados por escrito antes de empezar y suyos para siempre.",
   "home.hero.cta": "Empezar un proyecto",
   "home.hero.ctaSecondary": "Ver lo que hacemos",
 
   "home.proof.speed": "Páginas que cargan en menos de un segundo",
-  "home.proof.a11y": "Probadas con lector de pantalla y teclado",
+  "home.proof.a11y": "Pensadas para lector de pantalla y teclado",
   "home.proof.own": "El código y el dominio son suyos, siempre",
   "home.proof.heading": "Cada sitio",
 
   "home.services.eyebrow": "Lo que hacemos",
   "home.services.heading": "Cuatro cosas, bien hechas",
   "home.services.body":
-    "Hacemos poco a propósito. Así lo hacemos de verdad bien, en lugar de sabernos un poco de todo.",
+    "Nos centramos en pocos servicios para hacer cada uno de verdad bien.",
   "home.services.cta": "Todos los servicios",
 
   "home.process.eyebrow": "Cómo funciona",
   "home.process.heading": "Sin sorpresas, en ningún momento",
   "home.process.body":
-    "Recibe un precio cerrado antes de empezar, un enlace para seguir el avance y un sitio que podrá mantener usted mismo cuando se lo entreguemos.",
+    "Recibe un presupuesto cerrado antes de empezar, un enlace para seguir el avance y un sitio que podrá mantener usted mismo cuando se lo entreguemos.",
 
   "home.process.1.title": "Hablamos",
   "home.process.1.body":
     "Media hora, gratis. Qué hace el negocio, quién tiene que encontrarlo y qué no está funcionando ahora. Si no somos los adecuados, se lo diremos.",
-  "home.process.2.title": "Recibe un precio cerrado",
+  "home.process.2.title": "Recibe un presupuesto cerrado",
   "home.process.2.body":
     "Un alcance por escrito y una cifra. No una estimación por horas que va creciendo. Si el alcance cambia, volvemos a presupuestar antes de seguir.",
   "home.process.3.title": "Construimos a la vista",
@@ -88,7 +85,7 @@ export const es: UiStrings = {
   "home.team.eyebrow": "Con quién trabaja",
   "home.team.heading": "Un equipo pequeño, a propósito",
   "home.team.body":
-    "Habla con las personas que escriben el código. Nada pasa por un gestor de cuentas ni se subcontrata en silencio.",
+    "Habla con las personas que escriben el código, desde la primera llamada hasta la entrega.",
   "home.team.cta": "Conocer al equipo",
 
   "home.partners.eyebrow": "Buena compañía",
@@ -108,7 +105,7 @@ export const es: UiStrings = {
     "Diseño y desarrollo de sitios web, tiendas en línea, mantenimiento continuo y auditorías de velocidad, accesibilidad y buscadores.",
   "services.heading": "Lo que hacemos",
   "services.lead":
-    "Pocos servicios, cada uno presupuestado para su proyecto. Cuéntenos lo que necesita y reciba un presupuesto cerrado tras una conversación gratuita de media hora.",
+    "Pocos servicios, cada uno adaptado a su proyecto. Cuéntenos lo que necesita y empezamos con una conversación gratuita de media hora.",
   "services.includes": "Qué incluye",
   "services.who": "Quién lo hace",
   "services.quote": "Pida su presupuesto hoy",
@@ -121,12 +118,11 @@ export const es: UiStrings = {
   // --- Work -------------------------------------------------------------
   "work.title": "Proyectos",
   "work.description": "Proyectos seleccionados y para qué se construyeron.",
-  "work.heading": "Proyectos seleccionados",
+  "work.heading": "Nuestro trabajo",
   "work.lead":
     "Todo lo que hemos construido, en dos grupos: trabajo para negocios y proyectos hechos para aprender. Ambos están etiquetados, porque no son lo mismo.",
   "work.pending":
     "Estamos redactando los casos de estudio. Mientras tanto, le enseñamos con gusto trabajos recientes en una llamada — incluidas las partes que no salieron según lo previsto.",
-  "work.visit": "Ver el sitio",
   "work.stack": "Hecho con",
   "work.builtBy": "Hecho por",
   "work.opensNewTab": "(se abre en una pestaña nueva)",
@@ -142,13 +138,14 @@ export const es: UiStrings = {
   "team.description": "Las personas que harán el trabajo de verdad.",
   "team.heading": "El equipo",
   "team.lead":
-    "Pequeño, con experiencia, y las mismas personas desde la primera llamada hasta la entrega. Nunca le presentarán a alguien nuevo a mitad del proyecto.",
+    "Un equipo pequeño, y las mismas personas desde la primera llamada hasta la entrega. Nunca le presentarán a alguien nuevo a mitad del proyecto.",
   "team.pending": "Estamos redactando los perfiles del equipo.",
   "team.focus": "Especialidad",
   "team.offers": "De qué se encargan",
   "team.highlights": "Más allá del código",
   "team.speaks": "Trabaja en",
   "team.profile": "Perfil",
+  "team.linkOn": "en",
 
   // --- Values (team page) ---------------------------------------------
   "values.eyebrow":
@@ -201,7 +198,7 @@ export const es: UiStrings = {
   "contact.response.body":
     "Leemos cada mensaje nosotros mismos. En dos días laborables recibirá una respuesta real de una persona — normalmente con una o dos preguntas y una opinión honesta sobre si somos los adecuados.",
   "contact.privacy":
-    "Lo que envíe llega a nuestro correo y a ningún sitio más. No lo guardamos en ninguna base de datos, no le añadimos a ninguna lista y no se lo pasamos a nadie.",
+    "Lo que envíe llega a nuestro correo y se guarda seis meses en nuestro registro de consultas, para que no se pierda. Nunca le añadimos a ninguna lista ni se lo pasamos a nadie.",
 
   "form.name.label": "Su nombre",
   "form.name.error": "Díganos cómo dirigirnos a usted.",
@@ -222,10 +219,10 @@ export const es: UiStrings = {
   "form.budget.label": "Presupuesto aproximado",
   "form.budget.hint": "Un rango honesto nos ahorra tiempo a los dos. Elija el más cercano.",
   "form.budget.unsure": "Todavía no lo sé",
-  "form.budget.under2k": "Menos de 2.000",
-  "form.budget.2to5k": "2.000 – 5.000",
-  "form.budget.5to10k": "5.000 – 10.000",
-  "form.budget.over10k": "Más de 10.000",
+  "form.budget.under1k": "Menos de 1.000 US$",
+  "form.budget.1kto2k5": "1.000 – 2.500 US$",
+  "form.budget.2k5to5k": "2.500 – 5.000 US$",
+  "form.budget.over5k": "Más de 5.000 US$",
   "form.timeline.label": "¿Para cuándo lo necesita?",
   "form.timeline.flexible": "Sin fecha fija",
   "form.timeline.month": "En un mes",

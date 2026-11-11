@@ -21,6 +21,7 @@ import LanguageSwitcher from "../components/LanguageSwitcher.astro";
 import { LOCALE_META, toLocale } from "../i18n/locales";
 import type { PageRef } from "../i18n/routes";
 import { useTranslations } from "../i18n/ui";
+import { APPLE_TOUCH_ICON } from "../lib/seo";
 import "../styles/global.css";
 
 interface Props {
@@ -46,11 +47,12 @@ const t = useTranslations(locale);
     <ThemeScript />
     <MotionScript />
 
-    {/* SVG only. Every browser released in the last several years supports it, and a
-        second .ico is another request for the handful that do not.
-        TODO: add public/apple-touch-icon.png (180x180) before launch — iOS ignores
-        SVG favicons and falls back to a screenshot of the page. */}
+    {/* SVG for browsers: every one released in the last several years supports it,
+        and a second .ico is another request for the handful that do not. iOS ignores
+        SVG favicons and would fall back to a screenshot of the page, so it gets the
+        PNG — the favicon drawn full-bleed and opaque. */}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes={`${APPLE_TOUCH_ICON.size}x${APPLE_TOUCH_ICON.size}`} href={APPLE_TOUCH_ICON.path} />
 
     {/*
       Two preloads: the heading face (Space Grotesk 700) and body text (Inter 400).

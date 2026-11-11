@@ -13,22 +13,20 @@
 export const en = {
   // --- Site identity ----------------------------------------------------
   "site.name": "Team Rodriguez",
-  "site.tagline": "Websites that earn their keep",
-  "site.description":
-    "A small software studio building fast, accessible websites for small businesses.",
+  /** Alt text for public/og.png, the link-preview image. Its text is in English in every
+   *  language, so the alt quotes it and describes the rest of the picture. */
+  "site.ogImageAlt":
+    "Team Rodriguez — \"Websites that earn their keep\": a software studio for small businesses, above a line of evergreens under a blue sun.",
 
   // --- Accessibility and chrome ----------------------------------------
   "a11y.skipToContent": "Skip to content",
-  "a11y.breadcrumb": "Breadcrumb",
   "nav.label": "Main",
   "nav.openMenu": "Open menu",
   "nav.closeMenu": "Close menu",
   "nav.home": "Home",
-  "theme.label": "Theme",
   "theme.toLight": "Switch to light theme",
   "theme.toDark": "Switch to dark theme",
   "lang.label": "Language",
-  "lang.current": "Current language",
 
   "translation.machine":
     "This page was translated automatically and has not yet been checked by a native speaker.",
@@ -42,6 +40,7 @@ export const en = {
   "footer.contactHeading": "Get in touch",
   "footer.rights": "All rights reserved.",
   "footer.builtWith": "Built with Astro. No trackers, no cookie banner, no nonsense. Some of us work nights.",
+  "footer.flags": "Flags of Mexico and the United States",
 
   // --- Home -------------------------------------------------------------
   "home.title": "Team Rodriguez — websites for small businesses",
@@ -50,30 +49,30 @@ export const en = {
   "home.hero.eyebrow": "Software studio",
   "home.hero.heading": "Websites that earn their keep",
   "home.hero.body":
-    "Most small-business websites are slow, fragile, and cost more to run than they return. We build the other kind: fast, accessible, easy to change, and yours to keep.",
+    "Fast, accessible websites for small businesses: easy to change, quoted in writing before we start, and yours to keep.",
   "home.hero.cta": "Start a project",
   "home.hero.ctaSecondary": "See what we do",
 
   "home.proof.speed": "Pages that load in under a second",
-  "home.proof.a11y": "Accessible to screen readers and keyboards, tested",
+  "home.proof.a11y": "Built for screen readers and keyboards",
   "home.proof.own": "You own the code and the domain, always",
   "home.proof.heading": "Every site",
 
   "home.services.eyebrow": "What we do",
   "home.services.heading": "Four things, done properly",
   "home.services.body":
-    "We deliberately do a narrow set of work. It means we are genuinely good at it rather than passably familiar with everything.",
+    "We focus on a small set of services, so we can do each of them really well.",
   "home.services.cta": "All services",
 
   "home.process.eyebrow": "How it goes",
   "home.process.heading": "No surprises, at any point",
   "home.process.body":
-    "You get a fixed price before we start, a link to watch it being built, and a site you can actually maintain when we hand it over.",
+    "You get a fixed quote before we start, a link to watch it being built, and a site you can actually maintain when we hand it over.",
 
   "home.process.1.title": "We talk",
   "home.process.1.body":
     "Half an hour, free. What the business does, who needs to find it, what is not working now. If we are not the right fit we will say so.",
-  "home.process.2.title": "You get a fixed price",
+  "home.process.2.title": "You get a fixed quote",
   "home.process.2.body":
     "A written scope and one number. Not an hourly estimate that grows. If the scope changes, we re-quote before doing the work.",
   "home.process.3.title": "We build in the open",
@@ -86,7 +85,7 @@ export const en = {
   "home.team.eyebrow": "Who you work with",
   "home.team.heading": "A small team, on purpose",
   "home.team.body":
-    "You talk to the people writing the code. Nothing is passed to an account manager and nothing is quietly offshored.",
+    "You talk to the people writing the code, from the first call to the handover.",
   "home.team.cta": "Meet the team",
 
   "home.partners.eyebrow": "Good company",
@@ -106,7 +105,7 @@ export const en = {
     "Website design and build, online shops, ongoing care, and audits for speed, accessibility and search.",
   "services.heading": "What we do",
   "services.lead":
-    "A narrow set of services, each quoted for your project. Tell us what you need and get a fixed quote after a free half-hour conversation.",
+    "A small set of services, each shaped to your project. Tell us what you need, and we start with a free half-hour conversation.",
   "services.includes": "What is included",
   "services.who": "Who does this",
   "services.quote": "Get a quote today",
@@ -119,12 +118,11 @@ export const en = {
   // --- Work -------------------------------------------------------------
   "work.title": "Work",
   "work.description": "Selected projects and what they were built to do.",
-  "work.heading": "Selected work",
+  "work.heading": "Our work",
   "work.lead":
     "Everything we have built, in two groups: work for businesses, and the projects we built to learn. Both are labelled, because they are not the same thing.",
   "work.pending":
     "Case studies are being written up. In the meantime, we are happy to walk you through recent work on a call — including the parts that did not go to plan.",
-  "work.visit": "Visit the site",
   "work.stack": "Built with",
   "work.builtBy": "Built by",
   "work.opensNewTab": "(opens in a new tab)",
@@ -140,13 +138,15 @@ export const en = {
   "team.description": "The people who will actually do the work.",
   "team.heading": "The team",
   "team.lead":
-    "Small, senior, and the same people from first call to handover. You will never be introduced to someone new halfway through.",
+    "A small team, and the same people from first call to handover. You will never be introduced to someone new halfway through.",
   "team.pending": "Team profiles are being written up.",
   "team.focus": "Focus",
   "team.offers": "What they take on",
   "team.speaks": "Works in",
   "team.highlights": "Beyond the code",
   "team.profile": "Profile",
+  /** Screen-reader text joining a name to a profile site: "Mike Rodriguez on LinkedIn". */
+  "team.linkOn": "on",
 
   // --- Values (team page) ---------------------------------------------
   "values.eyebrow":
@@ -198,7 +198,7 @@ export const en = {
   "contact.response.body":
     "We read every message ourselves. You will get a real reply from a person within two working days — usually with a question or two, and an honest view of whether we are the right people for it.",
   "contact.privacy":
-    "What you send is emailed to us and nothing else. We do not store it in a database, add you to a mailing list, or pass it to anyone.",
+    "What you send is emailed to us and kept in our enquiry records for six months, so it cannot get lost. We never add you to a mailing list or pass it to anyone.",
 
   "form.name.label": "Your name",
   "form.name.error": "Please tell us what to call you.",
@@ -219,10 +219,10 @@ export const en = {
   "form.budget.label": "Rough budget",
   "form.budget.hint": "An honest range saves us both time. Pick the nearest.",
   "form.budget.unsure": "Not sure yet",
-  "form.budget.under2k": "Under 2,000",
-  "form.budget.2to5k": "2,000 – 5,000",
-  "form.budget.5to10k": "5,000 – 10,000",
-  "form.budget.over10k": "Over 10,000",
+  "form.budget.under1k": "Under $1,000",
+  "form.budget.1kto2k5": "$1,000 – $2,500",
+  "form.budget.2k5to5k": "$2,500 – $5,000",
+  "form.budget.over5k": "Over $5,000",
   "form.timeline.label": "When do you need it?",
   "form.timeline.flexible": "No fixed date",
   "form.timeline.month": "Within a month",
