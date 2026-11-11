@@ -106,7 +106,8 @@ export const PROJECTS: Project[] = [
     name: "Pinché Café",
     url: "https://www.pinchecafes.com/",
     year: 2021,
-    builtBy: ["mike-rodriguez", "francisco-martinez"],
+    // Francisco's LinkedIn lists Luis and Mike as contributors (2026-11-11).
+    builtBy: ["mike-rodriguez", "francisco-martinez", "luis-inzunza"],
     summary: {
       en: "A coffee house site — who they are, the menu with prices, and the opening hours. Our own project: built as a team and put live on a domain we bought.",
       de: "Die Website eines Cafés — wer dahintersteckt, die Karte mit Preisen und die Öffnungszeiten. Unser eigenes Projekt: im Team gebaut und auf einer selbst gekauften Domain veröffentlicht.",

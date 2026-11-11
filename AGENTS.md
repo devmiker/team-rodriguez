@@ -244,9 +244,9 @@ have to clean up.
   endpoint is a twenty-line change; the account and a verified sending domain are not.
 - **Francisco's and Luis's entries.** Published at Mike's request. Both still need
   their own words and their agreement to appear. Luis's title, bio, skills and links
-  were drafted from his own portfolio on 2026-11-11 and wait for him to approve them.
-  Francisco's `location` still names a city (Mike's does not — his call whether to
-  change it).
+  were drafted from his own portfolio on 2026-11-11, and Francisco's from his own
+  LinkedIn the same day; both wait for their owner to approve them. All three
+  locations are now the region, "United States · Remote".
 - **Legal review.** `PRIVACY_REVIEWED` and `TERMS_SUPPLIED` are both false and the
   pages say so. The privacy text is an accurate description of what the site does,
   which is the hard part; it still needs a lawyer.
