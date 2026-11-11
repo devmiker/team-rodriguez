@@ -41,6 +41,10 @@ updates:
       # public/staticwebapp.config.json), and is bumped by hand when that moves.
       - dependency-name: "@types/node"
         update-types: ["version-update:semver-major"]
+      # Kept on the same TypeScript major as the root, which cannot move to 7 until
+      # @astrojs/check supports it. One compiler across the repo, moved together.
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: github-actions
     directory: "/"
