@@ -23,6 +23,7 @@ export const en = {
   "nav.label": "Main",
   "nav.openMenu": "Open menu",
   "nav.closeMenu": "Close menu",
+  "nav.home": "Home",
   "theme.toLight": "Switch to light theme",
   "theme.toDark": "Switch to dark theme",
   "lang.label": "Language",

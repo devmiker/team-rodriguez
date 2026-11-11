@@ -23,6 +23,7 @@ export const es: UiStrings = {
   "nav.label": "Principal",
   "nav.openMenu": "Abrir menú",
   "nav.closeMenu": "Cerrar menú",
+  "nav.home": "Inicio",
   "theme.toLight": "Cambiar al tema claro",
   "theme.toDark": "Cambiar al tema oscuro",
   "lang.label": "Idioma",

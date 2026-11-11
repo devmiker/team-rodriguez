@@ -23,6 +23,7 @@ export const de: UiStrings = {
   "nav.label": "Hauptnavigation",
   "nav.openMenu": "Menü öffnen",
   "nav.closeMenu": "Menü schließen",
+  "nav.home": "Startseite",
   "theme.toLight": "Zur hellen Darstellung wechseln",
   "theme.toDark": "Zur dunklen Darstellung wechseln",
   "lang.label": "Sprache",
