@@ -4,7 +4,7 @@
  *
  * Lives outside `[locale]` because a wrong URL may not have a usable language segment
  * in it — "/nonsense" has none at all. It renders in the default language and offers
- * the main pages as a way back, which is more use than an apology.
+ * the home page and the main pages as a way back, which is more use than an apology.
  */
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Icon from "../components/Icon.astro";
@@ -14,9 +14,13 @@ import { useTranslations } from "../i18n/ui";
 
 const locale = DEFAULT_LOCALE;
 const t = useTranslations(locale);
+/* <Seo> adds the site name to every title except the home page's, which already
+   contains it. This page borrows the home route for its language links, so it adds the
+   name itself, in the same form. */
+const title = `${t("notFound.title")} — ${t("site.name")}`;
 ---
 
-<BaseLayout page={{ route: "home" }} title={t("notFound.title")} description={t("notFound.title")} noindex>
+<BaseLayout page={{ route: "home" }} title={title} description={t("notFound.title")} noindex>
   <section class="section">
     <div class="page notfound">
       <p class="eyebrow">404</p>
@@ -24,6 +28,12 @@ const t = useTranslations(locale);
       <p class="lead">{t("notFound.body")}</p>
 
       <ul class="notfound__links">
+        <li>
+          <a href={pathFor({ route: "home" }, locale)}>
+            {t("nav.home")}
+            <Icon name="arrowRight" size="0.95em" />
+          </a>
+        </li>
         {
           NAV_ROUTES.map((route) => (
             <li>
