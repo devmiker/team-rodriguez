@@ -100,6 +100,9 @@ frame-src 'none'; frame-ancestors 'none'; form-action 'self';
 object-src 'none'; base-uri 'none'; upgrade-insecure-requests
 ```
 
+`upgrade-insecure-requests` is emitted in enforce mode only. Browsers ignore it in a
+report-only policy and log a console error saying so on every page.
+
 Worth knowing:
 
 - **It is derived, never hand-written.** A hand-maintained policy drifts the first time

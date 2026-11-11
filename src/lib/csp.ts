@@ -78,9 +78,11 @@ export function collectInlineSources(html: string): InlineSources {
  *   (`<object>` for plugin content, `<base>` for silently re-pointing every relative
  *   URL on the page) and neither is used here.
  * - `upgrade-insecure-requests` so a stray http:// URL is fetched over TLS rather than
- *   mixed-content-blocked.
+ *   mixed-content-blocked. Enforce mode only: a report-only policy cannot upgrade
+ *   anything, so browsers ignore the directive there and log a console error about it
+ *   on every page.
  */
-export function buildCspValue({ scripts, styles }: InlineSources): string {
+export function buildCspValue({ scripts, styles }: InlineSources, mode: CspMode): string {
   const unique = (values: string[]) => [...new Set(values)].sort();
   const scriptHashes = unique(scripts.map(sourceHash));
   const styleHashes = unique(styles.map(sourceHash));
@@ -98,6 +100,6 @@ export function buildCspValue({ scripts, styles }: InlineSources): string {
     "form-action 'self'",
     "object-src 'none'",
     "base-uri 'none'",
-    "upgrade-insecure-requests",
+    ...(mode === "enforce" ? ["upgrade-insecure-requests"] : []),
   ].join("; ");
 }
