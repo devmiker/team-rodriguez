@@ -1,5 +1,6 @@
 /// <reference types="vitest/config" />
 import { getViteConfig } from "astro/config";
+import { configDefaults } from "vitest/config";
 
 /**
  * Tests run through Astro's own Vite config, so imports resolve exactly as they do in
@@ -12,5 +13,7 @@ import { getViteConfig } from "astro/config";
 export default getViteConfig({
   test: {
     environment: "node",
+    // The API's compiled output, if a local build left one behind.
+    exclude: [...configDefaults.exclude, "api/dist/**"],
   },
 });

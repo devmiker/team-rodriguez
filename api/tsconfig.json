@@ -22,5 +22,9 @@
     "rootDir": "..",
     "outDir": "dist"
   },
-  "include": ["src/**/*.ts", "../src/lib/contact.ts"]
+  "include": ["src/**/*.ts", "../src/lib/contact.ts"],
+  // Tests run from the root vitest. Compiled here they would land in
+  // dist/api/src/functions/, match package.json's "main" glob, and be deployed — where
+  // their `import "vitest"` fails because vitest is not an API dependency.
+  "exclude": ["src/**/*.test.ts"]
 }
