@@ -12,10 +12,10 @@
     "start": "func start"
   },
   "dependencies": {
-    "@azure/functions": "^4.17.0"
+    "@azure/functions": "^4.17.1"
   },
   "devDependencies": {
-    "@types/node": "22.20.3",
+    "@types/node": "22.20.5",
     "typescript": "5.9.3"
   }
 }
